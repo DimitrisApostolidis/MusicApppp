@@ -1,30 +1,20 @@
-
 package org.example;
 
-
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-
-@Entity
 public class Artist {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
     private String name;
-    private String bio;
-    private String imageUrl;
+    private String biography;
 
-    // Constructors, getters, and setters
-    public Artist() {}
-
-    public Artist(String name, String bio, String imageUrl) {
+    // Constructor, getters, and setters
+    public Artist(String name, String biography) {
         this.name = name;
-        this.bio = bio;
-        this.imageUrl = imageUrl;
+        this.biography = biography;
     }
 
-    // Getters and Setters...
+    public String getName() {
+        return name;
+    }
+
+    public String getBiography() {
+        return biography;
+    }
 }

@@ -1,26 +1,21 @@
 package org.example;
 
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import java.util.ArrayList;
 import java.util.List;
 
-@RestController
-@RequestMapping("/api/artists")
 public class ArtistController {
-    @Autowired
-    private ArtistService artistService;
+    private List<Artist> artists;
 
-    @GetMapping
-    public List<Artist> getAllArtists() {
-        return artistService.getAllArtists();
+    public ArtistController() {
+        this.artists = new ArrayList<>();
     }
 
-    @PostMapping
-    public Artist addArtist(@RequestBody Artist artist) {
-        return artistService.addArtist(artist);
-    }}
+    // Δηλώνοντας τη μέθοδο με δύο παραμέτρους
+    public void addArtist(String name, String biography) {
+        artists.add(new Artist(name, biography));
+    }
+
+    public String getArtistName(int index) {
+        return artists.get(index).getName();
+    }
+}
