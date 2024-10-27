@@ -1,3 +1,15 @@
+package org.example;
+
+
+import javafx.application.Application;
+import javafx.stage.Stage;
+import javafx.scene.Scene;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.VBox;
+import javafx.scene.control.Button;
+
+
+
 public class MusicManagerApp extends Application {
     @Override
     public void start(Stage primaryStage) {
@@ -24,4 +36,5 @@ public class MusicManagerApp extends Application {
     public static void main(String[] args) {
         launch(args);
     }
-}}
+}
+

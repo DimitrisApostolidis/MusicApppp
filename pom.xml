@@ -8,13 +8,41 @@
     <version>1.0-SNAPSHOT</version>
 
     <properties>
-        <java.version>23</java.version> <!-- Ορίστε την έκδοση της Java -->
+        <java.version>17</java.version>
+        <spring.boot.version>3.3.5</spring.boot.version>
     </properties>
 
+    <repositories>
+        <repository>
+            <id>central</id>
+            <url>https://repo.maven.apache.org/maven2</url>
+        </repository>
+    </repositories>
+
+    <dependencies>
+        <!-- Spring Boot Starter Web για web εφαρμογές -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+            <version>3.3.5</version>
+        </dependency>
+
+        <!-- Spring Data JPA για πρόσβαση σε βάσεις δεδομένων -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+            <version>3.3.5</version>
+        </dependency>
+
+        <!-- Εξάρτηση για τον H2 Database (μπορείς να αλλάξεις σε άλλη αν χρειάζεται) -->
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+
+            <scope>runtime</scope>
+        </dependency>
 
         <!-- JavaFX dependencies -->
-    <dependencies>
-        <!-- Εδώ προσθέτετε τις εξαρτήσεις σας -->
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
@@ -55,6 +83,11 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+               <version> 3.3.5</version>
             </plugin>
         </plugins>
     </build>
