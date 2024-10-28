@@ -5,9 +5,11 @@ import java.util.List;
 
 public class ArtistController {
     private List<Artist> artists;
+    private List<Playlist> playlists;
 
     public ArtistController() {
         this.artists = new ArrayList<>();
+        this.playlists = new ArrayList<>();
     }
 
     // Δηλώνοντας τη μέθοδο με δύο παραμέτρους
@@ -17,5 +19,22 @@ public class ArtistController {
 
     public String getArtistName(int index) {
         return artists.get(index).getName();
+    }
+
+    public void addPlaylist(String name) {
+        playlists.add(new Playlist(name));
+    }
+
+    public void addSongToPlaylist(String playlistName, Song song) {
+        for (Playlist playlist : playlists) {
+            if (playlist.getName().equals(playlistName)) {
+                playlist.addSong(song);
+                break;
+            }
+        }
+    }
+
+    public List<Playlist> getPlaylists() {
+        return playlists;
     }
 }
