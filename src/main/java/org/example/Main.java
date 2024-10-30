@@ -23,6 +23,19 @@ public class Main {
             for (Song song : playlist.getSongs()) {
                 System.out.println("- " + song.getTitle() + " (" + song.getGenre() + ")");
             }
+
+            // Κλήση της νέας μεθόδου
+            int totalDuration = calculateTotalDuration(playlist);
+            System.out.println("Total Duration from method: " + totalDuration + " seconds");
         }
     }
+
+    // Νέα μέθοδος που υπολογίζει τη συνολική διάρκεια όλων των τραγουδιών σε μια playlist
+    public static int calculateTotalDuration(Playlist playlist) {
+        int total = 0;
+        for (Song song : playlist.getSongs()) {
+            total += song.getDuration();
+        }
+        return total;
     }
+}
