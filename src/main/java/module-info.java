@@ -3,6 +3,7 @@ module org.example {
     requires javafx.fxml;     // Required for JavaFX FXML (if you're using it)
     requires de.jensd.fx.glyphs.fontawesome;
     requires de.jensd.fx.glyphs.commons;
+    requires java.desktop;
 
     opens org.example to javafx.fxml; // Open your package to FXMLLoader (if using FXML)
     exports org.example; // Exports your package
