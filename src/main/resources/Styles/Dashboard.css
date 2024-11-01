@@ -1,0 +1,13 @@
+.album-cover {
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0.0, 1, 1);
+    -fx-background-radius: 10; /* Rounded corners */
+    -fx-padding: 5; /* Optional padding */
+}
+
+.album-cover:hover {
+    -fx-opacity: 0.8; /* Slight opacity change on hover */
+}
+
+.background {
+    -fx-background-color: #949191;
+}

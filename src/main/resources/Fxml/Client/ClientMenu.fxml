@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.text.Text?>
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="750.0" prefWidth="180.0" styleClass="main_menu_container" stylesheets="@../../Styles/ClientMenu.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <AnchorPane prefHeight="730.0" prefWidth="160.0" styleClass="left_container">
+      <children>
+         <VBox prefHeight="80.0" prefWidth="160.0" styleClass="title_container" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <children>
+               <ImageView fitHeight="58.0" fitWidth="60.0" preserveRatio="true">
+                  <image>
+                     <Image url="https://i.imgur.com/cSB10ID.png" />
+                  </image>
+                  <VBox.margin>
+                     <Insets left="55.0" />
+                  </VBox.margin>
+               </ImageView>
+               <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Ludius Player" />
+            </children>
+         </VBox>
+         <VBox layoutY="116.0" prefHeight="400.0" prefWidth="160.0" styleClass="menu_container" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="116.0">
+            <children>
+               <Button fx:id="dashboard_btn" mnemonicParsing="false" text="Dashboard">
+                  <graphic>
+                     <FontAwesomeIconView glyphName="HOME" size="20" />
+                  </graphic>
+               </Button>
+               <Button fx:id="playlist_btn" mnemonicParsing="false" text="Playlists">
+                  <graphic>
+                     <FontAwesomeIconView glyphName="PLAY" size="20" />
+                  </graphic>
+               </Button>
+               <Button fx:id="likedsong_btn" mnemonicParsing="false" text="Liked Songs">
+                  <graphic>
+                     <FontAwesomeIconView glyphName="THUMBS_UP" size="20" />
+                  </graphic>
+               </Button>
+               <Button fx:id="history_btn" mnemonicParsing="false" text="History">
+                  <graphic>
+                     <FontAwesomeIconView glyphName="HISTORY" size="20" />
+                  </graphic>
+               </Button>
+               <Line endX="120.0" />
+               <Button fx:id="profile_btn" mnemonicParsing="false" styleClass="alt_menu_btn" text="Profile">
+                  <graphic>
+                     <FontAwesomeIconView glyphName="USER" size="20" />
+                  </graphic>
+               </Button>
+               <Button fx:id="logout_btn" mnemonicParsing="false" styleClass="alt_menu_btn" text="Log-Out">
+                  <graphic>
+                     <FontAwesomeIconView glyphName="SIGN_OUT" size="20" />
+                  </graphic>
+               </Button>
+            </children>
+         </VBox>
+         <VBox alignment="TOP_CENTER" layoutX="14.0" layoutY="596.0" prefHeight="120.0" prefWidth="130.0" styleClass="report_container" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0">
+            <children>
+               <Text strokeType="OUTSIDE" strokeWidth="0.0" text="We are still in beta" />
+               <Label prefHeight="55.0" prefWidth="152.0" text="Use this to report any bugs or give us a suggestions" />
+               <Button fx:id="report_btn" mnemonicParsing="false" text="Report">
+                  <graphic>
+                     <FontAwesomeIconView glyphName="ROCKET" />
+                  </graphic>
+               </Button>
+            </children>
+         </VBox>
+      </children>
+   </AnchorPane>
+</VBox>

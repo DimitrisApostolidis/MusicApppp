@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane prefHeight="750.0" prefWidth="850.0" styleClass="background" stylesheets="@../../Styles/Dashboard.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.Controllers.Client.DashboardController">
+   <children>
+      <Text layoutX="52.0" layoutY="58.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Welcome back, Symeon" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="30.0" />
+      <Label text="Label" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="27.0" />
+      <Text layoutX="20.0" layoutY="115.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Latest Artists" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="102.0" />
+      <Text layoutX="20.0" layoutY="388.0" strokeType="OUTSIDE" strokeWidth="0.0" text="What's Trending" />
+      <GridPane layoutX="18.0" layoutY="129.0" prefHeight="226.0" prefWidth="790.0">
+        <columnConstraints>
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="392.0" minWidth="10.0" prefWidth="145.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="392.0" minWidth="10.0" prefWidth="158.0" />
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="392.0" minWidth="10.0" prefWidth="158.0" />
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="617.0" minWidth="10.0" prefWidth="158.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="617.0" minWidth="10.0" prefWidth="158.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints maxHeight="135.0" minHeight="0.0" prefHeight="68.0" vgrow="SOMETIMES" />
+          <RowConstraints maxHeight="135.0" minHeight="0.0" prefHeight="67.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <ImageView fx:id="artist1" fitHeight="121.0" fitWidth="147.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="https://www.billboard.com/wp-content/uploads/media/tyler-the-creator-igor-album-art-2019-billboard-embed.jpg?w=600" />
+               </image>
+            </ImageView>
+            <ImageView fx:id="artist2" fitHeight="113.0" fitWidth="158.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1">
+               <image>
+                  <Image url="https://media.architecturaldigest.com/photos/5890e88033bd1de9129eab0a/1:1/w_870,h_870,c_limit/Artist-Designed%20Album%20Covers%202.jpg" />
+               </image>
+            </ImageView>
+            <ImageView fx:id="artist3" fitHeight="111.0" fitWidth="159.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2">
+               <image>
+                  <Image url="https://miro.medium.com/v2/resize:fit:681/1*EBOL4lka5QjcYoxj6AHp-g.png" />
+               </image>
+            </ImageView>
+            <ImageView fx:id="artist4" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3">
+               <image>
+                  <Image url="https://www.indieground.net/images/blog/2024/indieblog-best-album-covers-2010s-07.jpg" />
+               </image>
+            </ImageView>
+            <ImageView fx:id="artist5" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="4">
+               <image>
+                  <Image url="https://archive.smashing.media/assets/344dbf88-fdf9-42bb-adb4-46f01eedd629/aecf4604-1d3b-417f-97c6-d5be80f51eb9/3.jpg" />
+               </image>
+            </ImageView>
+            <ImageView fx:id="artist6" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.rowIndex="1">
+               <image>
+                  <Image url="https://www.groundguitar.com/wp-content/uploads/2024/02/Queen-News-Of-The-World-1976-1021x1024.jpg" />
+               </image>
+            </ImageView>
+            <ImageView fx:id="artist7" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" styleClass="album-cover" GridPane.columnIndex="1" GridPane.rowIndex="1">
+               <image>
+                  <Image url="https://www.premadepixels.com/wp-content/uploads/2022/03/Anterior-Album-Cover-PP1.jpg" />
+               </image>
+            </ImageView>
+            <ImageView fx:id="artist8" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2" GridPane.rowIndex="1">
+               <image>
+                  <Image url="https://www.swiftpublisher.com/assets/img/articles/design-album-cover/album-cover.jpg" />
+               </image>
+            </ImageView>
+            <ImageView fx:id="artist9" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3" GridPane.rowIndex="1">
+               <image>
+                  <Image url="https://www.billboard.com/wp-content/uploads/2023/07/rihanna-anti-cover-2016-billboard-1240.jpg?w=600" />
+               </image>
+            </ImageView>
+            <ImageView fx:id="artist10" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="4" GridPane.rowIndex="1">
+               <image>
+                  <Image url="https://www.creativeboom.com/upload/articles/db/db1a6b372e7c23636f9b8d88f879a9a815c6825c_1280.jpeg" />
+               </image>
+            </ImageView>
+         </children>
+      </GridPane>
+   </children>
+</AnchorPane>
