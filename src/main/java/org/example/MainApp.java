@@ -15,5 +15,6 @@ public class MainApp extends Application{
     @Override
     public void start(Stage stage) {
         Model.getInstance().getViewFactory().showLoginWindow();
+        //ss
     }
 }
