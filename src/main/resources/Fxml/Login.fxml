@@ -29,5 +29,6 @@
       <TextField fx:id="password_fld" styleClass="input_field" />
       <Button fx:id="login_btn" mnemonicParsing="false" prefHeight="84.0" text="Log In" />
       <Label fx:id="error_lbl" styleClass="error_lbl" text="Error:" />
+      <Button fx:id="signup_btn" mnemonicParsing="false" text="Sign Up" />
    </VBox>
 </AnchorPane>

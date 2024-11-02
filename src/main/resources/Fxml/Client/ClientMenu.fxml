@@ -24,7 +24,7 @@
                      <Insets left="55.0" />
                   </VBox.margin>
                </ImageView>
-               <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Ludius Player" />
+               <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Rapsodia Player" />
             </children>
          </VBox>
          <VBox layoutY="116.0" prefHeight="400.0" prefWidth="160.0" styleClass="menu_container" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="116.0">

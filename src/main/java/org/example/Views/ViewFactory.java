@@ -8,6 +8,7 @@ import org.example.Controllers.Client.ClientController;
 
 public class ViewFactory {
     private AnchorPane dashboardView;
+    private Stage loginStage;
 
     public ViewFactory(){}
 
@@ -30,13 +31,16 @@ public class ViewFactory {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        Stage stage = new Stage();
-        stage.setScene(scene);
-        stage.setTitle("Ludius Player");
-        stage.show();
+        loginStage = new Stage();
+        loginStage.setScene(scene);
+        loginStage.setTitle("Rapsodia Player");
+        loginStage.show();
     }
 
     public void showClientWindow() {
+        if (loginStage != null) {
+            loginStage.close();
+        }
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Client/Client.fxml"));
         ClientController clientController = new ClientController();
         loader.setController(clientController);
@@ -48,7 +52,7 @@ public class ViewFactory {
         }
         Stage stage = new Stage();
         stage.setScene(scene);
-        stage.setTitle("Ludius Player");
+        stage.setTitle("Rapsodia Player");
         stage.show();
     }
 
