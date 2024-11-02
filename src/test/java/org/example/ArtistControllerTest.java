@@ -12,7 +12,7 @@ class ArtistControllerTest {
         controller.addArtist("John Doe", "Biography of John Doe");
 
 
-        String artistName = controller.getArtistName(0); // Υποθέτουμε ότι έχεις μια μέθοδο για να πάρεις το όνομα του καλλιτέχνη
+        String artistName = controller.getArtistName(0);
         assertEquals("John Doe", artistName);
     }
 }

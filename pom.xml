@@ -1,4 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?>
+
+
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
@@ -7,16 +8,24 @@
     <groupId>org.example</groupId>
     <artifactId>MusicApp</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <packaging>jar</packaging> <!-- or "exe" if you are creating a native application -->
+    <packaging>jar</packaging>
+
 
     <properties>
         <javafx.version>23.0.1</javafx.version>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
     </properties>
 
+
     <repositories>
+        <repository>
+            <id>openjfx</id>
+            <url>https://openjfx.io/repo/</url>
+        </repository>
         <repository>
             <id>central</id>
             <url>https://repo.maven.apache.org/maven2</url>
@@ -30,6 +39,12 @@
             <artifactId>spring-boot-starter-web</artifactId>
             <version>3.3.5</version>
         </dependency>
+        <dependency>
+        <groupId>mysql</groupId>
+        <artifactId>mysql-connector-java</artifactId>
+        <version>8.0.27</version> <!-- Χρησιμοποίησε την τελευταία διαθέσιμη έκδοση -->
+    </dependency>
+
 
         <!-- Spring Data JPA για πρόσβαση σε βάσεις δεδομένων -->
         <dependency>
@@ -38,18 +53,20 @@
             <version>3.3.5</version>
         </dependency>
 
-        <!-- Εξάρτηση για τον H2 Database (μπορείς να αλλάξεις σε άλλη αν χρειάζεται) -->
+        <!-- H2 Database για ενσωματωμένη βάση δεδομένων -->
         <dependency>
-            <groupId>org.openjfx</groupId>
-            <artifactId>javafx-base</artifactId>
-            <version>${javafx.version}</version>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
-
+            <version>2.1.214</version> <!-- Ορίστε την έκδοση της H2 -->
             <scope>runtime</scope>
         </dependency>
 
         <!-- JavaFX dependencies -->
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-base</artifactId>
+            <version>${javafx.version}</version>
+        </dependency>
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
@@ -66,36 +83,42 @@
             <version>${javafx.version}</version>
         </dependency>
         <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-media</artifactId>
+            <version>${javafx.version}</version>
+        </dependency>
+
+        <!-- Font Awesome FX για εικονίδια -->
+        <dependency>
             <groupId>de.jensd</groupId>
             <artifactId>fontawesomefx-fontawesome</artifactId>
             <version>4.7.0-9.1.2</version>
-            <groupId>org.openjfx</groupId>
-            <artifactId>javafx-media</artifactId>
-            <version>23.0.1</version>
         </dependency>
-
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.13.2</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>RELEASE</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
         <plugins>
-            <plugin>
-                <groupId>org.openjfx</groupId>
-                <artifactId>javafx-maven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <mainClass>com.example.MainApp</mainClass> <!-- Replace with your main class -->
-                </configuration>
-            </plugin>
+            <!-- Spring Boot Maven Plugin -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-               <version> 3.3.5</version>
+                <version>3.3.5</version>
+            </plugin>
+
+            <!-- Maven Compiler Plugin -->
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.8.1</version>
