@@ -4,6 +4,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import org.example.DataBase.DataBaseConnection;
 
 public class SignUpController {
     @FXML
@@ -17,8 +18,11 @@ public class SignUpController {
     @FXML
     private Label error_lbl;
 
+    private DataBaseConnection dataBaseConnection;
+
     @FXML
     public void initialize() {
+        dataBaseConnection = new DataBaseConnection();
         createAccount_btn.setOnAction(actionEvent -> handleSignUp());
     }
 
@@ -33,14 +37,12 @@ public class SignUpController {
             return;
         }
 
-        // Εδώ μπορείς να προσθέσεις λογική για την εγγραφή του χρήστη
-        // Π.χ., επικοινωνία με τη βάση δεδομένων για αποθήκευση χρηστών
-
-        // Ακολουθία αποτυχίας
-        // if (registrationFailed) {
-        //     error_lbl.setText("Registration failed. Please try again.");
-        // } else {
-        //     // Επιτυχής εγγραφή, μπορείς να μεταβείς στην οθόνη σύνδεσης ή στο κύριο παράθυρο
-        // }
+        boolean registrationSuccessful = dataBaseConnection.registerUser(username, email, password);
+        if (registrationSuccessful) {
+            error_lbl.setText("Registration successful!"); // Επιτυχής εγγραφή
+            // Μπορείτε να μεταβείτε σε άλλη οθόνη εδώ αν χρειάζεται
+        } else {
+            error_lbl.setText("Registration failed. Username may already exist."); // Αποτυχία εγγραφής
+        }
     }
 }

@@ -5,7 +5,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import org.example.Models.Model;
-import org.example.DataBaseConnection; // Βεβαιωθείτε ότι αυτή η κλάση υπάρχει
+import org.example.DataBase.DataBaseConnection; // Βεβαιωθείτε ότι αυτή η κλάση υπάρχει
 
 import java.net.URL;
 import java.util.ResourceBundle;
