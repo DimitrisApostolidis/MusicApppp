@@ -12,12 +12,15 @@ public class ArtistController {
         this.playlists = new ArrayList<>();
     }
 
-    // Δηλώνοντας τη μέθοδο με δύο παραμέτρους
+    // Δηλώνει τη μέθοδο με δύο παραμέτρους
     public void addArtist(String name, String biography) {
         artists.add(new Artist(name, biography));
     }
 
     public String getArtistName(int index) {
+        if (index < 0 || index >= artists.size()) {
+            return "Invalid index";
+        }
         return artists.get(index).getName();
     }
 
