@@ -7,7 +7,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
 public class DataBaseConnection {
-    private static final String URL = "jdbc:mysql://localhost:3306/music_apppp";
+    private static final String URL = "jdbc:mysql://localhost:3306/rapsodiaplayer";
     private static final String USER = "root";
     private static final String PASSWORD = "";
     private int failedAttempts = 0; // Μετρητής αποτυχημένων προσπαθειών
