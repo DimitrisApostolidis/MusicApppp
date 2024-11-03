@@ -7,7 +7,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
 public class DataBaseConnection {
-    private static final String URL = "jdbc:mysql://localhost:3306/rapsodiaplayer";
+    private static final String URL = "jdbc:mysql://localhost:3306/music_apppp";
     private static final String USER = "root";
     private static final String PASSWORD = "";
     private int failedAttempts = 0; // Μετρητής αποτυχημένων προσπαθειών
@@ -35,16 +35,34 @@ public class DataBaseConnection {
         }
     }
 
-    // Μέθοδος εγγραφής χρήστη
+    // Μέθοδος εγγραφής χρήστη με έλεγχο για ύπαρξη
     public boolean registerUser(String username, String email, String password) {
-        String query = "INSERT INTO user (username, email, password) VALUES (?, ?, ?)";
+        String checkUserQuery = "SELECT * FROM user WHERE username = ? OR email = ?";
+        String insertUserQuery = "INSERT INTO user (username, email, password) VALUES (?, ?, ?)";
+
         try (Connection conn = this.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(query)) {
-            stmt.setString(1, username);
-            stmt.setString(2, email);
-            stmt.setString(3, password);
-            stmt.executeUpdate();
-            return true;
+             PreparedStatement checkStmt = conn.prepareStatement(checkUserQuery);
+             PreparedStatement insertStmt = conn.prepareStatement(insertUserQuery)) {
+
+            // Έλεγχος αν ο χρήστης ή το email υπάρχει ήδη
+            checkStmt.setString(1, username);
+            checkStmt.setString(2, email);
+            ResultSet rs = checkStmt.executeQuery();
+
+            if (rs.next()) {
+                // Ο χρήστης ή το email υπάρχει ήδη
+                System.out.println("Ο χρήστης ή το email υπάρχει ήδη.");
+                return false; // Δηλώνει αποτυχία εγγραφής
+            }
+
+            // Εισαγωγή νέου χρήστη
+            insertStmt.setString(1, username);
+            insertStmt.setString(2, email);
+            insertStmt.setString(3, password); // Σημείωση: Προσθέστε κρυπτογράφηση κωδικού εδώ για λόγους ασφαλείας
+            insertStmt.executeUpdate();
+
+            System.out.println("Η εγγραφή ήταν επιτυχής!");
+            return true; // Επιτυχής εγγραφή
         } catch (SQLException e) {
             e.printStackTrace();
             return false;

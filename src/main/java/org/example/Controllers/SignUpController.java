@@ -3,6 +3,7 @@ package org.example.Controllers;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import org.example.DataBase.DataBaseConnection;
 import javafx.fxml.FXMLLoader;
@@ -38,7 +39,6 @@ public class SignUpController {
     }
 
     private void handleSignUp() {
-        System.out.println("Sign Up button pressed");
         String username = username_fld.getText().trim();
         String email = email_fld.getText().trim();
         String password = password_fld.getText().trim();
@@ -46,8 +46,7 @@ public class SignUpController {
         // Έλεγχος εγκυρότητας των πεδίων
         if (username.isEmpty() || email.isEmpty() || password.isEmpty()) {
             error_lbl.setText("Please fill in all fields.");
-            error_lbl.setVisible(true); // Εμφάνιση του Label σε περίπτωση σφάλματος
-            System.out.println("Error: All fields must be filled."); // Σημείωση σφάλματος
+            error_lbl.setVisible(true);
             return;
         }
 
@@ -70,11 +69,12 @@ public class SignUpController {
                 logger.log(Level.SEVERE, "Failed to load client.fxml", e);
             }
         } else {
-            error_lbl.setText("Registration failed. Username may already exist.");
-            error_lbl.setVisible(true); // Εμφάνιση του Label σε περίπτωση σφάλματος
-            System.out.println("Error: Registration failed.");
+            // Εμφανίζει μήνυμα λάθους αν το όνομα χρήστη ή το email υπάρχουν ήδη
+            error_lbl.setText("Registration failed. Username or email may already exist.");
+            error_lbl.setVisible(true);
         }
     }
+
     private void goBackToLogin() {
         try {
             // Φόρτωσε το login.fxml
