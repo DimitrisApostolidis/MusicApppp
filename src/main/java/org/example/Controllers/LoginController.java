@@ -78,5 +78,5 @@ public class LoginController implements Initializable {
             stage.show();
         } catch (IOException e) {
             logger.log(Level.SEVERE, "Failed to load signup.fxml", e); // Log the exception
-    }
+        }
     }}

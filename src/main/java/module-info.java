@@ -1,16 +1,15 @@
 module org.example {
-    requires java.sql;
-    requires javafx.graphics;
     requires javafx.controls;  // Required for JavaFX controls
-    requires javafx.fxml;
-    requires spring.boot;
-    requires spring.boot.autoconfigure;// Required for JavaFX FXML (if you're using it)
+    requires javafx.fxml;     // Required for JavaFX FXML (if you're using it)
     requires de.jensd.fx.glyphs.fontawesome;
     requires de.jensd.fx.glyphs.commons;
     requires java.desktop;
+    requires java.sql;
 
-    opens org.example to javafx.fxml;
-    opens org.example.Controllers to javafx.fxml;// Open your package to FXMLLoader (if using FXML)
+    opens org.example.Controllers to javafx.fxml;
+
+    opens org.example.Controllers.Client to javafx.fxml;
+    opens org.example to javafx.fxml; // Open your package to FXMLLoader (if using FXML)
     exports org.example; // Exports your package
     exports org.example.Controllers;
     exports org.example.Controllers.Admin;

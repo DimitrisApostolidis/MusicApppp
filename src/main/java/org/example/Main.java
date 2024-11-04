@@ -1,53 +1,22 @@
 package org.example;
 
-import org.example.DataBase.DataBaseConnection;
-import org.example.Views.PlaylistController;
-
-import java.sql.*;
-
 public class Main {
     public static void main(String[] args) {
-        // Σύνδεση με τη βάση δεδομένων και εμφάνιση καλλιτεχνών
+        ArtistController controller = new ArtistController();
+        controller.addArtist("John Doe", "Biography of John Doe");
 
-        Connection connection = DataBaseConnection.getConnection();
-        if (connection != null) {
-            try {
-                Statement statement = connection.createStatement();
-                String sql = "SELECT * FROM artists";
-                ResultSet resultSet = statement.executeQuery(sql);
+        System.out.println(controller.getArtistName(0)); // Αναμένονται: John Doe
 
-                while (resultSet.next()) {
-                    int id = resultSet.getInt("artist_id");
-                    String name = resultSet.getString("name");
-                    String biography = resultSet.getString("bio");
-
-                    System.out.println("ID: " + id + ", Name: " + name + ", Biography: " + biography);
-                }
-
-                resultSet.close();
-                statement.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            } finally {
-                try {
-                    connection.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-
-        // Διαχείριση Playlist και Τραγουδιών
-        PlaylistController controller = new PlaylistController();
-
+        // Δημιουργία και προσθήκη τραγουδιών
         Song song1 = new Song("Song A", "Rock", 240);
         Song song2 = new Song("Song B", "Rap", 300);
 
+        // Δημιουργία playlist και προσθήκη τραγουδιών σε αυτή
         controller.addPlaylist("My Favorites");
         controller.addSongToPlaylist("My Favorites", song1);
         controller.addSongToPlaylist("My Favorites", song2);
 
-
+        // Εμφάνιση playlist και συνολικής διάρκειας
         for (Playlist playlist : controller.getPlaylists()) {
             System.out.println("Playlist: " + playlist.getName());
             System.out.println("Total Duration: " + playlist.getTotalDuration() + " seconds");
@@ -61,7 +30,7 @@ public class Main {
         }
     }
 
-
+    // Νέα μέθοδος που υπολογίζει τη συνολική διάρκεια όλων των τραγουδιών σε μια playlist
     public static int calculateTotalDuration(Playlist playlist) {
         int total = 0;
         for (Song song : playlist.getSongs()) {
@@ -69,8 +38,4 @@ public class Main {
         }
         return total;
     }
-
-
 }
-
-
