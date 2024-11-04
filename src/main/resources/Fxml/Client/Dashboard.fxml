@@ -88,5 +88,6 @@
       <Button fx:id="nextt" layoutX="470.0" layoutY="641.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="28.0" text="⏭" />
       <Button fx:id="previouss" layoutX="335.0" layoutY="641.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="28.0" text="⏮" />
 
+
    </children>
 </AnchorPane>
