@@ -1,0 +1,108 @@
+.playlist-item {
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 5, 0.0, 2, 2);
+    -fx-background-radius: 10; /* Rounded corners */
+    -fx-padding: 10; /* Spacing for better readability */
+    -fx-background-color: #e0e0e0; /* Light gray background for contrast */
+    -fx-border-color: #4a90e2; /* Subtle blue border */
+    -fx-border-width: 1px;
+    -fx-font-family: 'Segoe UI', 'Roboto', 'Open Sans', sans-serif; /* Font family */
+    -fx-font-size: 18px; /* Adjusted font size */
+    transition: -fx-background-color 0.3s ease; /* Smooth transition on background */
+}
+
+.playlist-item:hover {
+    -fx-background-color: #d0eaff; /* Light blue on hover */
+    -fx-transform: scale(1.03); /* Slight zoom effect */
+}
+
+.playlist-item:pressed {
+    -fx-background-color: #4a90e2; /* Blue when pressed */
+    -fx-text-fill: #ffffff; /* White text on press */
+}
+
+
+
+/* Button Style */
+.button {
+    -fx-background-radius: 15; /* Rounded buttons */
+    -fx-border-radius: 15;
+    -fx-min-width: 100px; /* Adjusted size */
+    -fx-min-height: 35px;
+    -fx-background-color: #4a90e2; /* Modern blue */
+    -fx-font-size: 16px; /* Font size for better readability */
+    -fx-text-fill: #ffffff; /* White text */
+    -fx-border-color: #357ABD; /* Border matching the background */
+    -fx-border-width: 1px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 3, 1.0, 0, 1);
+}
+
+.button:hover {
+    -fx-background-color: #357ABD; /* Darker blue on hover */
+}
+
+.button:pressed {
+    -fx-background-color: #2a6eb3; /* Even darker blue when pressed */
+    -fx-effect: none; /* Remove shadow when pressed */
+}
+
+/* Text Field Style */
+.text-field {
+    -fx-background-radius: 10; /* Rounded corners */
+    -fx-padding: 8; /* Padding for comfort */
+    -fx-border-color: #4a90e2; /* Blue border */
+    -fx-border-width: 1px;
+    -fx-font-size: 14px;
+}
+
+/* ListView Style */
+.list-view {
+    -fx-background-radius: 10; /* Rounded corners */
+    -fx-padding: 10; /* Add padding for space */
+    -fx-background-color: #f9f9f9; /* Light background */
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 5, 0.0, 2, 2);
+}
+
+/* Label Style */
+.heading-label {
+    -fx-font-size: 24px; /* Larger text */
+    -fx-font-weight: bold; /* Bold for emphasis */
+    -fx-text-fill: #333333; /* Dark text for visibility */
+}
+
+.subheading-label {
+    -fx-font-size: 18px; /* Smaller than main heading */
+    -fx-text-fill: #555555; /* Gray text */
+}
+
+/* Add Song Button */
+.add-song-button {
+    -fx-background-color: #388E3C; /* Green background */
+    -fx-border-color: #2e7d32; /* Darker green border */
+    -fx-text-fill: #ffffff; /* White text */
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+}
+
+.add-song-button:hover {
+    -fx-background-color: #2e7d32; /* Darker green on hover */
+}
+
+.add-song-button:pressed {
+    -fx-background-color: #1b5e20; /* Darkest green when pressed */
+}
+
+/* Scroll Bar Styling */
+.scroll-bar {
+    -fx-background-color: transparent; /* Transparent background */
+}
+.scroll-bar .thumb {
+    -fx-background-color: #4a90e2; /* Blue thumb */
+    -fx-background-radius: 5; /* Rounded thumb */
+}
+
+/* Additional spacing for layout */
+.container {
+    -fx-padding: 20; /* Add padding around containers */
+    -fx-background-color: #ffffff; /* White background for main sections */
+    -fx-background-radius: 15; /* Rounded corners */
+}

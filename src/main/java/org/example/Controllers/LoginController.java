@@ -41,35 +41,10 @@ public class LoginController implements Initializable {
     }
 
 
+
     private void handleLogin() {
         String username = username_fld.getText();
         String password = password_fld.getText();
-
-        if ("admin".equals(username) && "admin".equals(password)) {
-            try {
-                // Φόρτωσε το clientmenu.fxml
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Client/Client.fxml"));
-                Parent clientRoot = loader.load();
-
-                // Πάρε το τρέχον Stage και κλείσε το
-                Stage currentStage = (Stage) login_btn.getScene().getWindow();
-                currentStage.close();
-
-                // Δημιούργησε ένα νέο Stage για το client menu
-                Stage newStage = new Stage();
-                Scene newScene = new Scene(clientRoot);
-                newStage.initStyle(StageStyle.UNDECORATED);
-                // Link the CSS file to the new scene
-                newScene.getStylesheets().add(getClass().getResource("/Styles/Background.css").toExternalForm());
-                // Set the scene to the new stage
-                newStage.setScene(newScene);
-                newStage.show();
-            } catch (IOException e) {
-                logger.log(Level.SEVERE, "Failed to load 1clientmenu.fxml", e);
-            }
-            return;
-        }
-
         DataBaseConnection db = new DataBaseConnection();
         if (db.verifyCredentials(username, password)) {
             try {
@@ -83,12 +58,19 @@ public class LoginController implements Initializable {
 
                 // Δημιούργησε ένα νέο Stage για το client menu
                 Stage newStage = new Stage();
-                newStage.setScene(new Scene(clientRoot));
+                Scene newScene = new Scene(clientRoot);
+                // Link the CSS file to the new scene
+                newScene.getStylesheets().add(getClass().getResource("/Styles/Background.css").toExternalForm());
+                newStage.initStyle(StageStyle.UNDECORATED);
+                // Set the scene to the new stage
+                newStage.setScene(newScene);
                 newStage.show();
             } catch (IOException e) {
                 logger.log(Level.SEVERE, "Failed to load clientmenu.fxml", e);
             }
-        } else {
+            ;
+        }
+        else  {
             error_lbl.setText("Invalid username or password");
             error_lbl.setVisible(true);
         }

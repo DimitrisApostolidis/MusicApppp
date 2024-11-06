@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane prefHeight="750.0" prefWidth="850.0" stylesheets="@../../Styles/Playlist.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.Views.PlaylistController">
+    <!-- Main Playlist Content -->
+    <VBox AnchorPane.leftAnchor="20.0" layoutY="20.0" prefWidth="270.0" prefHeight="600.0" spacing="20.0">
+        <Label text="Playlists" styleClass="heading-label" />
+        <ListView fx:id="playlistView" prefHeight="400.0" prefWidth="250.0" />
+        <HBox spacing="10.0">
+            <TextField fx:id="newPlaylistName" promptText="New Playlist Name" prefWidth="200.0" />
+            <Button fx:id="addPlaylistButton" text="Add" />
+        </HBox>
+    </VBox>
+
+    <VBox AnchorPane.leftAnchor="320.0" layoutY="20.0" prefWidth="270.0" prefHeight="600.0" spacing="20.0">
+        <Label text="Selected Playlist Details" styleClass="subheading-label" />
+        <ListView fx:id="playlistDetailsView" prefHeight="400.0" prefWidth="250.0" />
+        <Button fx:id="addSongButton" text="Add Song to Playlist" />
+    </VBox>
+</AnchorPane>
+
+
+
+

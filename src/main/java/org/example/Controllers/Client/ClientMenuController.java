@@ -28,9 +28,52 @@ public class ClientMenuController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         logout_btn.setOnAction(event -> handleLogout());
+        playlist_btn.setOnAction(event -> openPlaylistScene());
+        dashboard_btn.setOnAction(event -> openDashboardScene());
     }
 
-    
+    private void openDashboardScene() {
+        try {
+            // Φόρτωσε το client.fxml
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Client/Client.fxml"));
+            Parent dashboardRoot = loader.load();
+
+            // Πάρε το τρέχον Stage και κλείσε το
+            Stage currentStage = (Stage) dashboard_btn.getScene().getWindow();
+            currentStage.close();
+
+            // Δημιούργησε ένα νέο Stage για τη σελίδα Client
+            Stage newStage = new Stage();
+            Scene newScene = new Scene(dashboardRoot);
+            newScene.getStylesheets().add(getClass().getResource("/Styles/Background.css").toExternalForm());
+            newStage.setScene(newScene);
+            newStage.initStyle(StageStyle.UNDECORATED);
+            newStage.show();
+        } catch (IOException e) {
+            logger.log(Level.SEVERE, "Failed to load client.fxml", e);
+        }
+    }
+
+    private void openPlaylistScene() {
+        try {
+            // Φόρτωσε το FXML αρχείο της σελίδας Playlist
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Client/PlaylistClient.fxml"));
+            Parent playlistRoot = loader.load();
+            // Πάρε το τρέχον Stage και κλείσε το
+            Stage currentStage = (Stage) playlist_btn.getScene().getWindow();
+            currentStage.close();
+
+            // Δημιούργησε ένα νέο Stage για τη σελίδα Playlist
+            Stage newStage = new Stage();
+            Scene newScene = new Scene(playlistRoot);
+            newScene.getStylesheets().add(getClass().getResource("/Styles/Background.css").toExternalForm());
+            newStage.setScene(newScene);
+            newStage.initStyle(StageStyle.UNDECORATED);
+            newStage.show();
+        } catch (IOException e) {
+            logger.log(Level.SEVERE, "Failed to load playlist.fxml", e);
+        }
+    }
 
     private void handleLogout() {
         try {
