@@ -10,9 +10,11 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import org.example.DataBase.DataParser;
 
+
 public class DashboardController {
 
-
+    @FXML
+    private AnchorPane rootPane;
 
     @FXML
     private ImageView artist1;
@@ -41,6 +43,25 @@ public class DashboardController {
 
 
 
+
+    @FXML
+    private Button nextt;
+
+    @FXML
+    private Button pausee;
+
+    @FXML
+    private Button previouss;
+
+
+    @FXML
+    private Button playy;
+
+
+
+
+    @FXML
+    private Slider time;
     @FXML
     private ListView<String> albumListView;
     @FXML
