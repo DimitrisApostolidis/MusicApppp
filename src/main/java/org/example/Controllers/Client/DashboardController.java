@@ -1,11 +1,17 @@
 package org.example.Controllers.Client;
-
+import javafx.scene.image.Image;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.ListView;
 import javafx.scene.control.Slider;
+import org.example.Models.Album;
+import java.util.List;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
+import org.example.Controllers.Client.ApiClient;
+import org.example.DataBase.DataParser;
+import javafx.fxml.FXML;
 
 public class DashboardController {
 
@@ -58,13 +64,30 @@ public class DashboardController {
 
     @FXML
     private Slider time;
+    @FXML
+    private ListView<String> albumListView;
+    @FXML
+    public void initialize() {
+        ApiClient apiClient = new ApiClient();
+        String response = apiClient.getArtistData("artistName");
+        List<Album> albums = apiClient.getAlbumsByArtistId("112024"); // ID καλλιτέχνη
 
+        if (response != null) {
+            DataParser dataParser = new DataParser();
+            dataParser.parseArtistData(response);
+            for (Album album : albums) {
+                albumListView.getItems().add(album.getName() + " (" + album.getYear() + ")");
+            }// Κλήση της μεθόδου ανάλυσης JSON
+            // Εδώ μπορείς να προσθέσεις λογική για να εμφανίσεις τα δεδομένα στο UI
+        }
+    }
 
-
-
-
-
-
+    public void displayArtistImages(String[] imageUrls) {
+        ImageView[] imageViews = {artist1, artist2, artist3, artist4, artist5, artist6, artist7, artist8, artist9, artist10};
+        for (int i = 0; i < imageUrls.length && i < imageViews.length; i++) {
+            imageViews[i].setImage(new Image(imageUrls[i]));
+        }
+    }
 }
 
 

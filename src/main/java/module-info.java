@@ -5,6 +5,7 @@ module org.example {
     requires de.jensd.fx.glyphs.commons;
     requires java.desktop;
     requires java.sql;
+    requires org.json;
 
     opens org.example.Controllers to javafx.fxml;
 

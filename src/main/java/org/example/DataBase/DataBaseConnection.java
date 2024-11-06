@@ -7,7 +7,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
 public class DataBaseConnection {
-    private static final String URL = "jdbc:mysql://localhost:3306/music_apppp";
+    private static final String URL = "jdbc:mysql://localhost:3306/Rapsodiaplayer";
     private static final String USER = "root";
     private static final String PASSWORD = "";
     private int failedAttempts = 0; // Μετρητής αποτυχημένων προσπαθειών
@@ -79,5 +79,21 @@ public class DataBaseConnection {
             e.printStackTrace();
         }
         return connection;
+    }
+
+    public boolean insertArtist(String artistName, String bio, String genre) {
+        String insertArtistQuery = "INSERT INTO artist (name, bio, genre) VALUES (?, ?, ?)";
+        try (Connection conn = this.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(insertArtistQuery)) {
+            stmt.setString(1, artistName);
+            stmt.setString(2, bio);
+            stmt.setString(3, genre);
+            stmt.executeUpdate();
+            System.out.println("Καλλιτέχνης προστέθηκε με επιτυχία!");
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }
