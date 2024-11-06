@@ -10,6 +10,8 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Text?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.layout.VBox?>
 
 <AnchorPane prefHeight="750.0" prefWidth="850.0" styleClass="background" stylesheets="@../../Styles/Dashboard.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.Controllers.Client.DashboardController">
    <children>
@@ -87,7 +89,7 @@
       <Button fx:id="playy" layoutX="380.0" layoutY="641.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="28.0" text="▶" />
       <Button fx:id="nextt" layoutX="470.0" layoutY="641.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="28.0" text="⏭" />
       <Button fx:id="previouss" layoutX="335.0" layoutY="641.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="28.0" text="⏮" />
-
+      <ListView fx:id="albumListView" layoutX="240.0" layoutY="380.0" prefHeight="200.0" prefWidth="300.0" />
 
 
 
