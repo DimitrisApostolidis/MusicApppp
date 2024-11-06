@@ -28,7 +28,7 @@ public class ClientMenuController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        logout_btn.setOnAction(event -> handleLogout());
+        logout_btn.setOnAction(event -> handleLogout());//ss
     }
 
     private void handleLogout() {
