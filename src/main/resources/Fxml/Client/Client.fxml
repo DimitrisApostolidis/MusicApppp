@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.BorderPane?>
 
-<BorderPane xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane styleClass="background" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
     <left>
         <fx:include source="ClientMenu.fxml" />
     </left>
@@ -10,6 +10,10 @@
     <center>
         <fx:include source="Dashboard.fxml" />
     </center>
+
+    <top>
+        <fx:include source="CustomTitleBar.fxml" />
+    </top>
 
 
         </BorderPane>

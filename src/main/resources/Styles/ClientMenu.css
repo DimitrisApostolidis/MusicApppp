@@ -1,18 +1,19 @@
 .main_menu_container {
-    -fx-background-color: #949191;
+    -fx-background-color: rgba(255, 255, 255, 0.0);
     -fx-alignment: center;
 }
 
 .left_container {
-    -fx-background-color: #495a75;
+    -fx-background-color: #1c1d21;
     -fx-background-radius: 10;
-    -fx-effect: dropshadow(two-pass-box, #AAAAAA, 5, 0, 0, 4);
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0.0, 1, 1);
+    -fx-padding: 10; /* Increased padding for a more spacious look */
 }
 
 /* Title/Logo */
 
 .title_container {
-    -fx-background-color: #495a75;
+    -fx-background-color: #1c1d21;
     -fx-background-radius: 20 20 0 0;
     -fx-padding: 10;
 }
@@ -26,7 +27,7 @@
     -fx-font-family: "Monaco";
     -fx-alignment: center;
     -fx-font-weight: bold;
-    -fx-fill: linear-gradient(from 0% 0% to 0% 100%, #ffffff, #808080); /* Gradient effect */
+    -fx-fill: linear-gradient(from 0% 0% to 0% 100%, #000000, #808080); /* Gradient effect */
     -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 5, 0.0, 1, 1);
     -fx-letter-spacing: 1px;
     -fx-font-style: oblique
@@ -50,24 +51,31 @@
     -fx-pref-width: 115;
     -fx-pref-height: 40;
     -fx-background-color: #FFFFFF;
-    -fx-text-fill: #495a75;
+    -fx-text-fill: #1c1d21;
     -fx-font-size: 1.1em;
     -fx-alignment: center_left;
     -fx-effect: dropshadow(three-pass-box, #000000, 5, 0, 0, 6);
+    transition: -fx-opacity 0.3s;
+
 }
 
 .menu_container Button:hover {
     -fx-cursor: hand;
+    -fx-opacity: 0.80;
 }
 
 .menu_container Button FontAwesomeIconView {
-    -fx-fill: #495a75;
+    -fx-fill: #1c1d21;
+}
+
+.menu_container Button:pressed {
+    -fx-opacity: 1;
 }
 
 .alt_menu_btn {
     -fx-pref-width: 115;
     -fx-pref-height: 40;
-    -fx-background-color: #495a85;
+    -fx-background-color: #000000;
     -fx-text-fill: #FFFFFF;
     -fx-font-size: 1.1em;
     -fx-alignment: center_left;
@@ -85,11 +93,12 @@
     -fx-alignment: center;
     -fx-spacing: 10;
     -fx-padding: 10 0 10 0;
+    transition: -fx-opacity 0.3s;
  }
 
  .report_container Text {
     -fx-font-weight: bold;
-    -fx-fill: #495a75;
+    -fx-fill: #1c1d21;
  }
 
  .report_container Label {
@@ -99,12 +108,18 @@
 
  .report_container Button {
     -fx-pref-width: 80;
-    -fx-background-color: #495a75;
+    -fx-background-color: #1c1d21;
     -fx-text-fill: #FFFFFF;
  }
 
  .report_container Button:hover {
     -fx-cursor: hand;
+    -fx-opacity: 0.80;
+
+ }
+
+ .report_container Button:pressed {
+     -fx-opacity: 1;
  }
 
  .report_container Button FontAwesomeIconView {

@@ -1,12 +1,13 @@
 .login_container {
-    -fx-background-color: #EEEEEE;
+    -fx-background-size: cover; /* Cover the entire area */
+    -fx-opacity: 0.9; /* Slightly reduce opacity to blend the texture */
 }
 
 /** Logo Container */
 .login_logo_container {
-    -fx-background-color: #495a75;
+    -fx-background-color: #1c1d21;
     -fx-alignment:center;
-     -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 15, 0.3, 5, 0);
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 15, 0.3, 5, 0);
 
 }
 .login_logo_container Text {
@@ -15,9 +16,6 @@
     -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0.5, 3, 3);
 }
 
-.login_logo_container FontAwesomeIconView {
-    -fx-fill: #ECF39E;
-}
 
 
 /* Log in form styles */
@@ -51,8 +49,8 @@
 }
 
 .login_form_container Button {
-    -fx-background-color: linear-gradient(#60749a, #4a5e82);
-    -fx-text-fill: linear-gradient(#ffffff, #d9e2f0);
+    -fx-background-color: linear-gradient(to bottom, #808080, #1a1a1a); /* Dark grey to grey for black background */
+    -fx-text-fill: linear-gradient(to bottom, #ffffff, #e0e0e0); /* White to light grey for better visibility */
     -fx-pref-width: 350;
     -fx-pref-height: 30;
     -fx-font-size: 1.2em;
@@ -60,20 +58,20 @@
     -fx-background-radius: 5;
     -fx-border-radius: 5;
     -fx-padding: 5;
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 8, 0.3, 2, 2);
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 8, 0.3, 2, 2);
     -fx-text-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.25), 1, 0, 1, 1);
 }
 
 .login_form_container Button:hover {
-    -fx-background-color: linear-gradient(#6e83a8, #586e94);
+    -fx-background-color: linear-gradient(#2a2a2a, #ffffff); /* Slightly lighter grey to blue-grey */
     -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.4), 12, 0.4, 3, 3);
     -fx-cursor: hand;
 }
 
 .login_form_container Button:pressed {
-    -fx-background-color: linear-gradient(#4a5e82, #60749a);
-    -fx-effect: innershadow(gaussian, rgba(0, 0, 0, 0.3), 5, 0.2, 0, 0);
-    -fx-text-fill: linear-gradient(#d9e2f0, #ffffff);
+    -fx-background-color: linear-gradient(#FFFFFF, #000000); /* Darker blue-grey */
+    -fx-effect: innershadow(gaussian, rgba(0, 0, 0, 0.5), 5, 0.2, 0, 0);
+    -fx-text-fill: linear-gradient(#d9e2f0, #ffffff); /* Light blue to white for pressed state */
 }
 
 .error_lbl {

@@ -1,0 +1,34 @@
+.transparent-button {
+    -fx-background-color: transparent; /* Transparent background */
+    -fx-fill: #FFFFFF;
+    -fx-font-weight: bold; /* Bold text */
+    -fx-background-radius: 5; /* Rounded corners for smooth look */
+    -fx-padding: 5 10; /* Adjust padding for better spacing */
+    -fx-cursor: hand; /* Hand cursor on hover */
+
+    /* Drop shadow for a floating effect */
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 8, 0.4, 2, 2);
+}
+
+/* Hover effect for the button */
+.transparent-button:hover {
+    -fx-effect: dropshadow(gaussian, rgba(255, 255, 255, 0.5), 12, 0.5, 0, 0); /* Brighter shadow on hover */
+    -fx-text-fill: #f0f0f0; /* Slightly lighter text on hover */
+}
+
+/* Pressed effect for click feedback */
+.transparent-button:pressed {
+    -fx-effect: innershadow(gaussian, rgba(0, 0, 0, 0.4), 6, 0.3, 0, 0);
+    -fx-translate-y: 1; /* Subtle shift to indicate press */
+}
+
+.floating-text {
+    -fx-font-weight: bold; /* Bold text */
+    -fx-font-size: 16px; /* Adjust font size as needed */
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 8, 0.4, 2, 2); /* Floating shadow */
+}
+
+/* Hover effect for the floating text (optional) */
+.floating-text:hover {
+    -fx-effect: dropshadow(gaussian, rgba(255, 255, 255, 0.5), 12, 0.5, 0, 0); /* Slight glow on hover */
+}

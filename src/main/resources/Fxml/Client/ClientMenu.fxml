@@ -11,23 +11,30 @@
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Text?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="750.0" prefWidth="180.0" styleClass="main_menu_container" stylesheets="@../../Styles/ClientMenu.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.Controllers.Client.ClientMenuController">
-   <AnchorPane prefHeight="730.0" prefWidth="160.0" styleClass="left_container">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="794.0" prefWidth="232.0" styleClass="main_menu_container" stylesheets="@../../Styles/ClientMenu.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.Controllers.Client.ClientMenuController">
+   <AnchorPane prefHeight="745.0" prefWidth="188.0" styleClass="left_container" stylesheets="@../../Styles/ClientMenu.css">
       <children>
          <VBox prefHeight="80.0" prefWidth="160.0" styleClass="title_container" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <children>
                <ImageView fitHeight="58.0" fitWidth="60.0" preserveRatio="true">
                   <image>
-                     <Image url="https://i.imgur.com/cSB10ID.png" />
+                     <Image url="https://i.imgur.com/7Mhbbnm.png" />
                   </image>
                   <VBox.margin>
                      <Insets left="55.0" />
                   </VBox.margin>
                </ImageView>
-               <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Rapsodia Player" />
+               <ImageView fitHeight="58.0" fitWidth="154.0" pickOnBounds="true" preserveRatio="true">
+                  <image>
+                     <Image url="https://i.imgur.com/qe5NHxd.png" />
+                  </image>
+                  <VBox.margin>
+                     <Insets left="7.0" top="15.0" />
+                  </VBox.margin>
+               </ImageView>
             </children>
          </VBox>
-         <VBox layoutY="116.0" prefHeight="400.0" prefWidth="160.0" styleClass="menu_container" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="116.0">
+         <VBox layoutY="136.0" prefHeight="400.0" prefWidth="160.0" styleClass="menu_container" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="136.0">
             <children>
                <Button fx:id="dashboard_btn" mnemonicParsing="false" text="Dashboard">
                   <graphic>
@@ -74,5 +81,11 @@
             </children>
          </VBox>
       </children>
+      <VBox.margin>
+         <Insets left="30.0" right="30.0" />
+      </VBox.margin>
+      <opaqueInsets>
+         <Insets />
+      </opaqueInsets>
    </AnchorPane>
 </VBox>

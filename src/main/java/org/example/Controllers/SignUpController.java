@@ -3,7 +3,6 @@ package org.example.Controllers;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import org.example.DataBase.DataBaseConnection;
 import javafx.fxml.FXMLLoader;
@@ -78,7 +77,7 @@ public class SignUpController {
     private void goBackToLogin() {
         try {
             // Φόρτωσε το login.fxml
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/login.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Client/Login.fxml"));
             Parent loginRoot = loader.load();
 
             Stage stage = (Stage) backToLogin_btn.getScene().getWindow();

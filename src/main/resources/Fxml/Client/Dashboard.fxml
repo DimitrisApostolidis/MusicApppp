@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
+<?import javafx.geometry.Point3D?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Slider?>
@@ -11,88 +13,87 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="750.0" prefWidth="850.0" styleClass="background" stylesheets="@../../Styles/Dashboard.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.Controllers.Client.DashboardController">
-   <children>
-      <Text layoutX="52.0" layoutY="58.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Welcome " AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="30.0" />
-      <Button fx:id="pausee" layoutX="425.0" layoutY="641.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="28.0" text="⏸" />
-      <Label text="Label" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="27.0" />
-      <Text layoutX="20.0" layoutY="60.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Latest Artists" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="72.0" />
-      <Text layoutX="20.0" layoutY="400.0" strokeType="OUTSIDE" strokeWidth="0.0" text="What's Trending" />
-      <GridPane hgap="10.0" layoutX="18.0" layoutY="129.0" prefHeight="226.0" prefWidth="790.0" vgap="10.0">
-         <columnConstraints>
-            <ColumnConstraints hgrow="SOMETIMES" maxWidth="200.0" minWidth="10.0" prefWidth="150.0" />
-            <ColumnConstraints hgrow="SOMETIMES" maxWidth="200.0" minWidth="10.0" prefWidth="150.0" />
-            <ColumnConstraints hgrow="SOMETIMES" maxWidth="200.0" minWidth="10.0" prefWidth="150.0" />
-            <ColumnConstraints hgrow="SOMETIMES" maxWidth="200.0" minWidth="10.0" prefWidth="150.0" />
-            <ColumnConstraints hgrow="SOMETIMES" maxWidth="200.0" minWidth="10.0" prefWidth="150.0" />
-         </columnConstraints>
-         <rowConstraints>
-            <RowConstraints maxHeight="150.0" minHeight="100.0" prefHeight="150.0" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="150.0" minHeight="100.0" prefHeight="150.0" vgrow="SOMETIMES" />
-         </rowConstraints>
-         <children>
-            <ImageView fx:id="artist1" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" styleClass="album-cover">
-               <image>
-                  <Image url="https://www.billboard.com/wp-content/uploads/media/tyler-the-creator-igor-album-art-2019-billboard-embed.jpg?w=600" />
-               </image>
-            </ImageView>
-            <ImageView fx:id="artist2" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" styleClass="album-cover" GridPane.columnIndex="1">
-               <image>
-                  <Image url="https://media.architecturaldigest.com/photos/5890e88033bd1de9129eab0a/1:1/w_870,h_870,c_limit/Artist-Designed%20Album%20Covers%202.jpg" />
-               </image>
-            </ImageView>
-            <ImageView fx:id="artist3" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" styleClass="album-cover" GridPane.columnIndex="2">
-               <image>
-                  <Image url="https://miro.medium.com/v2/resize:fit:681/1*EBOL4lka5QjcYoxj6AHp-g.png" />
-               </image>
-            </ImageView>
-            <ImageView fx:id="artist4" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" styleClass="album-cover" GridPane.columnIndex="3">
-               <image>
-                  <Image url="https://www.indieground.net/images/blog/2024/indieblog-best-album-covers-2010s-07.jpg" />
-               </image>
-            </ImageView>
-            <ImageView fx:id="artist5" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" styleClass="album-cover" GridPane.columnIndex="4">
-               <image>
-                  <Image url="https://archive.smashing.media/assets/344dbf88-fdf9-42bb-adb4-46f01eedd629/aecf4604-1d3b-417f-97c6-d5be80f51eb9/3.jpg" />
-               </image>
-            </ImageView>
-            <ImageView fx:id="artist6" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" styleClass="album-cover" GridPane.rowIndex="1">
-               <image>
-                  <Image url="https://www.groundguitar.com/wp-content/uploads/2024/02/Queen-News-Of-The-World-1976-1021x1024.jpg" />
-               </image>
-            </ImageView>
-            <ImageView fx:id="artist7" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" styleClass="album-cover" GridPane.columnIndex="1" GridPane.rowIndex="1">
-               <image>
-                  <Image url="https://www.premadepixels.com/wp-content/uploads/2022/03/Anterior-Album-Cover-PP1.jpg" />
-               </image>
-            </ImageView>
-            <ImageView fx:id="artist8" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" styleClass="album-cover" GridPane.columnIndex="2" GridPane.rowIndex="1">
-               <image>
-                  <Image url="https://www.swiftpublisher.com/assets/img/articles/design-album-cover/album-cover.jpg" />
-               </image>
-            </ImageView>
-            <ImageView fx:id="artist9" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" styleClass="album-cover" GridPane.columnIndex="3" GridPane.rowIndex="1">
-               <image>
-                  <Image url="https://www.billboard.com/wp-content/uploads/2023/07/rihanna-anti-cover-2016-billboard-1240.jpg?w=600" />
-               </image>
-            </ImageView>
-            <ImageView fx:id="artist10" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" styleClass="album-cover" GridPane.columnIndex="4" GridPane.rowIndex="1">
-               <image>
-                  <Image url="https://www.creativeboom.com/upload/articles/db/db1a6b372e7c23636f9b8d88f879a9a815c6825c_1280.jpeg" />
-               </image>
-            </ImageView>
-         </children>
-      </GridPane>
-      <Slider fx:id="time" layoutX="182.0" layoutY="693.0" prefHeight="14.0" prefWidth="485.0" />
-      <Button fx:id="playy" layoutX="380.0" layoutY="641.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="28.0" text="▶" />
-      <Button fx:id="nextt" layoutX="470.0" layoutY="641.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="28.0" text="⏭" />
-      <Button fx:id="previouss" layoutX="335.0" layoutY="641.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="28.0" text="⏮" />
+<AnchorPane prefHeight="750.0" prefWidth="850.0" stylesheets="@../../Styles/Dashboard.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.Controllers.Client.DashboardController">
+   <Text fill="WHITE" layoutX="52.0" layoutY="58.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="shape-text" text="Welcome back, Placeholder" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="30.0" />
+   <Button fx:id="pausee" layoutX="444.0" layoutY="666.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="28.0" text="⏸" />
+   <Label text="Label" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="27.0" />
+   <Text fill="WHITE" layoutX="9.0" layoutY="171.8984375" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="shape-text" text="Latest Artists" wrappingWidth="164.513671875" AnchorPane.leftAnchor="9.0" AnchorPane.topAnchor="146.0" />
+   <Text fill="WHITE" layoutX="9.0" layoutY="529.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="shape-text" text="What's Trending" />
+   <GridPane hgap="10.0" layoutX="9.0" layoutY="183.0" prefHeight="320.0" prefWidth="808.0" vgap="10.0">
+      <columnConstraints>
+         <ColumnConstraints hgrow="SOMETIMES" maxWidth="200.0" minWidth="10.0" prefWidth="150.0" />
+         <ColumnConstraints hgrow="SOMETIMES" maxWidth="200.0" minWidth="10.0" prefWidth="150.0" />
+         <ColumnConstraints hgrow="SOMETIMES" maxWidth="200.0" minWidth="10.0" prefWidth="150.0" />
+         <ColumnConstraints hgrow="SOMETIMES" maxWidth="200.0" minWidth="10.0" prefWidth="150.0" />
+         <ColumnConstraints hgrow="SOMETIMES" maxWidth="200.0" minWidth="10.0" prefWidth="150.0" />
+      </columnConstraints>
+      <rowConstraints>
+         <RowConstraints maxHeight="150.0" minHeight="100.0" prefHeight="150.0" vgrow="SOMETIMES" />
+         <RowConstraints maxHeight="150.0" minHeight="100.0" prefHeight="150.0" vgrow="SOMETIMES" />
+      </rowConstraints>
+      <children>
+         <ImageView fx:id="artist1" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" styleClass="album-cover">
+            <image>
+               <Image url="https://i.imgur.com/T454ikE.png" />
+            </image>
+         </ImageView>
+         <ImageView fx:id="artist2" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" styleClass="album-cover" GridPane.columnIndex="1">
+            <image>
+               <Image url="https://i.imgur.com/1sKpTcI.png" />
+            </image>
+         </ImageView>
+         <ImageView fx:id="artist3" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" styleClass="album-cover" GridPane.columnIndex="2">
+            <image>
+               <Image url="https://i.imgur.com/3bOD1EC.png" />
+            </image>
+         </ImageView>
+         <ImageView fx:id="artist4" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" styleClass="album-cover" GridPane.columnIndex="3">
+            <image>
+               <Image url="https://i.imgur.com/eo8EOxs.png" />
+            </image>
+         </ImageView>
+         <ImageView fx:id="artist5" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" styleClass="album-cover" GridPane.columnIndex="4">
+            <image>
+               <Image url="https://i.imgur.com/CH0lAYM.png" />
+            </image>
+         </ImageView>
+         <ImageView fx:id="artist6" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" styleClass="album-cover" GridPane.rowIndex="1">
+            <image>
+               <Image url="https://i.imgur.com/BR0P8Er.png" />
+            </image>
+         </ImageView>
+         <ImageView fx:id="artist7" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" styleClass="album-cover" GridPane.columnIndex="1" GridPane.rowIndex="1">
+            <image>
+               <Image url="https://i.imgur.com/4MVUyqP.png" />
+            </image>
+         </ImageView>
+         <ImageView fx:id="artist8" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" styleClass="album-cover" GridPane.columnIndex="2" GridPane.rowIndex="1">
+            <image>
+               <Image url="https://i.imgur.com/VrUnZbE.png" />
+            </image>
+         </ImageView>
+         <ImageView fx:id="artist9" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" styleClass="album-cover" GridPane.columnIndex="3" GridPane.rowIndex="1">
+            <image>
+               <Image url="https://i.imgur.com/hMylE9I.png" />
+            </image>
+         </ImageView>
+         <ImageView fx:id="artist10" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" styleClass="album-cover" GridPane.columnIndex="4" GridPane.rowIndex="1">
+            <image>
+               <Image url="https://i.imgur.com/9HDHoIA.png" />
+            </image>
+         </ImageView>
+      </children>
+   </GridPane>
+   <Slider fx:id="time" layoutX="183.0" layoutY="729.0" prefHeight="14.0" prefWidth="485.0" stylesheets="@../../Styles/Dashboard.css" />
+   <Button fx:id="playy" layoutX="353.0" layoutY="666.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="28.0" text="▶" />
+   <Button fx:id="nextt" layoutX="525.0" layoutY="666.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="50.0" text="⏭" />
+   <Button fx:id="previouss" layoutX="260.0" layoutY="666.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="28.0" text="⏮">
+      <rotationAxis>
+         <Point3D />
+      </rotationAxis>
+      <opaqueInsets>
+         <Insets />
+      </opaqueInsets></Button>
 
 
-
-
-
-
-
-   </children>
 </AnchorPane>

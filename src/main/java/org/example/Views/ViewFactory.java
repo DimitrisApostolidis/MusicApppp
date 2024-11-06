@@ -4,6 +4,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import org.example.Controllers.Client.ClientController;
 
 public class ViewFactory {
@@ -24,16 +25,18 @@ public class ViewFactory {
     }
 
     public void showLoginWindow() {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Login.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Client/LoginClient.fxml"));
         Scene scene = null;
         try {
             scene = new Scene(loader.load());
+            scene.getStylesheets().add(getClass().getResource("/Styles/Background.css").toExternalForm());
         } catch (Exception e) {
             e.printStackTrace();
         }
+
         loginStage = new Stage();
         loginStage.setScene(scene);
-        loginStage.setTitle("Rapsodia Player");
+        loginStage.initStyle(StageStyle.UNDECORATED);
         loginStage.show();
     }
 
@@ -54,6 +57,7 @@ public class ViewFactory {
         stage.setScene(scene);
         stage.setTitle("Rapsodia Player");
         stage.show();
+
     }
 
 

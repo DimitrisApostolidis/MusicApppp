@@ -4,11 +4,13 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.stage.StageStyle;
 import org.example.Models.Model;
 import java.io.IOException;
 import java.util.logging.Logger;
@@ -31,6 +33,7 @@ public class LoginController implements Initializable {
     @FXML
     private Button login_btn;
 
+
     public Label username_lbl;
 
     @Override
@@ -39,9 +42,35 @@ public class LoginController implements Initializable {
         createAccount_btn.setOnAction(actionEvent -> handleCreateAccount());
     }
 
+
     private void handleLogin() {
         String username = username_fld.getText();
         String password = password_fld.getText();
+
+        if ("admin".equals(username) && "admin".equals(password)) {
+            try {
+                // Φόρτωσε το clientmenu.fxml
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Client/Client.fxml"));
+                Parent clientRoot = loader.load();
+
+                // Πάρε το τρέχον Stage και κλείσε το
+                Stage currentStage = (Stage) login_btn.getScene().getWindow();
+                currentStage.close();
+
+                // Δημιούργησε ένα νέο Stage για το client menu
+                Stage newStage = new Stage();
+                Scene newScene = new Scene(clientRoot);
+                newStage.initStyle(StageStyle.UNDECORATED);
+                // Link the CSS file to the new scene
+                newScene.getStylesheets().add(getClass().getResource("/Styles/Background.css").toExternalForm());
+                // Set the scene to the new stage
+                newStage.setScene(newScene);
+                newStage.show();
+            } catch (IOException e) {
+                logger.log(Level.SEVERE, "Failed to load clientmenu.fxml", e);
+            }
+            return;
+        }
 
         DataBaseConnection db = new DataBaseConnection();
         if (db.verifyCredentials(username, password)) {
@@ -78,5 +107,6 @@ public class LoginController implements Initializable {
             stage.show();
         } catch (IOException e) {
             logger.log(Level.SEVERE, "Failed to load signup.fxml", e); // Log the exception
-        }
-    }}
+    }
+    }
+}
