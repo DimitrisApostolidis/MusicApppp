@@ -4,14 +4,12 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.StageStyle;
-import org.example.Models.Model;
 import java.io.IOException;
 import java.util.logging.Logger;
 import java.util.logging.Level;
@@ -67,7 +65,7 @@ public class LoginController implements Initializable {
                 newStage.setScene(newScene);
                 newStage.show();
             } catch (IOException e) {
-                logger.log(Level.SEVERE, "Failed to load clientmenu.fxml", e);
+                logger.log(Level.SEVERE, "Failed to load 1clientmenu.fxml", e);
             }
             return;
         }

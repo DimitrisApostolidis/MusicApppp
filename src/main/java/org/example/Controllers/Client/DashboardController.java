@@ -8,10 +8,7 @@ import org.example.Models.Album;
 import java.util.List;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.HBox;
-import org.example.Controllers.Client.ApiClient;
 import org.example.DataBase.DataParser;
-import javafx.fxml.FXML;
 
 public class DashboardController {
 
@@ -76,7 +73,7 @@ public class DashboardController {
             DataParser dataParser = new DataParser();
             dataParser.parseArtistData(response);
             for (Album album : albums) {
-                albumListView.getItems().add(album.getName() + " (" + album.getYear() + ")");
+                // albumListView.getItems().add(album.getName() + " (" + album.getYear() + ")");
             }// Κλήση της μεθόδου ανάλυσης JSON
             // Εδώ μπορείς να προσθέσεις λογική για να εμφανίσεις τα δεδομένα στο UI
         }

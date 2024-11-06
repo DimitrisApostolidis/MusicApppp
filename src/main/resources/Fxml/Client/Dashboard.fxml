@@ -21,68 +21,56 @@
    <Text fill="WHITE" layoutX="9.0" layoutY="529.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="shape-text" text="What's Trending" />
    <GridPane hgap="10.0" layoutX="9.0" layoutY="183.0" prefHeight="320.0" prefWidth="808.0" vgap="10.0">
       <columnConstraints>
-         <ColumnConstraints hgrow="SOMETIMES" maxWidth="200.0" minWidth="10.0" prefWidth="150.0" />
-         <ColumnConstraints hgrow="SOMETIMES" maxWidth="200.0" minWidth="10.0" prefWidth="150.0" />
-         <ColumnConstraints hgrow="SOMETIMES" maxWidth="200.0" minWidth="10.0" prefWidth="150.0" />
-         <ColumnConstraints hgrow="SOMETIMES" maxWidth="200.0" minWidth="10.0" prefWidth="150.0" />
-         <ColumnConstraints hgrow="SOMETIMES" maxWidth="200.0" minWidth="10.0" prefWidth="150.0" />
+         <ColumnConstraints hgrow="SOMETIMES" maxWidth="200.0" minWidth="10.0" prefWidth="150.0"/>
+         <ColumnConstraints hgrow="SOMETIMES" maxWidth="200.0" minWidth="10.0" prefWidth="150.0"/>
+         <ColumnConstraints hgrow="SOMETIMES" maxWidth="200.0" minWidth="10.0" prefWidth="150.0"/>
+         <ColumnConstraints hgrow="SOMETIMES" maxWidth="200.0" minWidth="10.0" prefWidth="150.0"/>
+         <ColumnConstraints hgrow="SOMETIMES" maxWidth="200.0" minWidth="10.0" prefWidth="150.0"/>
       </columnConstraints>
       <rowConstraints>
-         <RowConstraints maxHeight="150.0" minHeight="100.0" prefHeight="150.0" vgrow="SOMETIMES" />
-         <RowConstraints maxHeight="150.0" minHeight="100.0" prefHeight="150.0" vgrow="SOMETIMES" />
+         <RowConstraints maxHeight="150.0" minHeight="100.0" prefHeight="150.0" vgrow="SOMETIMES"/>
+         <RowConstraints maxHeight="150.0" minHeight="100.0" prefHeight="150.0" vgrow="SOMETIMES"/>
       </rowConstraints>
-      <children>
-         <ImageView fx:id="artist1" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" styleClass="album-cover">
-            <image>
-               <Image url="https://i.imgur.com/T454ikE.png" />
-            </image>
-         </ImageView>
-         <ImageView fx:id="artist2" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" styleClass="album-cover" GridPane.columnIndex="1">
-            <image>
-               <Image url="https://i.imgur.com/1sKpTcI.png" />
-            </image>
-         </ImageView>
-         <ImageView fx:id="artist3" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" styleClass="album-cover" GridPane.columnIndex="2">
-            <image>
-               <Image url="https://i.imgur.com/3bOD1EC.png" />
-            </image>
-         </ImageView>
-         <ImageView fx:id="artist4" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" styleClass="album-cover" GridPane.columnIndex="3">
-            <image>
-               <Image url="https://i.imgur.com/eo8EOxs.png" />
-            </image>
-         </ImageView>
-         <ImageView fx:id="artist5" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" styleClass="album-cover" GridPane.columnIndex="4">
-            <image>
-               <Image url="https://i.imgur.com/CH0lAYM.png" />
-            </image>
-         </ImageView>
-         <ImageView fx:id="artist6" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" styleClass="album-cover" GridPane.rowIndex="1">
-            <image>
-               <Image url="https://i.imgur.com/BR0P8Er.png" />
-            </image>
-         </ImageView>
-         <ImageView fx:id="artist7" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" styleClass="album-cover" GridPane.columnIndex="1" GridPane.rowIndex="1">
-            <image>
-               <Image url="https://i.imgur.com/4MVUyqP.png" />
-            </image>
-         </ImageView>
-         <ImageView fx:id="artist8" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" styleClass="album-cover" GridPane.columnIndex="2" GridPane.rowIndex="1">
-            <image>
-               <Image url="https://i.imgur.com/VrUnZbE.png" />
-            </image>
-         </ImageView>
-         <ImageView fx:id="artist9" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" styleClass="album-cover" GridPane.columnIndex="3" GridPane.rowIndex="1">
-            <image>
-               <Image url="https://i.imgur.com/hMylE9I.png" />
-            </image>
-         </ImageView>
-         <ImageView fx:id="artist10" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" styleClass="album-cover" GridPane.columnIndex="4" GridPane.rowIndex="1">
-            <image>
-               <Image url="https://i.imgur.com/9HDHoIA.png" />
-            </image>
-         </ImageView>
-      </children>
+      <ImageView fx:id="artist1" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true"
+                 styleClass="album-cover">
+         <Image url="https://i.imgur.com/T454ikE.png"/>
+      </ImageView>
+      <ImageView fx:id="artist2" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true"
+                 styleClass="album-cover" GridPane.columnIndex="1">
+         <Image url="https://i.imgur.com/1sKpTcI.png"/>
+      </ImageView>
+      <ImageView fx:id="artist3" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true"
+                 styleClass="album-cover" GridPane.columnIndex="2">
+         <Image url="https://i.imgur.com/3bOD1EC.png"/>
+      </ImageView>
+      <ImageView fx:id="artist4" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true"
+                 styleClass="album-cover" GridPane.columnIndex="3">
+         <Image url="https://i.imgur.com/eo8EOxs.png"/>
+      </ImageView>
+      <ImageView fx:id="artist5" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true"
+                 styleClass="album-cover" GridPane.columnIndex="4">
+         <Image url="https://i.imgur.com/CH0lAYM.png"/>
+      </ImageView>
+      <ImageView fx:id="artist6" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true"
+                 styleClass="album-cover" GridPane.rowIndex="1">
+         <Image url="https://i.imgur.com/BR0P8Er.png"/>
+      </ImageView>
+      <ImageView fx:id="artist7" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true"
+                 styleClass="album-cover" GridPane.columnIndex="1" GridPane.rowIndex="1">
+         <Image url="https://i.imgur.com/4MVUyqP.png"/>
+      </ImageView>
+      <ImageView fx:id="artist8" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true"
+                 styleClass="album-cover" GridPane.columnIndex="2" GridPane.rowIndex="1">
+         <Image url="https://i.imgur.com/VrUnZbE.png"/>
+      </ImageView>
+      <ImageView fx:id="artist9" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true"
+                 styleClass="album-cover" GridPane.columnIndex="3" GridPane.rowIndex="1">
+         <Image url="https://i.imgur.com/hMylE9I.png"/>
+      </ImageView>
+      <ImageView fx:id="artist10" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true"
+                 styleClass="album-cover" GridPane.columnIndex="4" GridPane.rowIndex="1">
+         <Image url="https://i.imgur.com/9HDHoIA.png"/>
+      </ImageView>
    </GridPane>
    <Slider fx:id="time" layoutX="183.0" layoutY="729.0" prefHeight="14.0" prefWidth="485.0" stylesheets="@../../Styles/Dashboard.css" />
    <Button fx:id="playy" layoutX="353.0" layoutY="666.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="28.0" text="▶" />
@@ -100,5 +88,4 @@
 
 
 
-   </children>
-</AnchorPane>
+   </AnchorPane>
