@@ -53,6 +53,5 @@ public class ClientMenuController implements Initializable {
         } catch (IOException e) {
             logger.log(Level.SEVERE, "Failed to load clientmenu.fxml", e);
         }
-        return;
     }
 }
