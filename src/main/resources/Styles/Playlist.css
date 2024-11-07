@@ -12,7 +12,9 @@
 
 .playlist-item:hover {
     -fx-background-color: #d0eaff; /* Light blue on hover */
-    -fx-transform: scale(1.03); /* Slight zoom effect */
+    -fx-scale-x: 1.03;
+    -fx-scale-y: 1.03;
+/* Slight zoom effect */
 }
 
 .playlist-item:pressed {

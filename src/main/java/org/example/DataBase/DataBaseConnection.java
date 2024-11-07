@@ -6,11 +6,15 @@ import java.sql.SQLException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
+
 public class DataBaseConnection {
-    private static final String URL = "jdbc:mysql://localhost:3306/Rapsodiaplayer";
+    private static final String URL = "jdbc:mysql://localhost:3306/rapsodia_player";
     private static final String USER = "root";
     private static final String PASSWORD = "";
-    private int failedAttempts = 0; // Μετρητής αποτυχημένων προσπαθειών
+    private int failedAttempts = 0;
 
     // Επαλήθευση διαπιστευτηρίων
     public boolean verifyCredentials(String username, String password) {
@@ -22,7 +26,7 @@ public class DataBaseConnection {
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
-                failedAttempts = 0; // Επαναφορά των αποτυχημένων προσπαθειών στην επιτυχημένη σύνδεση
+                failedAttempts = 0;
                 return true;
             } else {
                 failedAttempts++;
@@ -35,7 +39,6 @@ public class DataBaseConnection {
         }
     }
 
-    // Μέθοδος εγγραφής χρήστη με έλεγχο για ύπαρξη
     public boolean registerUser(String username, String email, String password) {
         String checkUserQuery = "SELECT * FROM user WHERE username = ? OR email = ?";
         String insertUserQuery = "INSERT INTO user (username, email, password) VALUES (?, ?, ?)";
@@ -43,26 +46,23 @@ public class DataBaseConnection {
         try (Connection conn = this.getConnection();
              PreparedStatement checkStmt = conn.prepareStatement(checkUserQuery);
              PreparedStatement insertStmt = conn.prepareStatement(insertUserQuery)) {
-
-            // Έλεγχος αν ο χρήστης ή το email υπάρχει ήδη
             checkStmt.setString(1, username);
             checkStmt.setString(2, email);
             ResultSet rs = checkStmt.executeQuery();
 
             if (rs.next()) {
-                // Ο χρήστης ή το email υπάρχει ήδη
                 System.out.println("Ο χρήστης ή το email υπάρχει ήδη.");
-                return false; // Δηλώνει αποτυχία εγγραφής
+                return false;
             }
 
             // Εισαγωγή νέου χρήστη
             insertStmt.setString(1, username);
             insertStmt.setString(2, email);
-            insertStmt.setString(3, password); // Σημείωση: Προσθέστε κρυπτογράφηση κωδικού εδώ για λόγους ασφαλείας
+            insertStmt.setString(3, password);
             insertStmt.executeUpdate();
 
             System.out.println("Η εγγραφή ήταν επιτυχής!");
-            return true; // Επιτυχής εγγραφή
+            return true;
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
@@ -80,20 +80,82 @@ public class DataBaseConnection {
         }
         return connection;
     }
+    public boolean addPlaylist(String playlistName) {
+        String query = "INSERT INTO playlist (name) VALUES (?)";
 
-    public boolean insertArtist(String artistName, String bio, String genre) {
-        String insertArtistQuery = "INSERT INTO artist (name, bio, genre) VALUES (?, ?, ?)";
         try (Connection conn = this.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(insertArtistQuery)) {
-            stmt.setString(1, artistName);
-            stmt.setString(2, bio);
-            stmt.setString(3, genre);
-            stmt.executeUpdate();
-            System.out.println("Καλλιτέχνης προστέθηκε με επιτυχία!");
-            return true;
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setString(1, playlistName);
+            int rowsAffected = stmt.executeUpdate();
+
+            if (rowsAffected > 0) {
+                System.out.println("Η νέα playlist προστέθηκε στη βάση δεδομένων.");
+                return true;
+            } else {
+                System.out.println("Σφάλμα κατά την προσθήκη της playlist.");
+                return false;
+            }
+
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
         }
     }
+
+    public List<String> getPlaylists() {
+        List<String> playlist = new ArrayList<>();
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD)) {
+            String sql = "SELECT name FROM playlist";
+            try (Statement stmt = conn.createStatement();
+                 ResultSet rs = stmt.executeQuery(sql)) {
+                while (rs.next()) {
+                    playlist.add(rs.getString("name"));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return playlist;
+    }
+    public boolean addSongToPlaylist(int playlist_id, String song_name) {
+        try (Connection conn = DriverManager.getConnection(URL,USER,PASSWORD)) {
+            String sql = "INSERT INTO playlist_song (playlist_id, song_name) VALUES (?, ?)";
+            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+                stmt.setInt(1, playlist_id);
+                stmt.setString(2, song_name);
+                int rowsAffected = stmt.executeUpdate();
+                return rowsAffected > 0;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+
+    public List<String> getPlaylistSongs(int playlist_id) {
+        List<String> songs = new ArrayList<>();
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD)) {
+            // Ανακοίνωση για το SQL με join στους πίνακες playlist_song και song
+            String sql = "SELECT playlist_song.song_name, song.artist FROM playlist_song JOIN song ON playlist_song.song_id = song.song_id WHERE playlist_song.playlist_id = ?";
+
+
+            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+                stmt.setInt(1, playlist_id);
+                try (ResultSet rs = stmt.executeQuery()) {
+                    while (rs.next()) {
+                        String song = "Song: " + rs.getString("song_name") + " - Artist: " + rs.getString("artist");
+                        songs.add(song);
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return songs;
+    }
+
+
 }

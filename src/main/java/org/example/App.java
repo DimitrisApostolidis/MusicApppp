@@ -1,7 +1,5 @@
 package org.example;
 
-import assets.MusicPlayerGUI;
-
 import javax.swing.*;
 
 public class App {

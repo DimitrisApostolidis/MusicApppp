@@ -1,4 +1,4 @@
-package assets;
+package org.example;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
