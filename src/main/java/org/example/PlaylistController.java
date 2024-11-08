@@ -59,6 +59,27 @@ public class PlaylistController {
         }
     }
 
+    @FXML
+    private void handleDeletePlaylist() {
+        // Παίρνουμε την επιλεγμένη playlist από το ListView
+        String selectedPlaylist = playlistView.getSelectionModel().getSelectedItem();
+
+        // Ελέγχουμε αν υπάρχει επιλεγμένη playlist
+        if (selectedPlaylist != null) {
+            // Διαγραφή από τη βάση δεδομένων
+            if (dbConnection.deletePlaylistByName(selectedPlaylist)) {
+                // Αφαίρεση από το ListView
+                playlistView.getItems().remove(selectedPlaylist);
+                System.out.println("Η playlist διαγράφηκε επιτυχώς.");
+            } else {
+                System.out.println("Σφάλμα κατά τη διαγραφή της playlist από τη βάση δεδομένων.");
+            }
+        } else {
+            System.out.println("Δεν έχει επιλεχθεί κάποια playlist για διαγραφή.");
+        }
+    }
+
+
     private void loadPlaylists() {
         playlistView.getItems().clear();
         List<String> playlistNames = dbConnection.getPlaylistNames();

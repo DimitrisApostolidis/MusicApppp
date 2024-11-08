@@ -16,7 +16,7 @@
         <HBox spacing="10.0">
             <TextField fx:id="newPlaylistName" promptText="New Playlist Name" prefWidth="200.0" />
             <Button fx:id="addPlaylistButton" text="Add" onAction="#handleAddPlaylist" />
-
+            <Button fx:id="deletePlaylistButton" text="Delete" onAction="#handleDeletePlaylist" />
         </HBox>
 
 

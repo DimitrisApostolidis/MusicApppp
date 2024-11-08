@@ -7,6 +7,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -155,6 +156,39 @@ public class DataBaseConnection {
             return false;
         }
     }
+
+    public boolean deletePlaylistByName(String playlistName) {
+        String deleteSongsSql = "DELETE FROM playlist_song WHERE playlist_id = (SELECT playlist_id FROM playlist WHERE name = ? LIMIT 1)";
+        String deletePlaylistSql = "DELETE FROM playlist WHERE name = ?";
+
+        try (Connection conn = getConnection()) {
+            conn.setAutoCommit(false); // Απενεργοποιούμε το autocommit για συναλλαγές
+
+            // Διαγραφή των σχετικών τραγουδιών
+            try (PreparedStatement deleteSongsStmt = conn.prepareStatement(deleteSongsSql)) {
+                deleteSongsStmt.setString(1, playlistName);
+                deleteSongsStmt.executeUpdate();
+            }
+
+            // Διαγραφή της playlist
+            try (PreparedStatement deletePlaylistStmt = conn.prepareStatement(deletePlaylistSql)) {
+                deletePlaylistStmt.setString(1, playlistName);
+                int rowsAffected = deletePlaylistStmt.executeUpdate();
+
+                conn.commit(); // Επιβεβαίωση της συναλλαγής
+                return rowsAffected > 0; // Επιστρέφει true αν διαγράφηκε η playlist
+            } catch (SQLException e) {
+                conn.rollback(); // Ανάκληση σε περίπτωση σφάλματος
+                e.printStackTrace();
+                return false;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+
 
 
     public List<String> getPlaylistSongs(int playlist_id) {
