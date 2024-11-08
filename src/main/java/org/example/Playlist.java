@@ -13,14 +13,9 @@ public class Playlist {
     public Playlist(String name) {
         this.name = name;
         this.songs = new ArrayList<>();
-        this.dbConnection = new DataBaseConnection();
 
         // Αποθήκευση της νέας playlist στη βάση δεδομένων
-        if (dbConnection.addPlaylist(name)) {
-            System.out.println("Η playlist δημιουργήθηκε και προστέθηκε στη βάση δεδομένων.");
-        } else {
-            System.out.println("Σφάλμα κατά την προσθήκη της playlist στη βάση δεδομένων.");
-        }
+
     }
 
     public void addSong(Song song) {

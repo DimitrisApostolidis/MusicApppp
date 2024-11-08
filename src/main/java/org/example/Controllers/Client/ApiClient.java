@@ -53,6 +53,8 @@ public class ApiClient {
             conn.connect();
 
             int responseCode = conn.getResponseCode();
+            System.out.println("Response Code: " + responseCode);
+
             if (responseCode != 200) {
                 throw new RuntimeException("HttpResponseCode: " + responseCode);
             } else {
@@ -63,6 +65,8 @@ public class ApiClient {
                     jsonResponse.append(line);
                 }
                 reader.close();
+
+                System.out.println("JSON Response: " + jsonResponse.toString());
 
                 JSONObject jsonObj = new JSONObject(jsonResponse.toString());
                 JSONArray albumsArray = jsonObj.getJSONArray("album");
@@ -79,4 +83,5 @@ public class ApiClient {
         }
         return albums;
     }
+
 }

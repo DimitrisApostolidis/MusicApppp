@@ -37,13 +37,6 @@ public class DashboardController {
     @FXML
     private ImageView artist10;
 
-
-
-
-
-
-
-
     @FXML
     private Button nextt;
 
@@ -62,23 +55,7 @@ public class DashboardController {
 
     @FXML
     private Slider time;
-    @FXML
-    private ListView<String> albumListView;
-    @FXML
-    public void initialize() {
-        ApiClient apiClient = new ApiClient();
-        String response = apiClient.getArtistData("artistName");
-        List<Album> albums = apiClient.getAlbumsByArtistId("112024"); // ID καλλιτέχνη
 
-        if (response != null) {
-            DataParser dataParser = new DataParser();
-            dataParser.parseArtistData(response);
-            for (Album album : albums) {
-                // albumListView.getItems().add(album.getName() + " (" + album.getYear() + ")");
-            }// Κλήση της μεθόδου ανάλυσης JSON
-            // Εδώ μπορείς να προσθέσεις λογική για να εμφανίσεις τα δεδομένα στο UI
-        }
-    }
 
     public void displayArtistImages(String[] imageUrls) {
         ImageView[] imageViews = {artist1, artist2, artist3, artist4, artist5, artist6, artist7, artist8, artist9, artist10};

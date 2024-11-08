@@ -1,5 +1,7 @@
 package org.example.DataBase;
 
+import org.example.Playlist;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -11,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DataBaseConnection {
-    private static final String URL = "jdbc:mysql://localhost:3306/rapsodia_player";
+    private static final String URL = "jdbc:mysql://localhost:3306/rapsodiaplayer";
     private static final String USER = "root";
     private static final String PASSWORD = "";
     private int failedAttempts = 0;
@@ -103,21 +105,42 @@ public class DataBaseConnection {
         }
     }
 
-    public List<String> getPlaylists() {
-        List<String> playlist = new ArrayList<>();
-        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD)) {
-            String sql = "SELECT name FROM playlist";
-            try (Statement stmt = conn.createStatement();
-                 ResultSet rs = stmt.executeQuery(sql)) {
-                while (rs.next()) {
-                    playlist.add(rs.getString("name"));
-                }
+    public List<Playlist> getPlaylists() {
+        List<Playlist> playlists = new ArrayList<>();
+        String sql = "SELECT * FROM playlist";
+
+        try (Connection conn = getConnection();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            while (rs.next()) {
+                String name = rs.getString("name");
+                Playlist playlist = new Playlist(name);
+                playlists.add(playlist);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return playlist;
+
+        return playlists;
     }
+
+    public List<String> getPlaylistNames() {
+        List<String> playlistNames = new ArrayList<>();
+        String sql = "SELECT name FROM playlist";
+
+        try (Connection conn = getConnection();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            while (rs.next()) {
+                playlistNames.add(rs.getString("name"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return playlistNames;
+    }
+
     public boolean addSongToPlaylist(int playlist_id, String song_name) {
         try (Connection conn = DriverManager.getConnection(URL,USER,PASSWORD)) {
             String sql = "INSERT INTO playlist_song (playlist_id, song_name) VALUES (?, ?)";
@@ -155,6 +178,20 @@ public class DataBaseConnection {
             e.printStackTrace();
         }
         return songs;
+    }
+    public int getPlaylistIdByName(String playlistName) {
+        String query = "SELECT playlist_id FROM playlist WHERE name = ?";
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setString(1, playlistName);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("playlist_id");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return -1; // Επιστρέφει -1 αν δεν βρεθεί
     }
 
 
