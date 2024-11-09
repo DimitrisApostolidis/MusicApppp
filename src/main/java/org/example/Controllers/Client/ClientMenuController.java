@@ -30,6 +30,7 @@ public class ClientMenuController implements Initializable {
         logout_btn.setOnAction(event -> handleLogout());
         playlist_btn.setOnAction(event -> openPlaylistScene());
         dashboard_btn.setOnAction(event -> openDashboardScene());
+        history_btn.setOnAction(event -> openHistoryScene());
     }
 
     private void openDashboardScene() {
@@ -72,6 +73,27 @@ public class ClientMenuController implements Initializable {
             newStage.show();
         } catch (IOException e) {
             logger.log(Level.SEVERE, "Failed to load playlist.fxml", e);
+        }
+    }
+
+    private void openHistoryScene() {
+        try {
+            // Φόρτωσε το FXML αρχείο της σελίδας History
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Client/HistoryClient.fxml"));
+            Parent playlistRoot = loader.load();
+            // Πάρε το τρέχον Stage και κλείσε το
+            Stage currentStage = (Stage) history_btn.getScene().getWindow();
+            currentStage.close();
+
+            // Δημιούργησε ένα νέο Stage για τη σελίδα History
+            Stage newStage = new Stage();
+            Scene newScene = new Scene(playlistRoot);
+            newScene.getStylesheets().add(getClass().getResource("/Styles/Background.css").toExternalForm());
+            newStage.setScene(newScene);
+            newStage.initStyle(StageStyle.UNDECORATED);
+            newStage.show();
+        } catch (IOException e) {
+            logger.log(Level.SEVERE, "Failed to load history.fxml", e);
         }
     }
 
