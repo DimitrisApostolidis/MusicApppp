@@ -9,6 +9,7 @@ import java.util.List;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import org.example.DataBase.DataParser;
+import javafx.scene.control.TextField;
 
 
 public class DashboardController {
@@ -50,8 +51,11 @@ public class DashboardController {
     @FXML
     private Button playy;
 
+    @FXML
+    private Button searchButton;
 
-
+    @FXML
+    private TextField searchField;
 
     @FXML
     private Slider time;
