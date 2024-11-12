@@ -39,8 +39,25 @@ public class LoginController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        preloadClientScene();
         login_btn.setOnAction(actionEvent -> handleLogin());
         createAccount_btn.setOnAction(actionEvent -> handleCreateAccount());
+    }
+
+    private void preloadClientScene() {
+        try {
+            if (clientScene == null) {
+                // Load the scene only once
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Client/Client.fxml"));
+                Parent clientRoot = loader.load();
+
+                // Cache the scene
+                clientScene = new Scene(clientRoot);
+                clientScene.getStylesheets().add(getClass().getResource("/Styles/Background.css").toExternalForm());
+            }
+        } catch (IOException e) {
+            logger.log(Level.SEVERE, "Failed to preload Client scene", e);
+        }
     }
 
     // Handle login
