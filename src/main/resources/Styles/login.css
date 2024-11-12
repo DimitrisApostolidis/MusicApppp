@@ -1,6 +1,7 @@
 .login_container {
     -fx-background-size: cover; /* Cover the entire area */
     -fx-opacity: 0.9; /* Slightly reduce opacity to blend the texture */
+
 }
 
 /** Logo Container */

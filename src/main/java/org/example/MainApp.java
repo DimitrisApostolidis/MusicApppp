@@ -2,6 +2,7 @@ package org.example;
 
 import javafx.animation.FadeTransition;
 import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -42,12 +43,13 @@ public class MainApp extends Application {
 
             // After fade-in, wait x seconds, then fade-out the scene
             Timeline delay = new Timeline(new KeyFrame(Duration.seconds(0.5), event -> {
-                FadeTransition fadeOut = new FadeTransition(Duration.seconds(0.1), loadingRoot);
+                FadeTransition fadeOut = new FadeTransition(Duration.seconds(0.5), loadingRoot);
                 fadeOut.setFromValue(1);
                 fadeOut.setToValue(0);
 
                 fadeOut.setOnFinished(e -> {
                     stage.close();
+
                 });
                 loadLogIn();
                 fadeOut.play();
@@ -59,24 +61,40 @@ public class MainApp extends Application {
             // Start the fade-in and then the fade-out with a delay
             fadeIn.setOnFinished(event -> delay.play());
             fadeIn.play();  // Start fade-in
+
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     public void loadLogIn() {
-        FXMLLoader loader1 = new FXMLLoader(getClass().getResource("/Fxml/Client/LoginClient.fxml"));
-        Scene scene = null;
         try {
-            scene = new Scene(loader1.load());
-            scene.getStylesheets().add(getClass().getResource("/Styles/Background.css").toExternalForm());
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Client/LoginClient.fxml"));
+            Parent loadingLogInRoot = loader.load();
+            Scene loadingScene = new Scene(loadingLogInRoot);
+
+            loadingScene.setFill(Color.TRANSPARENT); // Transparent scene (The background)
+            loadingScene.getStylesheets().add(getClass().getResource("/Styles/Background.css").toExternalForm());
+
+
+            Stage loginStage = new Stage();
+            loginStage.initStyle(StageStyle.TRANSPARENT);  // Remove window borders and title bar (Removes the white background)
+            loginStage.setScene(loadingScene);
+
+            loginStage.setOpacity(0);
+            loginStage.show();
+
+            Timeline timeline = new Timeline(
+                    new KeyFrame(Duration.ZERO, new KeyValue(loginStage.opacityProperty(), 0)),
+                    new KeyFrame(Duration.seconds(0.3), new KeyValue(loginStage.opacityProperty(), 1))
+            );
+            timeline.setCycleCount(1); // Play the animation once
+            timeline.play(); // Start the timeline
+
+
         } catch (Exception e) {
             e.printStackTrace();
         }
-        Stage loginStage = new Stage();
-        loginStage.setScene(scene);
-        loginStage.initStyle(StageStyle.UNDECORATED);
-        loginStage.show();
 
     }
 }

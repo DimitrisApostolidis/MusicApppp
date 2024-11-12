@@ -69,6 +69,8 @@ public class ClientMenuController implements Initializable {
                 currentStage.setScene(newScene);
                 currentStage.centerOnScreen();
                 currentStage.show();
+
+
             } catch (IOException e) {
                 logger.log(Level.SEVERE, "Failed to load scene: " + fxmlPath, e);
             }

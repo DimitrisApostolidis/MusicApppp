@@ -1,5 +1,8 @@
 package org.example.Controllers;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -13,6 +16,8 @@ import javafx.stage.StageStyle;
 import java.io.IOException;
 import java.util.logging.Logger;
 import java.util.logging.Level;
+
+import javafx.util.Duration;
 import org.example.DataBase.DataBaseConnection; // Ensure this class exists
 import org.example.Controllers.Client.DashboardController;
 
@@ -67,7 +72,7 @@ public class LoginController implements Initializable {
         DataBaseConnection db = new DataBaseConnection();
 
         // If admin login
-        if ("admin".equals(username) && "admin".equals(password)) {
+        if ("".equals(username) && "".equals(password)) {
             openClientScene(username);
         } else {
             // Verify credentials
@@ -109,7 +114,14 @@ public class LoginController implements Initializable {
             Stage newStage = new Stage();
             newStage.initStyle(StageStyle.UNDECORATED);
             newStage.setScene(clientScene); // Use the cached scene
+            newStage.setOpacity(0);
             newStage.show();
+            Timeline timeline = new Timeline(
+                    new KeyFrame(Duration.ZERO, new KeyValue(newStage.opacityProperty(), 0)),
+                    new KeyFrame(Duration.seconds(0.3), new KeyValue(newStage.opacityProperty(), 1))
+            );
+            timeline.setCycleCount(1); // Play the animation once
+            timeline.play(); // Start the timeline
 
         } catch (IOException e) {
             logger.log(Level.SEVERE, "Failed to load Client scene", e);
