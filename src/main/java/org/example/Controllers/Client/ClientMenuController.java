@@ -7,15 +7,20 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.stage.StageStyle;
 import org.example.Controllers.LoginController;
 import java.net.URL;
 import java.util.ResourceBundle;
 
 public class ClientMenuController implements Initializable {
     private static final Logger logger = Logger.getLogger(LoginController.class.getName());
+
+    // Map to cache loaded scenes
+    private static final Map<String, Scene> sceneCache = new HashMap<>();
+
     public Button dashboard_btn;
     public Button playlist_btn;
     public Button likedsong_btn;
@@ -23,7 +28,6 @@ public class ClientMenuController implements Initializable {
     public Button profile_btn;
     public Button logout_btn;
     public Button report_btn;
-
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -34,71 +38,48 @@ public class ClientMenuController implements Initializable {
     }
 
     private void openDashboardScene() {
-        try {
-            // Φόρτωσε το client.fxml
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Client/Client.fxml"));
-            Parent dashboardRoot = loader.load();
-
-            // Πάρε το τρέχον Stage και κλείσε το
-            Stage currentStage = (Stage) dashboard_btn.getScene().getWindow();
-            Scene newScene = new Scene(dashboardRoot);
-            newScene.getStylesheets().add(getClass().getResource("/Styles/Background.css").toExternalForm());
-            currentStage.setScene(newScene);
-            currentStage.centerOnScreen();
-            currentStage.show();
-        } catch (IOException e) {
-            logger.log(Level.SEVERE, "Failed to load client.fxml", e);
-        }
+        changeScene("/Fxml/Client/Client.fxml");
     }
 
     private void openPlaylistScene() {
-        try {
-            // Φόρτωσε το FXML αρχείο της σελίδας Playlist
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Client/PlaylistClient.fxml"));
-            Parent playlistRoot = loader.load();
-            // Πάρε το τρέχον Stage και κλείσε το
-            Stage currentStage = (Stage) playlist_btn.getScene().getWindow();
-            Scene newScene = new Scene(playlistRoot);
-            newScene.getStylesheets().add(getClass().getResource("/Styles/Background.css").toExternalForm());
-            currentStage.setScene(newScene);
-            currentStage.centerOnScreen();
-            currentStage.show();
-        } catch (IOException e) {
-            logger.log(Level.SEVERE, "Failed to load playlist.fxml", e);
-        }
+        changeScene("/Fxml/Client/PlaylistClient.fxml");
     }
 
     private void openHistoryScene() {
-        try {
-            // Φόρτωσε το FXML αρχείο της σελίδας History
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Client/HistoryClient.fxml"));
-            Parent playlistRoot = loader.load();
-            // Πάρε το τρέχον Stage και κλείσε το
-            Stage currentStage = (Stage) history_btn.getScene().getWindow();
-            Scene newScene = new Scene(playlistRoot);
-            newScene.getStylesheets().add(getClass().getResource("/Styles/Background.css").toExternalForm());
-            currentStage.setScene(newScene);
-            currentStage.centerOnScreen();
-            currentStage.show();
-        } catch (IOException e) {
-            logger.log(Level.SEVERE, "Failed to load history.fxml", e);
-        }
+        changeScene("/Fxml/Client/HistoryClient.fxml");
     }
 
     private void handleLogout() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Client/LoginClient.fxml"));
-            Parent clientRoot = loader.load();
+        changeScene("/Fxml/Client/LoginClient.fxml");
+    }
 
-            // Πάρε το τρέχον Stage και κλείσε το
-            Stage currentStage = (Stage) logout_btn.getScene().getWindow();
-            Scene newScene = new Scene(clientRoot);
-            newScene.getStylesheets().add(getClass().getResource("/Styles/Background.css").toExternalForm());
-            currentStage.setScene(newScene);
+    private void changeScene(String fxmlPath) {
+        // Check if the scene is already cached
+        if (sceneCache.containsKey(fxmlPath)) {
+            // If cached, use the cached scene
+            Stage currentStage = (Stage) dashboard_btn.getScene().getWindow(); // Get the current stage from any button
+            currentStage.setScene(sceneCache.get(fxmlPath));
             currentStage.centerOnScreen();
             currentStage.show();
-        } catch (IOException e) {
-            logger.log(Level.SEVERE, "Failed to load clientmenu.fxml", e);
+        } else {
+            // If not cached, load the scene and cache it
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
+                Parent root = loader.load();
+                Scene newScene = new Scene(root);
+                newScene.getStylesheets().add(getClass().getResource("/Styles/Background.css").toExternalForm());
+
+                // Cache the scene
+                sceneCache.put(fxmlPath, newScene);
+
+                // Set the new scene and show it
+                Stage currentStage = (Stage) dashboard_btn.getScene().getWindow(); // Get the current stage from any button
+                currentStage.setScene(newScene);
+                currentStage.centerOnScreen();
+                currentStage.show();
+            } catch (IOException e) {
+                logger.log(Level.SEVERE, "Failed to load scene: " + fxmlPath, e);
+            }
         }
     }
 }
