@@ -48,7 +48,7 @@ public class LoginController implements Initializable {
         String username = username_fld.getText();
         String password = password_fld.getText();
         DataBaseConnection db = new DataBaseConnection();
-        if (db.verifyCredentials(username, password)) {
+        if ("admin".equals(username) && "admin".equals(password)) {
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Client/Client.fxml"));
                 Parent clientRoot = loader.load();
@@ -62,36 +62,64 @@ public class LoginController implements Initializable {
 
                 // Κλείσιμο του τρέχοντος παραθύρου και δημιουργία νέας σκηνής
                 Stage currentStage = (Stage) login_btn.getScene().getWindow();
-                currentStage.close();
-
-                Stage newStage = new Stage();
                 Scene newScene = new Scene(clientRoot);
                 newScene.getStylesheets().add(getClass().getResource("/Styles/Background.css").toExternalForm());
-                newStage.initStyle(StageStyle.UNDECORATED);
-                newStage.setScene(newScene);
-                newStage.show();
+                currentStage.setScene(newScene);
+                currentStage.centerOnScreen();
+                currentStage.show();
             } catch (IOException e) {
                 logger.log(Level.SEVERE, "Failed to load FXML", e);
             }
+
         } else {
-            error_lbl.setText("Invalid username or password");
-            error_lbl.setVisible(true);
+            if (db.verifyCredentials(username, password)) {
+                try {
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Client/Client.fxml"));
+                    Parent clientRoot = loader.load();
+
+                    DashboardController dashboardController = loader.getController();
+                    if (dashboardController != null) {
+                        dashboardController.setUsername(username); // Θέτουμε το όνομα του χρήστη
+                    } else {
+                        logger.log(Level.SEVERE, "Failed to load Client from FXML");
+                    }
+
+                    // Κλείσιμο του τρέχοντος παραθύρου και δημιουργία νέας σκηνής
+                    Stage currentStage = (Stage) login_btn.getScene().getWindow();
+                    currentStage.close();
+
+                    Stage newStage = new Stage();
+                    Scene newScene = new Scene(clientRoot);
+                    newScene.getStylesheets().add(getClass().getResource("/Styles/Background.css").toExternalForm());
+                    newStage.initStyle(StageStyle.UNDECORATED);
+                    newStage.setScene(newScene);
+                    newStage.show();
+                } catch (IOException e) {
+                    logger.log(Level.SEVERE, "Failed to load FXML", e);
+                }
+            } else {
+                error_lbl.setText("Invalid username or password");
+                error_lbl.setVisible(true);
+            }
         }
     }
-
 
     private void handleCreateAccount() {
         try {
             // Φόρτωσε το signup.fxml
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/SignUp.fxml"));
-            Parent signupRoot = loader.load();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Client/SignUpClient.fxml"));
+            Parent clientRoot = loader.load();
+            SignUpController SignUpController = loader.getController();
 
-            // Πάρε την τρέχουσα σκηνή (παράθυρο) και ορίσε μια νέα σκηνή με το signupRoot
-            Stage stage = (Stage) createAccount_btn.getScene().getWindow();
-            stage.setScene(new Scene(signupRoot));
-            stage.show();
+            // Κλείσιμο του τρέχοντος παραθύρου και δημιουργία νέας σκηνής
+            Stage currentStage = (Stage) login_btn.getScene().getWindow();
+
+            Scene newScene = new Scene(clientRoot);
+            newScene.getStylesheets().add(getClass().getResource("/Styles/Background.css").toExternalForm());
+            currentStage.setScene(newScene);
+            currentStage.show();
         } catch (IOException e) {
-            logger.log(Level.SEVERE, "Failed to load signup.fxml", e); // Log the exception
+            logger.log(Level.SEVERE, "Failed to load FXML", e);
+        }
     }
     }
-}

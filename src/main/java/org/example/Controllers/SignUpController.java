@@ -77,11 +77,13 @@ public class SignUpController {
     private void goBackToLogin() {
         try {
             // Φόρτωσε το login.fxml
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Client/Login.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Client/LoginClient.fxml"));
             Parent loginRoot = loader.load();
 
             Stage stage = (Stage) backToLogin_btn.getScene().getWindow();
-            stage.setScene(new Scene(loginRoot));
+            Scene newScene = new Scene(loginRoot);
+            newScene.getStylesheets().add(getClass().getResource("/Styles/Background.css").toExternalForm());
+            stage.setScene(newScene);
             stage.show();
         } catch (IOException e) {
             logger.log(Level.SEVERE, "Failed to load login.fxml", e);

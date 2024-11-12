@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+
+<BorderPane styleClass="background" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1">
+
+    <center>
+        <fx:include source="SignUp.fxml" />
+    </center>
+
+    <top>
+        <fx:include source="CustomTitleBar.fxml" />
+    </top>
+
+
+</BorderPane>

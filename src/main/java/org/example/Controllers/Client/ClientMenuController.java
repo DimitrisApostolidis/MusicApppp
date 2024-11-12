@@ -41,15 +41,11 @@ public class ClientMenuController implements Initializable {
 
             // Πάρε το τρέχον Stage και κλείσε το
             Stage currentStage = (Stage) dashboard_btn.getScene().getWindow();
-            currentStage.close();
-
-            // Δημιούργησε ένα νέο Stage για τη σελίδα Client
-            Stage newStage = new Stage();
             Scene newScene = new Scene(dashboardRoot);
             newScene.getStylesheets().add(getClass().getResource("/Styles/Background.css").toExternalForm());
-            newStage.setScene(newScene);
-            newStage.initStyle(StageStyle.UNDECORATED);
-            newStage.show();
+            currentStage.setScene(newScene);
+            currentStage.centerOnScreen();
+            currentStage.show();
         } catch (IOException e) {
             logger.log(Level.SEVERE, "Failed to load client.fxml", e);
         }
@@ -62,15 +58,11 @@ public class ClientMenuController implements Initializable {
             Parent playlistRoot = loader.load();
             // Πάρε το τρέχον Stage και κλείσε το
             Stage currentStage = (Stage) playlist_btn.getScene().getWindow();
-            currentStage.close();
-
-            // Δημιούργησε ένα νέο Stage για τη σελίδα Playlist
-            Stage newStage = new Stage();
             Scene newScene = new Scene(playlistRoot);
             newScene.getStylesheets().add(getClass().getResource("/Styles/Background.css").toExternalForm());
-            newStage.setScene(newScene);
-            newStage.initStyle(StageStyle.UNDECORATED);
-            newStage.show();
+            currentStage.setScene(newScene);
+            currentStage.centerOnScreen();
+            currentStage.show();
         } catch (IOException e) {
             logger.log(Level.SEVERE, "Failed to load playlist.fxml", e);
         }
@@ -83,15 +75,11 @@ public class ClientMenuController implements Initializable {
             Parent playlistRoot = loader.load();
             // Πάρε το τρέχον Stage και κλείσε το
             Stage currentStage = (Stage) history_btn.getScene().getWindow();
-            currentStage.close();
-
-            // Δημιούργησε ένα νέο Stage για τη σελίδα History
-            Stage newStage = new Stage();
             Scene newScene = new Scene(playlistRoot);
             newScene.getStylesheets().add(getClass().getResource("/Styles/Background.css").toExternalForm());
-            newStage.setScene(newScene);
-            newStage.initStyle(StageStyle.UNDECORATED);
-            newStage.show();
+            currentStage.setScene(newScene);
+            currentStage.centerOnScreen();
+            currentStage.show();
         } catch (IOException e) {
             logger.log(Level.SEVERE, "Failed to load history.fxml", e);
         }
@@ -104,17 +92,11 @@ public class ClientMenuController implements Initializable {
 
             // Πάρε το τρέχον Stage και κλείσε το
             Stage currentStage = (Stage) logout_btn.getScene().getWindow();
-            currentStage.close();
-
-            // Δημιούργησε ένα νέο Stage για το client menu
-            Stage newStage = new Stage();
             Scene newScene = new Scene(clientRoot);
-            newStage.initStyle(StageStyle.UNDECORATED);
-            // Link the CSS file to the new scene
             newScene.getStylesheets().add(getClass().getResource("/Styles/Background.css").toExternalForm());
-            // Set the scene to the new stage
-            newStage.setScene(newScene);
-            newStage.show();
+            currentStage.setScene(newScene);
+            currentStage.centerOnScreen();
+            currentStage.show();
         } catch (IOException e) {
             logger.log(Level.SEVERE, "Failed to load clientmenu.fxml", e);
         }

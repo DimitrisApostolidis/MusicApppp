@@ -1,41 +1,79 @@
 .signup_container {
-    -fx-background-color: #EEEEEE;
+    -fx-background-size: cover; /* Cover the entire area */
+    -fx-opacity: 0.9; /* Slightly reduce opacity to blend the texture */
 }
 
 /** Logo Container */
 .signup_logo_container {
-    -fx-background-color: #495a75;
-    -fx-alignment: center;
+    -fx-background-color: #1c1d21;
+    -fx-alignment:center;
     -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 15, 0.3, 5, 0);
-}
 
+}
 .signup_logo_container Text {
     -fx-font-size: 2em;
     -fx-fill: #FFFFFF;
     -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0.5, 3, 3);
 }
 
-.signup_logo_container FontAwesomeIconView {
-    -fx-fill: #ECF39E;
+
+
+/* Log in form styles */
+.signup_form_container {
+    -fx-spacing: 15;
+    -fx-aligment: middle;
+
 }
 
-/** Form Container */
-.signup_form_container {
-    -fx-padding: 20;
-    -fx-spacing: 10;
+.signup_form_container Label {
+    -fx-font-size: 1.1em;
+    -fx-font-weight: bold;
 }
+
 
 .input_field {
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: #4a5e82;
+    -fx-border-width: 1;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+    -fx-pref-height: 35;
+    -fx-font-size: 1.2em;
+    -fx-padding: 5;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.15), 5, 0.2, 2, 2);
+}
+
+.input_field:focused {
+    -fx-border-color: #60749a;
+    -fx-effect: dropshadow(gaussian, rgba(96, 116, 154, 0.4), 8, 0.3, 2, 2);
+}
+
+.signup_form_container Button {
+    -fx-background-color: linear-gradient(to bottom, #808080, #1a1a1a); /* Dark grey to grey for black background */
+    -fx-text-fill: linear-gradient(to bottom, #ffffff, #e0e0e0); /* White to light grey for better visibility */
+    -fx-pref-width: 350;
+    -fx-pref-height: 30;
+    -fx-font-size: 1.2em;
+    -fx-font-weight: bold;
     -fx-background-radius: 5;
     -fx-border-radius: 5;
-    -fx-border-color: #CCCCCC;
-    -fx-border-width: 1;
     -fx-padding: 5;
-    -fx-font-size: 14px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 8, 0.3, 2, 2);
+    -fx-text-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.25), 1, 0, 1, 1);
+}
+
+.signup_form_container Button:hover {
+    -fx-background-color: linear-gradient(#2a2a2a, #ffffff); /* Slightly lighter grey to blue-grey */
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.4), 12, 0.4, 3, 3);
+    -fx-cursor: hand;
+}
+
+.signup_form_container Button:pressed {
+    -fx-background-color: linear-gradient(#FFFFFF, #000000); /* Darker blue-grey */
+    -fx-effect: innershadow(gaussian, rgba(0, 0, 0, 0.5), 5, 0.2, 0, 0);
+    -fx-text-fill: linear-gradient(#d9e2f0, #ffffff); /* Light blue to white for pressed state */
 }
 
 .error_lbl {
-    -fx-text-fill: #D9534F;
-    -fx-font-size: 12px;
-    -fx-font-weight: bold;
+    -fx-text-fill: #FF0000;
 }
