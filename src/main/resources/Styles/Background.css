@@ -1,7 +1,7 @@
 /* General Background */
 .background {
-    -fx-background-image: url("https://i.imgur.com/BkAiFZf.png"); /* Add texture image */
-    -fx-background-size: cover; /* Cover the entire area */
-    -fx-opacity: 1; /* Slightly reduce opacity to blend the texture */
-
+    -fx-background-image: url("https://i.imgur.com/BkAiFZf.png");  /* Ensure the image has transparency where needed */
+    -fx-background-radius: 30;  /* Rounded corners */
+    -fx-padding: 10;  /* Padding around the content */
+    -fx-background-size: cover;  /* Ensure the background image covers the area */
 }

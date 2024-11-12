@@ -72,7 +72,7 @@ public class LoginController implements Initializable {
         DataBaseConnection db = new DataBaseConnection();
 
         // If admin login
-        if ("".equals(username) && "".equals(password)) {
+        if ("admin".equals(username) && "admin".equals(password)) {
             openClientScene(username);
         } else {
             // Verify credentials

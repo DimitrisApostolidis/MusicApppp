@@ -71,10 +71,11 @@ public class MainApp extends Application {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Client/LoginClient.fxml"));
             Parent loadingLogInRoot = loader.load();
-            Scene loadingScene = new Scene(loadingLogInRoot);
+            Scene loadingScene = new Scene(loadingLogInRoot, Color.TRANSPARENT);
 
-            loadingScene.setFill(Color.TRANSPARENT); // Transparent scene (The background)
+
             loadingScene.getStylesheets().add(getClass().getResource("/Styles/Background.css").toExternalForm());
+            loadingScene.setFill(Color.TRANSPARENT); // Transparent scene (The background)
 
 
             Stage loginStage = new Stage();
