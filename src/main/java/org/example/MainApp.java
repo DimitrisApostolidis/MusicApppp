@@ -41,7 +41,7 @@ public class MainApp extends Application {
             fadeIn.setToValue(1);
 
             // After fade-in, wait x seconds, then fade-out the scene
-            Timeline delay = new Timeline(new KeyFrame(Duration.seconds(2), event -> {
+            Timeline delay = new Timeline(new KeyFrame(Duration.seconds(0.5), event -> {
                 FadeTransition fadeOut = new FadeTransition(Duration.seconds(0.1), loadingRoot);
                 fadeOut.setFromValue(1);
                 fadeOut.setToValue(0);
