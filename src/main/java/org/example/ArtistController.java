@@ -1,6 +1,7 @@
 
 package org.example;
 
+import org.example.Models.Artist;
 import java.util.ArrayList;
 import java.util.List;
 

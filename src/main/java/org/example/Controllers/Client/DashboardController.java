@@ -10,9 +10,21 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import org.example.DataBase.DataParser;
 import javafx.scene.control.TextField;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.control.Label;
+import javafx.scene.text.Text;
 
 
 public class DashboardController {
+
+    @FXML
+    private Text welcomeText; // σύνδεση με το Text στο FXML
+
+    // Μέθοδος για ρύθμιση του ονόματος του χρήστη
+    public void setUsername(String username) {
+        welcomeText.setText("Welcome back, " + username + "!");
+    }
 
     @FXML
     private AnchorPane rootPane;

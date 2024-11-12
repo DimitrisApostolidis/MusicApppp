@@ -15,8 +15,7 @@
 <?import javafx.scene.text.Text?>
 
 <AnchorPane prefHeight="750.0" prefWidth="850.0" stylesheets="@../../Styles/Dashboard.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.Controllers.Client.DashboardController">
-   <Text fill="WHITE" layoutX="52.0" layoutY="58.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="shape-text" text="Welcome back!" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="30.0" />
-   <Button fx:id="pausee" layoutX="444.0" layoutY="666.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="28.0" text="⏸" />
+   <Text fx:id="welcomeText" fill="WHITE" layoutX="52.0" layoutY="58.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="shape-text" text="Welcome back!" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="30.0" />   <Button fx:id="pausee" layoutX="444.0" layoutY="666.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="28.0" text="⏸" />
    <Label text="Label" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="27.0" />
    <Text fill="WHITE" layoutX="9.0" layoutY="171.8984375" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="shape-text" text="Latest Artists" wrappingWidth="164.513671875" AnchorPane.leftAnchor="9.0" AnchorPane.topAnchor="146.0" />
    <Text fill="WHITE" layoutX="9.0" layoutY="529.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="shape-text" text="What's Trending" />
@@ -75,10 +74,4 @@
       </opaqueInsets></Button>
    <Button fx:id="searchButton" layoutX="550.0" layoutY="90.0" minHeight="39.0" minWidth="28.0" mnemonicParsing="false" prefHeight="39.0" prefWidth="28.0" text="🔍" />
    <TextField fx:id="searchField" layoutX="9.0" layoutY="99.0" prefHeight="32.0" prefWidth="527.0" />
-
-
-
-
-
-
 </AnchorPane>

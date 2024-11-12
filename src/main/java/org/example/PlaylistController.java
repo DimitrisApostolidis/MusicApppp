@@ -23,6 +23,9 @@ public class PlaylistController {
     @FXML
     private ListView<String> albumListView;
 
+    @FXML
+    private ListView<String> availableSongsListView;
+
     public PlaylistController() {
         playlists = new ArrayList<>();
         dbConnection = new DataBaseConnection();
@@ -108,6 +111,32 @@ public class PlaylistController {
                 playlist.addSong(song);
                 break;
             }
+        }
+    }
+    @FXML
+    private void handleAddSongToPlaylist() {
+        String selectedPlaylist = playlistView.getSelectionModel().getSelectedItem();
+
+        if (selectedPlaylist != null) {
+            List<String> availableSongs = dbConnection.getSongsFromDatabase();
+            availableSongsListView.getItems().setAll(availableSongs);
+
+            availableSongsListView.setOnMouseClicked(event -> {
+                if (event.getClickCount() == 2) {
+                    String selectedSong = availableSongsListView.getSelectionModel().getSelectedItem();
+                    if (selectedSong != null) {
+                        int playlistId = dbConnection.getPlaylistIdByName(selectedPlaylist);
+                        int songId = dbConnection.getSongIdByTitle(selectedSong); // Παίρνουμε το songId
+
+                        if (songId != -1 && dbConnection.addSongToPlaylist(playlistId, songId)) {
+                            System.out.println("Το τραγούδι προστέθηκε στην playlist.");
+                            loadPlaylists();
+                        }
+                    }
+                }
+            });
+        } else {
+            System.out.println("Δεν έχει επιλεχθεί κάποια playlist.");
         }
     }
 

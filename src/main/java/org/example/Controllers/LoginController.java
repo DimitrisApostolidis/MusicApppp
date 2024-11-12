@@ -13,7 +13,8 @@ import javafx.stage.StageStyle;
 import java.io.IOException;
 import java.util.logging.Logger;
 import java.util.logging.Level;
-import org.example.DataBase.DataBaseConnection; // Βεβαιωθείτε ότι αυτή η κλάση υπάρχει
+import org.example.DataBase.DataBaseConnection;// Βεβαιωθείτε ότι αυτή η κλάση υπάρχει
+import org.example.Controllers.Client.DashboardController;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -42,39 +43,43 @@ public class LoginController implements Initializable {
 
 
 
+    // Στο LoginController
     private void handleLogin() {
         String username = username_fld.getText();
         String password = password_fld.getText();
         DataBaseConnection db = new DataBaseConnection();
         if (db.verifyCredentials(username, password)) {
             try {
-                // Φόρτωσε το clientmenu.fxml
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Client/Client.fxml"));
                 Parent clientRoot = loader.load();
 
-                // Πάρε το τρέχον Stage και κλείσε το
+                DashboardController dashboardController = loader.getController();
+                if (dashboardController != null) {
+                    dashboardController.setUsername(username); // Θέτουμε το όνομα του χρήστη
+                } else {
+                    logger.log(Level.SEVERE, "Failed to load Client from FXML");
+                }
+
+                // Κλείσιμο του τρέχοντος παραθύρου και δημιουργία νέας σκηνής
                 Stage currentStage = (Stage) login_btn.getScene().getWindow();
                 currentStage.close();
 
-                // Δημιούργησε ένα νέο Stage για το client menu
                 Stage newStage = new Stage();
                 Scene newScene = new Scene(clientRoot);
-                // Link the CSS file to the new scene
                 newScene.getStylesheets().add(getClass().getResource("/Styles/Background.css").toExternalForm());
                 newStage.initStyle(StageStyle.UNDECORATED);
-                // Set the scene to the new stage
                 newStage.setScene(newScene);
                 newStage.show();
             } catch (IOException e) {
-                logger.log(Level.SEVERE, "Failed to load clientmenu.fxml", e);
+                logger.log(Level.SEVERE, "Failed to load FXML", e);
             }
-            ;
-        }
-        else  {
+        } else {
             error_lbl.setText("Invalid username or password");
             error_lbl.setVisible(true);
         }
     }
+
+
     private void handleCreateAccount() {
         try {
             // Φόρτωσε το signup.fxml

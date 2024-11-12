@@ -17,4 +17,5 @@ module org.example {
     exports org.example.Controllers.Client;
     exports org.example.Models;
     exports org.example.Views;
+    opens org.example.Models to javafx.fxml;
 }

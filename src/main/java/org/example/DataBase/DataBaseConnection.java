@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DataBaseConnection {
+    private Connection connection;
     private static final String URL = "jdbc:mysql://localhost:3306/rapsodiaplayer";
     private static final String USER = "root";
     private static final String PASSWORD = "";
@@ -142,20 +143,40 @@ public class DataBaseConnection {
         return playlistNames;
     }
 
-    public boolean addSongToPlaylist(int playlist_id, String song_name) {
-        try (Connection conn = DriverManager.getConnection(URL,USER,PASSWORD)) {
-            String sql = "INSERT INTO playlist_song (playlist_id, song_name) VALUES (?, ?)";
-            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-                stmt.setInt(1, playlist_id);
-                stmt.setString(2, song_name);
-                int rowsAffected = stmt.executeUpdate();
-                return rowsAffected > 0;
-            }
+    public boolean addSongToPlaylist(int playlistId, int songId) {
+        String sql = "INSERT INTO playlist_song (playlist_id, song_id) VALUES (?, ?)";
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, playlistId);
+            stmt.setInt(2, songId);
+
+            int rowsAffected = stmt.executeUpdate();
+            return rowsAffected > 0;
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
         }
     }
+
+    public int getSongIdByTitle(String title) {
+        String sql = "SELECT song_id FROM song WHERE name = ?";
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, title);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt("song_id");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return -1; // Επιστρέφει -1 αν δεν βρεθεί το τραγούδι
+    }
+
+
 
     public boolean deletePlaylistByName(String playlistName) {
         String deleteSongsSql = "DELETE FROM playlist_song WHERE playlist_id = (SELECT playlist_id FROM playlist WHERE name = ? LIMIT 1)";
@@ -227,6 +248,37 @@ public class DataBaseConnection {
         }
         return -1; // Επιστρέφει -1 αν δεν βρεθεί
     }
+
+    public boolean saveTrackToDatabase(String songName, String artist, String album) {
+        String query = "INSERT INTO song (name, artist, album) VALUES (?, ?, ?)";
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setString(1, songName);
+            stmt.setString(2, artist);
+            stmt.setString(3, album);
+            stmt.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public List<String> getSongsFromDatabase() {
+        List<String> songs = new ArrayList<>();
+        String query = "SELECT name FROM song";
+        try (Connection conn = getConnection();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(query)) {
+            while (rs.next()) {
+                songs.add(rs.getString("name"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return songs;
+    }
+
 
 
 }

@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane fx:controller="org.example.PlaylistController" prefHeight="750.0" prefWidth="850.0" stylesheets="@../../Styles/Playlist.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane fx:controller="org.example.PlaylistController"  prefHeight="750.0" prefWidth="850.0" stylesheets="@../../Styles/Playlist.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
     <!-- Main Playlist Content -->
     <VBox AnchorPane.leftAnchor="20.0" layoutY="20.0" prefWidth="270.0" prefHeight="600.0" spacing="20.0">
         <Label text="Playlists" styleClass="heading-label" />
@@ -18,13 +18,18 @@
             <Button fx:id="addPlaylistButton" text="Add" onAction="#handleAddPlaylist" />
             <Button fx:id="deletePlaylistButton" text="Delete" onAction="#handleDeletePlaylist" />
         </HBox>
-
-
     </VBox>
 
+    <!-- Selected Playlist Details -->
     <VBox AnchorPane.leftAnchor="320.0" layoutY="20.0" prefWidth="270.0" prefHeight="600.0" spacing="20.0">
         <Label text="Selected Playlist Details" styleClass="subheading-label" />
         <ListView fx:id="albumListView" prefHeight="400.0" prefWidth="250.0" />
-        <Button fx:id="addSongButton" text="Add Song to Playlist" />
+        <Button fx:id="addSongButton" text="Add Song to Playlist" onAction="#handleAddSongToPlaylist" />
+    </VBox>
+
+    <!-- Available Songs from API -->
+    <VBox AnchorPane.leftAnchor="620.0" layoutY="20.0" prefWidth="270.0" prefHeight="600.0" spacing="20.0">
+        <Label text="Available Songs from API" styleClass="subheading-label" />
+        <ListView fx:id="availableSongsListView" prefHeight="400.0" prefWidth="250.0" />
     </VBox>
 </AnchorPane>
