@@ -1,35 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ListView?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 
-<AnchorPane fx:controller="org.example.PlaylistController"  prefHeight="750.0" prefWidth="850.0" stylesheets="@../../Styles/Playlist.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane prefHeight="750.0" prefWidth="850.0" stylesheets="@../../Styles/Playlist.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.PlaylistController">
     <!-- Main Playlist Content -->
-    <VBox AnchorPane.leftAnchor="20.0" layoutY="20.0" prefWidth="270.0" prefHeight="600.0" spacing="20.0">
-        <Label text="Playlists" styleClass="heading-label" />
+    <VBox layoutY="20.0" prefHeight="600.0" prefWidth="270.0" spacing="20.0" AnchorPane.leftAnchor="20.0">
+        <Label styleClass="heading-label" text="Playlists" />
         <ListView fx:id="playlistView" prefHeight="400.0" prefWidth="250.0" />
         <HBox spacing="10.0">
-            <TextField fx:id="newPlaylistName" promptText="New Playlist Name" prefWidth="200.0" />
-            <Button fx:id="addPlaylistButton" text="Add" onAction="#handleAddPlaylist" />
-            <Button fx:id="deletePlaylistButton" text="Delete" onAction="#handleDeletePlaylist" />
+            <TextField fx:id="newPlaylistName" prefHeight="38.0" prefWidth="32.0" promptText="New Playlist Name" />
+            <Button fx:id="addPlaylistButton" onAction="#handleAddPlaylist" text="Add" />
+            <Button fx:id="deletePlaylistButton" onAction="#handleDeletePlaylist" text="Delete" />
+            <Button fx:id="addSongButton" onAction="#handleAddSongToPlaylist" text="Search and Add" />
         </HBox>
     </VBox>
 
     <!-- Selected Playlist Details -->
-    <VBox AnchorPane.leftAnchor="320.0" layoutY="20.0" prefWidth="270.0" prefHeight="600.0" spacing="20.0">
-        <Label text="Selected Playlist Details" styleClass="subheading-label" />
+    <VBox layoutY="20.0" prefHeight="600.0" prefWidth="270.0" spacing="20.0" AnchorPane.leftAnchor="320.0">
+        <Label styleClass="subheading-label" text="Selected Playlist Details" />
         <ListView fx:id="albumListView" prefHeight="400.0" prefWidth="250.0" />
-        <Button fx:id="addSongButton" text="Add Song to Playlist" onAction="#handleAddSongToPlaylist" />
     </VBox>
 
     <!-- Available Songs from API -->
-    <VBox AnchorPane.leftAnchor="620.0" layoutY="20.0" prefWidth="270.0" prefHeight="600.0" spacing="20.0">
-        <Label text="Available Songs from API" styleClass="subheading-label" />
+    <VBox layoutY="20.0" prefHeight="600.0" prefWidth="270.0" spacing="20.0" AnchorPane.leftAnchor="620.0">
+        <Label styleClass="subheading-label" text="Available Songs from API" />
         <ListView fx:id="availableSongsListView" prefHeight="400.0" prefWidth="250.0" />
     </VBox>
 </AnchorPane>
