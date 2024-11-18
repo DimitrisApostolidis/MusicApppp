@@ -13,10 +13,11 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Text?>
-<?import javafx.scene.control.ListView?>
+
 
 <AnchorPane prefHeight="750.0" prefWidth="850.0" stylesheets="@../../Styles/Dashboard.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.Controllers.Client.DashboardController">
    <Text fx:id="welcomeText" fill="WHITE" layoutX="52.0" layoutY="58.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="shape-text" text="Welcome back!" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="30.0" />   <Button fx:id="pausee" layoutX="444.0" layoutY="666.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="28.0" text="⏸" />
+   <Label text="Label" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="27.0" />
    <Text fill="WHITE" layoutX="9.0" layoutY="171.8984375" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="shape-text" text="Latest Artists" wrappingWidth="164.513671875" AnchorPane.leftAnchor="9.0" AnchorPane.topAnchor="146.0" />
    <Text fill="WHITE" layoutX="9.0" layoutY="529.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="shape-text" text="What's Trending" />
    <GridPane hgap="10.0" layoutX="9.0" layoutY="183.0" prefHeight="320.0" prefWidth="808.0" vgap="10.0">
@@ -65,6 +66,7 @@
    <Slider fx:id="time" layoutX="183.0" layoutY="729.0" prefHeight="14.0" prefWidth="485.0" stylesheets="@../../Styles/Dashboard.css" />
    <Button fx:id="playy" layoutX="353.0" layoutY="666.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="28.0" text="▶" />
    <Button fx:id="nextt" layoutX="525.0" layoutY="666.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="50.0" text="⏭" />
+   <Button fx:id="favoriteButton" layoutX="585.0" layoutY="680.0" mnemonicParsing="false" prefHeight="10.0" prefWidth="10.0" maxHeight="10.0" maxWidth="10.0" text="❤"  />
    <Button fx:id="previouss" layoutX="260.0" layoutY="666.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="28.0" text="⏮">
       <rotationAxis>
          <Point3D />
@@ -74,5 +76,4 @@
       </opaqueInsets></Button>
    <Button fx:id="searchButton" layoutX="550.0" layoutY="90.0" minHeight="39.0" minWidth="28.0" mnemonicParsing="false" prefHeight="39.0" prefWidth="28.0" text="🔍" />
    <TextField fx:id="searchField" layoutX="9.0" layoutY="99.0" prefHeight="32.0" prefWidth="527.0" />
-   <ListView fx:id="resultsList" layoutX="9.0" layoutY="129.0" prefWidth="527" prefHeight="400" visible="false"/>
 </AnchorPane>

@@ -16,6 +16,7 @@
 }
 
 
+
 /* General Style for Play Buttons */
 .button {
     -fx-background-radius: 50%; /* Rounded buttons */
@@ -30,6 +31,33 @@
     -fx-border-width: 2px; /* Slightly thicker border for a bolder look */
     -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 3, 1.0, 0, 1);
 }
+
+/* Specific Style for the Favorite Button */
+#favoriteButton {
+    -fx-min-width: 30px;  /* Smaller width */
+    -fx-min-height: 30px; /* Smaller height */
+    -fx-pref-width: 30px;  /* Preferred size */
+    -fx-pref-height: 30px; /* Preferred size */
+    -fx-font-size: 14px;    /* Smaller font size */
+    -fx-padding: 0;         /* Remove padding */
+    -fx-border-width: 1px; /* Thinner border */
+    -fx-border-color: #ffffff; /* White border */
+    -fx-background-color: transparent; /* Keep the background transparent */
+}
+/* Style when the button is pressed */
+.button:pressed {
+    -fx-background-color: #ff4081; /* Pink color */
+    -fx-border-color: #ff4081;     /* Matching border color */
+    -fx-text-fill: white;          /* Text color */
+}
+
+/* Style when the button is focused */
+.button:focused {
+    -fx-background-color: #f50057; /* Slightly darker shade */
+    -fx-border-color: #f50057;     /* Matching border color */
+    -fx-text-fill: white;          /* Text color */
+}
+
 
 /* Hover Effect for Buttons */
 .button:hover {
@@ -86,4 +114,7 @@
     -fx-background-radius: 10; /* Rounded corners for the thumb */
     -fx-min-width: 15px; /* Minimum width for the thumb */
     -fx-min-height: 15px; /* Minimum height for the thumb */
+}
+
+
 }
