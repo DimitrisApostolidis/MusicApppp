@@ -63,6 +63,8 @@
          <Image url="https://i.imgur.com/9HDHoIA.png" />
       </ImageView>
    </GridPane>
+
+
    <Slider fx:id="time" layoutX="183.0" layoutY="729.0" prefHeight="14.0" prefWidth="485.0" stylesheets="@../../Styles/Dashboard.css" />
    <Button fx:id="playy" layoutX="353.0" layoutY="666.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="28.0" text="▶" />
    <Button fx:id="nextt" layoutX="525.0" layoutY="666.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="50.0" text="⏭" />
