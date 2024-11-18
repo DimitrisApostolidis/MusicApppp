@@ -15,7 +15,7 @@ import javafx.util.Duration;
 import org.example.Models.Model;
 
 public class MainApp extends Application {
-//guccimane
+    //guccimane
     @Override
     public void start(Stage stage) {
 //ss

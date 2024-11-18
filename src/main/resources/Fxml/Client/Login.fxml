@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="rootPane" opacity="0.0" prefHeight="400.0" prefWidth="600.0" styleClass="login_container" stylesheets="@../../Styles/login.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.Controllers.LoginController">
+<AnchorPane opacity="0.0" prefHeight="400.0" prefWidth="600.0" styleClass="login_container" stylesheets="@../../Styles/login.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.Controllers.LoginController">
    <VBox layoutY="-1.0" prefHeight="400.0" prefWidth="200.0" styleClass="login_logo_container" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
       <children>
          <ImageView fitHeight="200.0" fitWidth="200.0" preserveRatio="true">
@@ -27,9 +27,9 @@
             <Font size="17.0" />
          </font>
       </Label>
-      <TextField fx:id="username_fld" styleClass="input_field" />
+      <TextField fx:id="username_fld" styleClass="input_field" promptText="👤 Username"/>
       <Label text="Password" textFill="#e4e4e4" />
-      <PasswordField fx:id="password_fld" styleClass="input_field" />
+      <PasswordField fx:id="password_fld" styleClass="input_field" promptText="🔒 Password" />
 
       <!-- Εδώ προσθέτουμε το κουμπί "Remember me" -->
       <CheckBox fx:id="remember_me_chk" text="Remember me" textFill="#d3d3d3" />

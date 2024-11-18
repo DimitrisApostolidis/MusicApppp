@@ -15,7 +15,7 @@ import java.util.List;
 
 public class DataBaseConnection {
     private Connection connection;
-    private static final String URL = "jdbc:mysql://localhost:3306/rapsodia_player";
+    private static final String URL = "jdbc:mysql://localhost:3306/music_apppp";
     private static final String USER = "root";
     private static final String PASSWORD = "";
     private int failedAttempts = 0;
