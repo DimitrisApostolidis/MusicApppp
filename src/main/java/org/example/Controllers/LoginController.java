@@ -7,6 +7,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.CheckBox;
 import javafx.stage.Stage;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -23,6 +24,7 @@ import org.example.Controllers.Client.DashboardController;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.prefs.Preferences;
 
 public class LoginController implements Initializable {
     private static final Logger logger = Logger.getLogger(LoginController.class.getName());
@@ -42,11 +44,27 @@ public class LoginController implements Initializable {
     private Button login_btn;
     public Label username_lbl;
 
+    @FXML
+    private CheckBox remember_me_chk;  // Το CheckBox για το "Remember me"
+
+    // Για την αποθήκευση και ανάκτηση στοιχείων χρήστη
+    private Preferences prefs = Preferences.userNodeForPackage(LoginController.class); // Preferences για την εφαρμογή
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         preloadClientScene();
         login_btn.setOnAction(actionEvent -> handleLogin());
         createAccount_btn.setOnAction(actionEvent -> handleCreateAccount());
+
+        // Έλεγχος αν υπάρχουν αποθηκευμένα στοιχεία και αυτόματη συμπλήρωση
+        String savedUsername = prefs.get("username", "");
+        String savedPassword = prefs.get("password", "");
+
+        if (!savedUsername.isEmpty() && !savedPassword.isEmpty()) {
+            username_fld.setText(savedUsername);
+            password_fld.setText(savedPassword);
+            remember_me_chk.setSelected(true);  // Αν είναι αποθηκευμένο, επιλέγεται το checkbox
+        }
     }
 
     private void preloadClientScene() {
@@ -69,6 +87,17 @@ public class LoginController implements Initializable {
     private void handleLogin() {
         String username = username_fld.getText();
         String password = password_fld.getText();
+
+        // Αν είναι επιλεγμένο το "Remember me"
+        if (remember_me_chk.isSelected()) {
+            prefs.put("username", username);  // Αποθήκευση του username
+            prefs.put("password", password);  // Αποθήκευση του password
+        } else {
+            // Διαγραφή των αποθηκευμένων στοιχείων αν δεν είναι επιλεγμένο το "Remember me"
+            prefs.remove("username");
+            prefs.remove("password");
+        }
+
         DataBaseConnection db = new DataBaseConnection();
 
         // If admin login
