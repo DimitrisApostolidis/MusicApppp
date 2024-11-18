@@ -18,7 +18,7 @@ public class MainApp extends Application {
 
     @Override
     public void start(Stage stage) {
-
+//ss
         try {
             // Load the loading screen FXML
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Client/LoadingWindow.fxml"));

@@ -159,8 +159,11 @@ public class DataBaseConnection {
         }
     }
 
+
+
+
     public int getSongIdByTitle(String title) {
-        String sql = "SELECT song_id FROM song WHERE name = ?";
+        String sql = "SELECT song_id FROM song WHERE title = ?";
         try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
@@ -266,7 +269,7 @@ public class DataBaseConnection {
 
     public List<String> getSongsFromDatabase() {
         List<String> songs = new ArrayList<>();
-        String query = "SELECT name FROM song";
+        String query = "SELECT title FROM song";
         try (Connection conn = getConnection();
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(query)) {
@@ -278,6 +281,28 @@ public class DataBaseConnection {
         }
         return songs;
     }
+
+    public int addSongToDatabase(String songTitle, String artistName) {
+        String sql = "INSERT INTO song (title, artist) VALUES (?, ?)";
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+             PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+
+            stmt.setString(1, songTitle);
+            stmt.setString(2, artistName);
+            stmt.executeUpdate();
+
+            ResultSet rs = stmt.getGeneratedKeys();
+            if (rs.next()) {
+                return rs.getInt(1); // Επιστρέφουμε το songId
+            } else {
+                return -1;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return -1;
+        }
+    }
+
 
 
 

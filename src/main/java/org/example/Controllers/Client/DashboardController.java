@@ -1,4 +1,6 @@
 package org.example.Controllers.Client;
+
+
 import javafx.scene.image.Image;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -14,6 +16,11 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
 import javafx.scene.text.Text;
+import kong.unirest.JsonNode;
+import javafx.application.Platform;
+import java.util.HashMap;
+import java.util.ArrayList;
+
 
 
 public class DashboardController {
@@ -25,6 +32,9 @@ public class DashboardController {
     public void setUsername(String username) {
         welcomeText.setText("Welcome back, " + username + "!");
     }
+
+    @FXML
+    private TextField searchField;
 
     @FXML
     private AnchorPane rootPane;
@@ -51,6 +61,9 @@ public class DashboardController {
     private ImageView artist10;
 
     @FXML
+    private ListView<String> resultsList;
+
+    @FXML
     private Button nextt;
 
     @FXML
@@ -67,19 +80,104 @@ public class DashboardController {
     private Button searchButton;
 
     @FXML
-    private TextField searchField;
+    private Slider time;
+
+    private LastFmApiClient apiClient = new LastFmApiClient();
 
     @FXML
-    private Slider time;
+    public void initialize() {
+        searchField.setOnKeyReleased(event -> {
+            String query = searchField.getText().trim();
+            if (!query.isEmpty()) {
+                resultsList.setVisible(true); // Εμφάνιση της λίστας
+                searchArtists(query);
+            } else {
+                resultsList.setVisible(false); // Απόκρυψη της λίστας
+            }
+        });
+
+        resultsList.setOnMouseClicked(event -> {
+            String selectedArtist = resultsList.getSelectionModel().getSelectedItem();
+            if (selectedArtist != null) {
+                System.out.println("Selected artist: " + selectedArtist);
+                // Μπορείς να καλέσεις τη μέθοδο για εμφάνιση πληροφοριών εδώ
+            }
+        });
+    }
+
+
+    private void searchArtists(String query) {
+        new Thread(() -> {
+            try {
+                JsonNode response = apiClient.searchArtists(query);
+
+                if (response != null && response.getObject().has("results")) {
+                    var artistsArray = response.getObject()
+                            .getJSONObject("results")
+                            .getJSONObject("artistmatches")
+                            .getJSONArray("artist");
+
+                    List<String> artistNames = new ArrayList<>();
+                    for (int i = 0; i < artistsArray.length(); i++) {
+                        var artist = artistsArray.getJSONObject(i);
+                        String name = artist.getString("name");
+                        artistNames.add(name);
+                    }
+
+                    Platform.runLater(() -> {
+                        if (!artistNames.isEmpty()) {
+                            resultsList.setVisible(true); // Εμφάνιση λίστας αν υπάρχουν αποτελέσματα
+                            updateResultsList(artistNames);
+                        } else {
+                            resultsList.setVisible(false); // Απόκρυψη αν δεν υπάρχουν αποτελέσματα
+                        }
+                    });
+                } else {
+                    Platform.runLater(() -> {
+                        resultsList.setVisible(false); // Απόκρυψη σε περίπτωση σφάλματος
+                    });
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                Platform.runLater(() -> {
+                    resultsList.setVisible(false); // Απόκρυψη σε περίπτωση σφάλματος
+                });
+            }
+        }).start();
+    }
+
+    private void updateUIWithResults(String[] artistImages) {
+        ImageView[] artistViews = {artist1, artist2, artist3, artist4, artist5};
+        for (int i = 0; i < artistViews.length; i++) {
+            if (i < artistImages.length) {
+                artistViews[i].setImage(new Image(artistImages[i]));
+            } else {
+                artistViews[i].setImage(null); // Καθαρίζουμε αν δεν υπάρχουν αρκετά αποτελέσματα
+            }
+        }
+    }
+
+    private void updateResultsList(List<String> artistNames) {
+        resultsList.getItems().clear();
+        resultsList.getItems().addAll(artistNames);
+    }
+
+
 
 
     public void displayArtistImages(String[] imageUrls) {
         ImageView[] imageViews = {artist1, artist2, artist3, artist4, artist5, artist6, artist7, artist8, artist9, artist10};
-        for (int i = 0; i < imageUrls.length && i < imageViews.length; i++) {
-            imageViews[i].setImage(new Image(imageUrls[i]));
+        String placeholderUrl = "https://via.placeholder.com/150"; // Placeholder εικόνα
+
+        for (int i = 0; i < imageViews.length; i++) {
+            if (i < imageUrls.length && !imageUrls[i].isEmpty()) {
+                imageViews[i].setImage(new Image(imageUrls[i]));
+            } else {
+                imageViews[i].setImage(new Image(placeholderUrl));
+            }
         }
-    }
-}
+    }}
+
 
 
 

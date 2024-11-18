@@ -6,6 +6,9 @@ module org.example {
     requires java.desktop;
     requires java.sql;
     requires org.json;
+    requires unirest.java;
+    requires java.net.http;
+    requires com.fasterxml.jackson.databind;
 
     opens org.example.Controllers to javafx.fxml;
 
