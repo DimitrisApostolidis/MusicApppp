@@ -19,6 +19,10 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
 import javafx.scene.text.Text;
+import kong.unirest.JsonNode;
+import javafx.application.Platform;
+import java.util.HashMap;
+import java.util.ArrayList;
 
 
 
@@ -42,6 +46,11 @@ public class DashboardController {
     @FXML
     private Slider time;
 
+    @FXML
+    private ListView<String> resultsList;
+
+    private LastFmApiClient apiClient = new LastFmApiClient();
+
     private boolean isFavorite = false; // Μεταβλητή για να παρακολουθεί αν είναι στα αγαπημένα
 
     private int userId; // Ο χρήστης που είναι συνδεδεμένος
@@ -62,6 +71,24 @@ public class DashboardController {
 
     @FXML
     public void initialize() {
+
+        searchField.setOnKeyReleased(event -> {
+            String query = searchField.getText().trim();
+            if (!query.isEmpty()) {
+                resultsList.setVisible(true); // Εμφάνιση της λίστας
+                searchArtists(query);
+            } else {
+                resultsList.setVisible(false); // Απόκρυψη της λίστας
+            }
+        });
+
+        resultsList.setOnMouseClicked(event -> {
+            String selectedArtist = resultsList.getSelectionModel().getSelectedItem();
+            if (selectedArtist != null) {
+                System.out.println("Selected artist: " + selectedArtist);
+                // Μπορείς να καλέσεις τη μέθοδο για εμφάνιση πληροφοριών εδώ
+            }
+        });
         // Ρύθμιση εμφάνισης κουμπιού
         favoriteButton.setPrefSize(12, 12);
         favoriteButton.setMaxSize(12, 12);
@@ -121,6 +148,63 @@ public class DashboardController {
             System.err.println("Σφάλμα κατά την αφαίρεση του τραγουδιού από τα αγαπημένα: " + e.getMessage());
         }
     }
+
+    private void searchArtists(String query) {
+        new Thread(() -> {
+            try {
+                JsonNode response = apiClient.searchArtists(query);
+
+                if (response != null && response.getObject().has("results")) {
+                    var artistsArray = response.getObject()
+                            .getJSONObject("results")
+                            .getJSONObject("artistmatches")
+                            .getJSONArray("artist");
+
+                    List<String> artistNames = new ArrayList<>();
+                    for (int i = 0; i < artistsArray.length(); i++) {
+                        var artist = artistsArray.getJSONObject(i);
+                        String name = artist.getString("name");
+                        artistNames.add(name);
+                    }
+
+                    Platform.runLater(() -> {
+                        if (!artistNames.isEmpty()) {
+                            resultsList.setVisible(true); // Εμφάνιση λίστας αν υπάρχουν αποτελέσματα
+                            updateResultsList(artistNames);
+                        } else {
+                            resultsList.setVisible(false); // Απόκρυψη αν δεν υπάρχουν αποτελέσματα
+                        }
+                    });
+                } else {
+                    Platform.runLater(() -> {
+                        resultsList.setVisible(false); // Απόκρυψη σε περίπτωση σφάλματος
+                    });
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                Platform.runLater(() -> {
+                    resultsList.setVisible(false); // Απόκρυψη σε περίπτωση σφάλματος
+                });
+            }
+        }).start();
+    }
+
+    private void updateUIWithResults(String[] artistImages) {
+        ImageView[] artistViews = {artist1, artist2, artist3, artist4, artist5};
+        for (int i = 0; i < artistViews.length; i++) {
+            if (i < artistImages.length) {
+                artistViews[i].setImage(new Image(artistImages[i]));
+            } else {
+                artistViews[i].setImage(null); // Καθαρίζουμε αν δεν υπάρχουν αρκετά αποτελέσματα
+            }
+        }
+    }
+
+    private void updateResultsList(List<String> artistNames) {
+        resultsList.getItems().clear();
+        resultsList.getItems().addAll(artistNames);
+    }
+
 
     public void displayArtistImages(String[] imageUrls) {
         ImageView[] imageViews = {artist1, artist2, artist3, artist4, artist5, artist6, artist7, artist8, artist9, artist10};

@@ -40,10 +40,10 @@
             <version>3.3.5</version>
         </dependency>
         <dependency>
-        <groupId>mysql</groupId>
-        <artifactId>mysql-connector-java</artifactId>
-        <version>8.0.27</version> <!-- Χρησιμοποίησε την τελευταία διαθέσιμη έκδοση -->
-    </dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>8.0.27</version> <!-- Χρησιμοποίησε την τελευταία διαθέσιμη έκδοση -->
+        </dependency>
 
 
         <!-- Spring Data JPA για πρόσβαση σε βάσεις δεδομένων -->
@@ -87,11 +87,11 @@
             <artifactId>javafx-media</artifactId>
             <version>${javafx.version}</version>
         </dependency>
-            <dependency>
-                <groupId>org.json</groupId>
-                <artifactId>json</artifactId>
-                <version>20230227</version>
-            </dependency>
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20230227</version>
+        </dependency>
 
         <!-- Font Awesome FX για εικονίδια -->
         <dependency>

@@ -8,11 +8,10 @@
     <VBox layoutY="20.0" prefHeight="600.0" prefWidth="270.0" spacing="20.0" AnchorPane.leftAnchor="20.0">
         <Label styleClass="heading-label" text="Playlists" />
         <ListView fx:id="playlistView" prefHeight="400.0" prefWidth="250.0" />
-        <HBox spacing="10.0">
-            <TextField fx:id="newPlaylistName" prefHeight="38.0" prefWidth="32.0" promptText="New Playlist Name" />
+        <HBox spacing="10.0" alignment="CENTER">
+            <TextField fx:id="newPlaylistName" prefHeight="38.0" prefWidth="150.0" promptText="New Playlist Name" />
             <Button fx:id="addPlaylistButton" onAction="#handleAddPlaylist" text="Add" />
             <Button fx:id="deletePlaylistButton" onAction="#handleDeletePlaylist" text="Delete" />
-            <Button fx:id="addSongButton" onAction="#handleAddSongToPlaylist" text="Search and Add" />
         </HBox>
     </VBox>
 
@@ -20,6 +19,10 @@
     <VBox layoutY="20.0" prefHeight="600.0" prefWidth="270.0" spacing="20.0" AnchorPane.leftAnchor="320.0">
         <Label styleClass="subheading-label" text="Selected Playlist Details" />
         <ListView fx:id="albumListView" prefHeight="400.0" prefWidth="250.0" />
+        <HBox spacing="10.0" alignment="CENTER">
+            <Button fx:id="addSongButton" onAction="#handleAddSongToPlaylist" text="Search and Add" />
+            <Button fx:id="deleteSongButton" onAction="#handleDeleteSongFromPlaylist" text="Delete Selected Song" />
+        </HBox>
     </VBox>
 
     <!-- Available Songs from API -->

@@ -15,7 +15,7 @@ import java.util.List;
 
 public class DataBaseConnection {
     private Connection connection;
-    private static final String URL = "jdbc:mysql://localhost:3306/music_apppp";
+    private static final String URL = "jdbc:mysql://localhost:3306/rapsodiaplayer";
     private static final String USER = "root";
     private static final String PASSWORD = "";
     private int failedAttempts = 0;
@@ -214,7 +214,8 @@ public class DataBaseConnection {
         List<String> songs = new ArrayList<>();
         try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD)) {
             // Ανακοίνωση για το SQL με join στους πίνακες playlist_song και song
-            String sql = "SELECT playlist_song.song_name, song.artist FROM playlist_song JOIN song ON playlist_song.song_id = song.song_id WHERE playlist_song.playlist_id = ?";
+            String sql = "SELECT song.title AS song_name, song.artist FROM playlist_song "
+                    + "JOIN song ON playlist_song.song_id = song.song_id WHERE playlist_song.playlist_id = ?";
 
 
             try (PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -278,6 +279,38 @@ public class DataBaseConnection {
         return songs;
     }
 
+    public boolean deleteSongById(int songId) {
+        String query = "DELETE FROM song WHERE song_id = ?";
+        try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setInt(1, songId);
+            int rowsAffected = preparedStatement.executeUpdate();
+            return rowsAffected > 0; // Επιστρέφει true αν διαγράφηκε τουλάχιστον μία εγγραφή
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false; // Επιστρέφει false σε περίπτωση αποτυχίας
+    }
+
+    public int getSongIdByTitleAndArtist(String songTitle, String songArtist) {
+        String query = "SELECT song_id FROM song WHERE title = ? AND artist = ?";
+        try (Connection conn = getConnection(); // Χρήση της μεθόδου getConnection()
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setString(1, songTitle);
+            stmt.setString(2, songArtist);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("song_id"); // Επιστροφή του song_id αν βρεθεί
+            } else {
+                return -1; // Επιστροφή -1 αν δεν βρεθεί
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return -1; // Επιστροφή -1 σε περίπτωση λάθους
+        }
+    }
+
+
     public String executeQuery(String query, String userId) throws Exception {
         Connection connection = DataBaseConnection.getConnection(); // Μέθοδος για σύνδεση με τη βάση
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
@@ -330,11 +363,4 @@ public class DataBaseConnection {
 
 
     }
-
-
-
-
-
-
-
 }

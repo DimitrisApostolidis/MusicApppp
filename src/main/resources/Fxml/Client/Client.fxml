@@ -15,9 +15,9 @@
         </VBox>
     </center>
 
-    <bottom>
+    <top>
 
         <fx:include source="CustomTitleBar.fxml" />
 
-    </bottom>
+    </top>
 </BorderPane>
