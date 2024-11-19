@@ -3,13 +3,13 @@
 <?import javafx.scene.layout.BorderPane?>
 
 <?import javafx.scene.layout.VBox?>
-<BorderPane xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.Controllers.Client.ClientController" >
+<BorderPane xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.Controllers.Client.ClientController" styleClass="background" >
 
     <left>
         <fx:include source="ClientMenu.fxml"/>
     </left>
     <center>
-        <VBox fx:id="vbox" spacing="5"  styleClass="background" >
+        <VBox fx:id="vbox" spacing="5"  >
             <Text fx:id="welcomeText" text="Welcome back!" styleClass="welcome-text"   />
             <fx:include source="Dashboard.fxml" />
         </VBox>

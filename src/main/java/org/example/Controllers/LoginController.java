@@ -130,8 +130,6 @@ public class LoginController implements Initializable {
             // Δημιουργία σκηνής και εφαρμογή στυλ
             Scene clientScene = new Scene(clientRoot);
             clientScene.getStylesheets().add(getClass().getResource("/Styles/Background.css").toExternalForm());
-            clientScene.getStylesheets().add(getClass().getResource("/Styles/CostumeTitleBar.css").toExternalForm());
-            clientScene.getStylesheets().add(getClass().getResource("/Styles/ClientMenu.css").toExternalForm());
 
             // Κλείσιμο του τρέχοντος παραθύρου
             Stage currentStage = (Stage) username_fld.getScene().getWindow();
