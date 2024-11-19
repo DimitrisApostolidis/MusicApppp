@@ -15,6 +15,7 @@ public class CostumTitleBarController {
 
     private double xOffset = 0;
     private double yOffset = 0;
+    private int flag = 0;
 
     @FXML
     private Button closeButton; // Link to the close button in FXML
@@ -59,12 +60,14 @@ public class CostumTitleBarController {
     @FXML
     private void handleEnlargeButtonAction() {
         Stage stage = (Stage) enlargeButton.getScene().getWindow();
-        if (stage.getWidth() > 1000 && stage.getHeight() > 1000) {
+        if (flag == 1) {            //if maximized
             stage.setWidth(1083);
             stage.setHeight(826);
-        } else {
-            stage.setWidth(1920);
-            stage.setHeight(1040);
+            flag =0;
+        } else {                    //set it full screen
+            stage.setWidth(Screen.getPrimary().getVisualBounds().getWidth());
+            stage.setHeight(Screen.getPrimary().getVisualBounds().getHeight());
+            flag =1;
         }
         stage.setX((Screen.getPrimary().getVisualBounds().getWidth() - stage.getWidth()) / 2);
         stage.setY((Screen.getPrimary().getVisualBounds().getHeight() - stage.getHeight()) / 2);
