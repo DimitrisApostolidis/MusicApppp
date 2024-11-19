@@ -85,7 +85,7 @@
     -fx-font-size: 24px; /* Increased font size for better readability */
     -fx-font-weight: 600; /* Bold text */
     -fx-text-fill: #f0e68c; /* Light yellow for better visibility */
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 3, 1.0, 0, 1); /* Subtle shadow for hovering effect */
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 2, 1.0, 0, 1); /* Subtle shadow for hovering effect */
 }
 
 /* Additional spacing for better layout */
