@@ -15,10 +15,10 @@ import javafx.util.Duration;
 import org.example.Models.Model;
 
 public class MainApp extends Application {
-
+    //guccimane
     @Override
     public void start(Stage stage) {
-
+//ss
         try {
             // Load the loading screen FXML
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Client/LoadingWindow.fxml"));

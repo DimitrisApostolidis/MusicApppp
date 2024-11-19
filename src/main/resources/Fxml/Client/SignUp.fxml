@@ -27,11 +27,11 @@
                     <Font size="17.0" />
                 </font>
             </Label>
-            <TextField fx:id="username_fld" styleClass="input_field" />
+            <TextField fx:id="username_fld" styleClass="input_field" promptText="👤 Username"/>
             <Label text="Password" textFill="#d7d7d7" />
-            <PasswordField fx:id="password_fld" styleClass="input_field" />
+            <PasswordField fx:id="password_fld" styleClass="input_field" promptText="🔑 Password" />
             <Label text="Email" textFill="#d0d0d0" />
-            <TextField fx:id="email_fld" styleClass="input_field" />
+            <TextField fx:id="email_fld" styleClass="input_field" promptText="📧 Email"/>
             <Button fx:id="createAccount_btn" mnemonicParsing="false" prefHeight="50.0" text="Sign Up" />
             <Button fx:id="backToLogin_btn" mnemonicParsing="false" prefHeight="50.0" text="Back to Login" />
             <Label fx:id="error_lbl" styleClass="error_lbl" text="Error:" visible="false" />
