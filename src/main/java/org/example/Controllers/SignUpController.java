@@ -57,7 +57,7 @@ public class SignUpController {
                 currentStage.close();
 
                 // Φόρτωσε το client.fxml
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Client/client.fxml"));
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Client/Client.fxml"));
                 Parent clientRoot = loader.load();
 
                 // Δημιούργησε νέο Stage για το client.fxml

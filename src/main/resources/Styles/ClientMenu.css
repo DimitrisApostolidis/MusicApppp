@@ -1,3 +1,7 @@
+.background {
+    -fx-background-color: #f0f0f0; /* ή όποιο χρώμα θέλεις */
+}
+
 .main_menu_container {
     -fx-background-color: rgba(255, 255, 255, 0.0);
     -fx-alignment: center;

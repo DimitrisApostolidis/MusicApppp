@@ -1,7 +1,12 @@
 /* General Background */
 .background {
     -fx-background-image: url("https://i.imgur.com/BkAiFZf.png");  /* Ensure the image has transparency where needed */
-    -fx-background-radius: 30;  /* Rounded corners */
+    -fx-background-radius: 30;/* Rounded corners */
     -fx-padding: 10;  /* Padding around the content */
-    -fx-background-size: cover;  /* Ensure the background image covers the area */
+    -fx-background-size: cover;
+}
+.welcome-text {
+    -fx-font-size: 24px;
+    -fx-fill: white;
+    -fx-font-weight: bold;  /* Αν θέλεις να το κάνεις και έντονο */
 }
