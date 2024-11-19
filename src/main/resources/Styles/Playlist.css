@@ -18,7 +18,7 @@
 }
 
 .playlist-item:pressed {
-    -fx-background-color: #4a90e2; /* Blue when pressed */
+    -fx-background-color: #1c1d21; /* Blue when pressed */
     -fx-text-fill: #ffffff; /* White text on press */
 }
 
@@ -27,14 +27,14 @@
 /* Button Style */
 .button {
     -fx-background-radius: 15; /* Rounded buttons */
-    -fx-border-radius: 15;
-    -fx-min-width: 100px; /* Adjusted size */
+    -fx-border-radius: 15;     /* Match border corners */
+    -fx-min-width: 100px;      /* Adjusted size */
     -fx-min-height: 35px;
-    -fx-background-color: #4a90e2; /* Modern blue */
-    -fx-font-size: 16px; /* Font size for better readability */
-    -fx-text-fill: #ffffff; /* White text */
-    -fx-border-color: #357ABD; /* Border matching the background */
-    -fx-border-width: 1px;
+    -fx-background-color: #1c1d21; /* Matching background color */
+    -fx-font-size: 16px;       /* Font size for readability */
+    -fx-text-fill: #ffffff;    /* White text */
+    -fx-border-color: #ffffff; /* White border */
+    -fx-border-width: 1px;     /* Border thickness */
     -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 3, 1.0, 0, 1);
 }
 
@@ -49,31 +49,57 @@
 
 /* Text Field Style */
 .text-field {
-    -fx-background-radius: 10; /* Rounded corners */
-    -fx-padding: 8; /* Padding for comfort */
-    -fx-border-color: #4a90e2; /* Blue border */
-    -fx-border-width: 1px;
-    -fx-font-size: 14px;
+    -fx-background-radius: 15; /* Rounded corners matching the button */
+    -fx-border-radius: 15;     /* Match border corners */
+    -fx-padding: 8;            /* Comfortable padding */
+    -fx-border-color: #ffffff; /* White border */
+    -fx-border-width: 1px;     /* Border thickness */
+    -fx-font-size: 14px;       /* Font size */
+    -fx-background-color: #1c1d21; /* Matching background color */
+    -fx-text-fill: #ffffff;    /* White text for readability */
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 3, 1.0, 0, 1);
 }
 
-/* ListView Style */
 .list-view {
-    -fx-background-radius: 10; /* Rounded corners */
-    -fx-padding: 10; /* Add padding for space */
-    -fx-background-color: #f9f9f9; /* Light background */
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 5, 0.0, 2, 2);
+    -fx-background-color: transparent; /* Transparent background */
+    -fx-border-color: white;           /* White border color */
+    -fx-border-width: 1px;             /* Thin border width */
+    -fx-border-radius: 5px;            /* Rounded corners */
+    -fx-padding: 5px;                  /* Padding inside the border */
+}
+
+.list-view .cell {
+    -fx-background-color: transparent; /* Default cell background */
+    -fx-text-fill: white;              /* Text color */
+}
+
+.list-view .cell:filled:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.1); /* Subtle highlight on hover */
+}
+
+.list-view .cell:selected {
+    -fx-background-color: rgba(255, 255, 255, 0.1); /* Subtle highlight on hover */
+    -fx-text-fill: white;          /* White text for contrast */
+    -fx-border-color: white;       /* Optional: border around selection */
+    -fx-border-width: 1px;         /* Thin border */
+    -fx-border-radius: 5px;        /* Rounded selection */
 }
 
 /* Label Style */
 .heading-label {
-    -fx-font-size: 24px; /* Larger text */
-    -fx-font-weight: bold; /* Bold for emphasis */
-    -fx-text-fill: #333333; /* Dark text for visibility */
+    -fx-font-family: 'Segoe UI', 'Roboto', 'Open Sans', sans-serif; /* Font family with fallbacks */
+    -fx-font-size: 24px; /* Increased font size for better readability */
+    -fx-font-weight: 600; /* Bold text */
+    -fx-text-fill: #ffffff; /* Light yellow for better visibility */
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 2, 1.0, 0, 1); /* Subtle shadow for hovering effect */
 }
 
 .subheading-label {
-    -fx-font-size: 18px; /* Smaller than main heading */
-    -fx-text-fill: #555555; /* Gray text */
+    -fx-font-family: 'Segoe UI', 'Roboto', 'Open Sans', sans-serif; /* Font family with fallbacks */
+    -fx-font-size: 20px; /* Increased font size for better readability */
+    -fx-font-weight: 600; /* Bold text */
+    -fx-text-fill: #ffffff; /* Light yellow for better visibility */
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 2, 1.0, 0, 1); /* Subtle shadow for hovering effect */
 }
 
 /* Add Song Button */
@@ -98,13 +124,14 @@
     -fx-background-color: transparent; /* Transparent background */
 }
 .scroll-bar .thumb {
-    -fx-background-color: #4a90e2; /* Blue thumb */
+    -fx-background-color: #ffffff; /* Blue thumb */
     -fx-background-radius: 5; /* Rounded thumb */
 }
 
 /* Additional spacing for layout */
 .container {
-    -fx-padding: 20; /* Add padding around containers */
-    -fx-background-color: #ffffff; /* White background for main sections */
+    -fx-padding: 10; /* Add padding around containers */
+    -fx-background-color: #1c1d21; /* White background for main sections */
     -fx-background-radius: 15; /* Rounded corners */
+    -fx-text-fill: #ffffff; /* White text */
 }
