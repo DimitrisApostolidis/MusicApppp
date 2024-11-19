@@ -7,6 +7,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.CheckBox;
 import javafx.stage.Stage;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -18,11 +19,13 @@ import java.util.logging.Logger;
 import java.util.logging.Level;
 
 import javafx.util.Duration;
+import org.example.Controllers.Client.ClientController;
 import org.example.DataBase.DataBaseConnection; // Ensure this class exists
 import org.example.Controllers.Client.DashboardController;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.prefs.Preferences;
 
 public class LoginController implements Initializable {
     private static final Logger logger = Logger.getLogger(LoginController.class.getName());
@@ -40,13 +43,30 @@ public class LoginController implements Initializable {
     private TextField password_fld;
     @FXML
     private Button login_btn;
+
     public Label username_lbl;
+
+    @FXML
+    private CheckBox remember_me_chk;  // Το CheckBox για το "Remember me"
+
+    // Για την αποθήκευση και ανάκτηση στοιχείων χρήστη
+    private Preferences prefs = Preferences.userNodeForPackage(LoginController.class); // Preferences για την εφαρμογή
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         preloadClientScene();
         login_btn.setOnAction(actionEvent -> handleLogin());
         createAccount_btn.setOnAction(actionEvent -> handleCreateAccount());
+
+        // Έλεγχος αν υπάρχουν αποθηκευμένα στοιχεία και αυτόματη συμπλήρωση
+        String savedUsername = prefs.get("username", "");
+        String savedPassword = prefs.get("password", "");
+
+        if (!savedUsername.isEmpty() && !savedPassword.isEmpty()) {
+            username_fld.setText(savedUsername);
+            password_fld.setText(savedPassword);
+            remember_me_chk.setSelected(true);  // Αν είναι αποθηκευμένο, επιλέγεται το checkbox
+        }
     }
 
     private void preloadClientScene() {
@@ -71,12 +91,21 @@ public class LoginController implements Initializable {
         String password = password_fld.getText();
         DataBaseConnection db = new DataBaseConnection();
 
-        // If admin login
+        // Αν είναι επιλεγμένο το "Remember me"
+        if (remember_me_chk.isSelected()) {
+            prefs.put("username", username);  // Αποθήκευση του username
+            prefs.put("password", password);  // Αποθήκευση του password
+        } else {
+            // Διαγραφή των αποθηκευμένων στοιχείων αν δεν είναι επιλεγμένο το "Remember me"
+            prefs.remove("username");
+            prefs.remove("password");
+        }
         if ("admin".equals(username) && "admin".equals(password)) {
             openClientScene(username);
         } else {
-            // Verify credentials
+
             if (db.verifyCredentials(username, password)) {
+                String userId = db.getUserId(username);
                 openClientScene(username);
             } else {
                 error_lbl.setText("Invalid username or password");
@@ -85,43 +114,47 @@ public class LoginController implements Initializable {
         }
     }
 
-    // Open the client scene, either cached or newly loaded
     private void openClientScene(String username) {
         try {
-            // If the scene is not already cached, load it
-            if (clientScene == null) {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Client/Client.fxml"));
-                Parent clientRoot = loader.load();
+            // Φόρτωση του Client.fxml
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Client/Client.fxml"));
+            Parent clientRoot = loader.load();
 
-                // Set the username for the DashboardController
-                DashboardController dashboardController = loader.getController();
-                if (dashboardController != null) {
-                    dashboardController.setUsername(username); // Set username
-                } else {
-                    logger.log(Level.SEVERE, "Failed to load Client from FXML");
-                }
-
-                // Cache the scene
-                clientScene = new Scene(clientRoot);
-                clientScene.getStylesheets().add(getClass().getResource("/Styles/Background.css").toExternalForm());
+            // Λήψη του controller και ρύθμιση των δεδομένων
+            ClientController clientController = loader.getController();
+            if (clientController != null) {
+                clientController.setUsername(username);
+                clientController.setWelcomeText(username);
             }
 
-            // Close the current window and open the client window
-            Stage currentStage = (Stage) login_btn.getScene().getWindow();
+            // Δημιουργία σκηνής και εφαρμογή στυλ
+            Scene clientScene = new Scene(clientRoot);
+            clientScene.getStylesheets().add(getClass().getResource("/Styles/Background.css").toExternalForm());
+            clientScene.getStylesheets().add(getClass().getResource("/Styles/CostumeTitleBar.css").toExternalForm());
+            clientScene.getStylesheets().add(getClass().getResource("/Styles/ClientMenu.css").toExternalForm());
+
+            // Κλείσιμο του τρέχοντος παραθύρου
+            Stage currentStage = (Stage) username_fld.getScene().getWindow();
             currentStage.close();
-            username_fld.clear();
-            password_fld.clear();
+
+            // Δημιουργία νέου παραθύρου και εφαρμογή εφέ
             Stage newStage = new Stage();
-            newStage.initStyle(StageStyle.UNDECORATED);
-            newStage.setScene(clientScene); // Use the cached scene
+            newStage.initStyle(StageStyle.UNDECORATED); // Αφαίρεση default title bar
+            newStage.setScene(clientScene);
+
+            // Προσθήκη εφέ fade-in
             newStage.setOpacity(0);
             newStage.show();
+
             Timeline timeline = new Timeline(
                     new KeyFrame(Duration.ZERO, new KeyValue(newStage.opacityProperty(), 0)),
                     new KeyFrame(Duration.seconds(0.3), new KeyValue(newStage.opacityProperty(), 1))
             );
-            timeline.setCycleCount(1); // Play the animation once
-            timeline.play(); // Start the timeline
+            timeline.play(); // Έναρξη του animation
+
+            // Καθαρισμός πεδίων
+            username_fld.clear();
+            password_fld.clear();
 
         } catch (IOException e) {
             logger.log(Level.SEVERE, "Failed to load Client scene", e);
@@ -147,4 +180,21 @@ public class LoginController implements Initializable {
             logger.log(Level.SEVERE, "Failed to load SignUp scene", e);
         }
     }
+    public String getUsernameFromDatabase(String userId) {
+        DataBaseConnection db = new DataBaseConnection();
+        String query = "SELECT username FROM user WHERE user_id = ?";
+
+        try {
+            return db.executeQuery(query, userId);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "Guest";
+        }
+
+    }
+
+
+
+
+
 }

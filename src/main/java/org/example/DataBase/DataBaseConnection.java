@@ -84,6 +84,7 @@ public class DataBaseConnection {
         }
         return connection;
     }
+
     public boolean addPlaylist(String playlistName) {
         String query = "INSERT INTO playlist (name) VALUES (?)";
 
@@ -159,11 +160,8 @@ public class DataBaseConnection {
         }
     }
 
-
-
-
     public int getSongIdByTitle(String title) {
-        String sql = "SELECT song_id FROM song WHERE title = ?";
+        String sql = "SELECT song_id FROM song WHERE name = ?";
         try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
@@ -178,7 +176,6 @@ public class DataBaseConnection {
         }
         return -1; // Επιστρέφει -1 αν δεν βρεθεί το τραγούδι
     }
-
 
 
     public boolean deletePlaylistByName(String playlistName) {
@@ -213,13 +210,12 @@ public class DataBaseConnection {
     }
 
 
-
-
     public List<String> getPlaylistSongs(int playlist_id) {
         List<String> songs = new ArrayList<>();
         try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD)) {
             // Ανακοίνωση για το SQL με join στους πίνακες playlist_song και song
-            String sql = "SELECT playlist_song.song_name, song.artist FROM playlist_song JOIN song ON playlist_song.song_id = song.song_id WHERE playlist_song.playlist_id = ?";
+            String sql = "SELECT song.title AS song_name, song.artist FROM playlist_song "
+                    + "JOIN song ON playlist_song.song_id = song.song_id WHERE playlist_song.playlist_id = ?";
 
 
             try (PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -237,6 +233,7 @@ public class DataBaseConnection {
         }
         return songs;
     }
+
     public int getPlaylistIdByName(String playlistName) {
         String query = "SELECT playlist_id FROM playlist WHERE name = ?";
         try (Connection conn = getConnection();
@@ -252,11 +249,11 @@ public class DataBaseConnection {
         return -1; // Επιστρέφει -1 αν δεν βρεθεί
     }
 
-    public boolean saveTrackToDatabase(String songName, String artist, String album) {
-        String query = "INSERT INTO song (name, artist, album) VALUES (?, ?, ?)";
+    public boolean saveTrackToDatabase(String title, String artist, String album) {
+        String query = "INSERT INTO song (title, artist, album) VALUES (?, ?, ?)";
         try (Connection conn = getConnection();
              PreparedStatement stmt = conn.prepareStatement(query)) {
-            stmt.setString(1, songName);
+            stmt.setString(1, title);
             stmt.setString(2, artist);
             stmt.setString(3, album);
             stmt.executeUpdate();
@@ -274,12 +271,74 @@ public class DataBaseConnection {
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(query)) {
             while (rs.next()) {
-                songs.add(rs.getString("name"));
+                songs.add(rs.getString("title"));
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return songs;
+    }
+
+    public boolean deleteSongById(int songId) {
+        String query = "DELETE FROM song WHERE song_id = ?";
+        try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setInt(1, songId);
+            int rowsAffected = preparedStatement.executeUpdate();
+            return rowsAffected > 0; // Επιστρέφει true αν διαγράφηκε τουλάχιστον μία εγγραφή
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false; // Επιστρέφει false σε περίπτωση αποτυχίας
+    }
+
+    public int getSongIdByTitleAndArtist(String songTitle, String songArtist) {
+        String query = "SELECT song_id FROM song WHERE title = ? AND artist = ?";
+        try (Connection conn = getConnection(); // Χρήση της μεθόδου getConnection()
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setString(1, songTitle);
+            stmt.setString(2, songArtist);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("song_id"); // Επιστροφή του song_id αν βρεθεί
+            } else {
+                return -1; // Επιστροφή -1 αν δεν βρεθεί
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return -1; // Επιστροφή -1 σε περίπτωση λάθους
+        }
+    }
+
+
+    public String executeQuery(String query, String userId) throws Exception {
+        Connection connection = DataBaseConnection.getConnection(); // Μέθοδος για σύνδεση με τη βάση
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setString(1, userId); // Ρύθμιση του userId στην query
+
+            ResultSet resultSet = stmt.executeQuery();
+            if (resultSet.next()) {
+                return resultSet.getString("username"); // Επιστροφή του username
+            } else {
+                return null; // Αν δεν βρέθηκε το όνομα χρήστη
+            }
+        }
+    }
+
+    public String getUserId(String username) {
+        String query = "SELECT user_id FROM user WHERE username = ?";
+        try (Connection conn = DataBaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setString(1, username);
+            ResultSet resultSet = stmt.executeQuery();
+            if (resultSet.next()) {
+                return resultSet.getString("user_id");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null; // Επιστρέφει null αν δεν βρεθεί ο χρήστης
     }
 
     public int addSongToDatabase(String songTitle, String artistName) {
@@ -301,9 +360,7 @@ public class DataBaseConnection {
             e.printStackTrace();
             return -1;
         }
+
+
     }
-
-
-
-
 }

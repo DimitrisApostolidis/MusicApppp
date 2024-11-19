@@ -9,6 +9,7 @@ module org.example {
     requires unirest.java;
     requires java.net.http;
     requires com.fasterxml.jackson.databind;
+    requires java.prefs;
 
     opens org.example.Controllers to javafx.fxml;
 

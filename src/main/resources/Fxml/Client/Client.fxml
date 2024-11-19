@@ -1,19 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
+<?import javafx.scene.text.Text?>
 <?import javafx.scene.layout.BorderPane?>
 
-<BorderPane styleClass="background" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1"  >
-    <left>
-        <fx:include source="ClientMenu.fxml" />
-    </left>
+<?import javafx.scene.layout.VBox?>
+<BorderPane xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.Controllers.Client.ClientController" >
 
+    <left>
+        <fx:include source="ClientMenu.fxml"/>
+    </left>
     <center>
-        <fx:include source="Dashboard.fxml" />
+        <VBox fx:id="vbox" spacing="5"  styleClass="background" >
+            <Text fx:id="welcomeText" text="Welcome back!" styleClass="welcome-text"   />
+            <fx:include source="Dashboard.fxml" />
+        </VBox>
     </center>
 
     <top>
+
         <fx:include source="CustomTitleBar.fxml" />
+
     </top>
-
-
 </BorderPane>

@@ -11,6 +11,14 @@ import kong.unirest.JsonNode;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -152,7 +160,7 @@ public class PlaylistController {
                         }
                         availableSongsListView.getItems().setAll(trackNames);
 
-            // Διαχείριση διπλού κλικ για προσθήκη τραγουδιού στην playlist
+                        // Διαχείριση διπλού κλικ για προσθήκη τραγουδιού στην playlist
                         availableSongsListView.setOnMouseClicked(event -> {
                             if (event.getClickCount() == 2) {
                                 String selectedSong = availableSongsListView.getSelectionModel().getSelectedItem();
@@ -185,6 +193,73 @@ public class PlaylistController {
             System.out.println("Δεν έχει επιλεχθεί κάποια playlist.");
         }
     }
+
+    @FXML
+    private void handleDeleteSongFromPlaylist() {
+        // Παίρνουμε το επιλεγμένο τραγούδι
+        String selectedSong = albumListView.getSelectionModel().getSelectedItem();
+
+        // Έλεγχος αν υπάρχει επιλεγμένο τραγούδι
+        if (selectedSong != null) {
+            // Παίρνουμε την επιλεγμένη playlist
+            String selectedPlaylist = playlistView.getSelectionModel().getSelectedItem();
+            if (selectedPlaylist != null) {
+                // Παίρνουμε το playlistId από τη βάση δεδομένων
+                int playlistId = dbConnection.getPlaylistIdByName(selectedPlaylist);
+
+                // Διαχωρισμός του τραγουδιού σε τίτλο και καλλιτέχνη
+                String songTitle = "";
+                String songArtist = "";
+
+                try {
+                    String[] parts = selectedSong.split(" - "); // Διαχωρισμός στο " - "
+                    songTitle = parts[0].replace("Song: ", "").trim(); // Αφαίρεση "Song: "
+                    songArtist = parts[1].replace("Artist: ", "").trim(); // Αφαίρεση "Artist: "
+                } catch (Exception e) {
+                    System.out.println("Σφάλμα στη μορφή του τραγουδιού: " + selectedSong);
+                    return;
+                }
+
+                // Παίρνουμε το songId από τη βάση δεδομένων χρησιμοποιώντας τίτλο και καλλιτέχνη
+                int songId = dbConnection.getSongIdByTitleAndArtist(songTitle, songArtist);
+
+                if (songId == -1) {
+                    System.out.println("Το τραγούδι '" + songTitle + "' του καλλιτέχνη '" + songArtist + "' δεν βρέθηκε στη βάση δεδομένων.");
+                    return;
+                }
+
+                // Διαγραφή τραγουδιού από την playlist
+                String deleteQuery = "DELETE FROM playlist_song WHERE playlist_id = ? AND song_id = ?";
+                try (Connection conn = DataBaseConnection.getConnection();
+                     PreparedStatement stmt = conn.prepareStatement(deleteQuery)) {
+
+                    System.out.println("Playlist ID: " + playlistId);
+                    System.out.println("Song ID: " + songId);
+
+                    stmt.setInt(1, playlistId);
+                    stmt.setInt(2, songId);
+                    int rowsAffected = stmt.executeUpdate();
+
+                    if (rowsAffected > 0) {
+                        System.out.println("Το τραγούδι διαγράφηκε επιτυχώς από την playlist.");
+                        albumListView.getItems().remove(selectedSong);
+                    } else {
+                        System.out.println("Δεν βρέθηκε αντιστοιχία για διαγραφή.");
+                    }
+                } catch (SQLException e) {
+                    System.out.println("Σφάλμα κατά τη διαγραφή του τραγουδιού.");
+                    e.printStackTrace();
+                }
+            } else {
+                System.out.println("Δεν έχει επιλεχθεί κάποια playlist.");
+            }
+        } else {
+            System.out.println("Δεν έχει επιλεχθεί κάποιο τραγούδι για διαγραφή.");
+        }
+    }
+
+
+
 
     public List<Playlist> getPlaylists() {
         return playlists;
