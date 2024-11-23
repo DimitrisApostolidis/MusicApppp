@@ -89,6 +89,23 @@ public class DashboardController {
     @FXML
     public void initialize() {
 
+        // Προσθήκη listener για κλικ έξω από τη λίστα
+        rootPane.addEventFilter(javafx.scene.input.MouseEvent.MOUSE_PRESSED, event -> {
+            if (resultsList.isVisible()) {
+                // Υπολογισμός των συντεταγμένων του `resultsList` στη σκηνή
+                double listX = resultsList.localToScene(resultsList.getBoundsInLocal()).getMinX();
+                double listY = resultsList.localToScene(resultsList.getBoundsInLocal()).getMinY();
+                double listWidth = resultsList.getBoundsInParent().getWidth();
+                double listHeight = resultsList.getBoundsInParent().getHeight();
+
+                // Έλεγχος αν το κλικ έγινε εκτός του `resultsList`
+                if (!(event.getSceneX() >= listX && event.getSceneX() <= listX + listWidth &&
+                        event.getSceneY() >= listY && event.getSceneY() <= listY + listHeight)) {
+                    resultsList.setVisible(false); // Απόκρυψη λίστας
+                }
+            }
+        });
+
         searchField.setOnKeyReleased(event -> {
             String query = searchField.getText().trim();
             if (!query.isEmpty()) {
