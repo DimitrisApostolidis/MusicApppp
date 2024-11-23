@@ -150,6 +150,7 @@ public class LoginController implements Initializable {
             );
             timeline.play(); // Έναρξη του animation
 
+
             // Καθαρισμός πεδίων
             username_fld.clear();
             password_fld.clear();
