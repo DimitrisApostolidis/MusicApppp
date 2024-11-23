@@ -99,6 +99,9 @@ public class LoginController implements Initializable {
             // Διαγραφή των αποθηκευμένων στοιχείων αν δεν είναι επιλεγμένο το "Remember me"
             prefs.remove("username");
             prefs.remove("password");
+            // Καθαρισμός πεδίων
+            username_fld.clear();
+            password_fld.clear();
         }
         if ("admin".equals(username) && "admin".equals(password)) {
             openClientScene(username);
@@ -151,9 +154,7 @@ public class LoginController implements Initializable {
             timeline.play(); // Έναρξη του animation
 
 
-            // Καθαρισμός πεδίων
-            username_fld.clear();
-            password_fld.clear();
+
 
         } catch (IOException e) {
             logger.log(Level.SEVERE, "Failed to load Client scene", e);
