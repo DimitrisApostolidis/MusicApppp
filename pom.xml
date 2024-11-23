@@ -30,7 +30,9 @@
             <id>central</id>
             <url>https://repo.maven.apache.org/maven2</url>
         </repository>
-    </repositories>
+        </repositories>
+
+
 
     <dependencies>
         <!-- Spring Boot Starter Web για web εφαρμογές -->
@@ -110,11 +112,6 @@
             <artifactId>junit-jupiter</artifactId>
             <version>RELEASE</version>
             <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.json</groupId>
-            <artifactId>json</artifactId>
-            <version>20210307</version>
         </dependency>
         <dependency>
             <groupId>com.github.jiconfont</groupId>

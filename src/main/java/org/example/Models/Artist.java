@@ -2,34 +2,19 @@ package org.example.Models;
 
 public class Artist {
     private String name;
-    private String biography;
+    private String imageUrl;
 
-    public Artist(String name, String biography) {
+    // Κατασκευαστής, getters και setters
+    public Artist(String name, String imageUrl) {
         this.name = name;
-        this.biography = biography;
+        this.imageUrl = imageUrl;
     }
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getBiography() {
-        return biography;
-    }
-
-    public void setBiography(String biography) {
-        this.biography = biography;
-    }
-
-    @Override
-    public String toString() {
-        return "Artist{" +
-                "name='" + name + '\'' +
-                ", biography='" + biography + '\'' +
-                '}';
+    public String getImageUrl() {
+        return imageUrl;
     }
 }

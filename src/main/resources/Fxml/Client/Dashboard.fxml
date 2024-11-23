@@ -13,6 +13,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Text?>
 <?import javafx.scene.control.ListView?>
+<?import javafx.scene.layout.HBox?>
 
 <AnchorPane prefHeight="750.0" prefWidth="850.0" stylesheets="@../../Styles/Dashboard.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.Controllers.Client.DashboardController">
    <Button fx:id="pausee" layoutX="444.0" layoutY="666.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="28.0" text="⏸" />
@@ -30,36 +31,28 @@
          <RowConstraints maxHeight="150.0" minHeight="100.0" prefHeight="150.0" vgrow="SOMETIMES" />
          <RowConstraints maxHeight="150.0" minHeight="100.0" prefHeight="150.0" vgrow="SOMETIMES" />
       </rowConstraints>
+      <HBox fx:id="imageContainer" spacing="10" alignment="CENTER">
       <ImageView fx:id="artist1" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" styleClass="album-cover">
-         <Image url="https://i.imgur.com/T454ikE.png" />
       </ImageView>
       <ImageView fx:id="artist2" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" styleClass="album-cover" GridPane.columnIndex="1">
-         <Image url="https://i.imgur.com/1sKpTcI.png" />
       </ImageView>
       <ImageView fx:id="artist3" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" styleClass="album-cover" GridPane.columnIndex="2">
-         <Image url="https://i.imgur.com/3bOD1EC.png" />
       </ImageView>
       <ImageView fx:id="artist4" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" styleClass="album-cover" GridPane.columnIndex="3">
-         <Image url="https://i.imgur.com/eo8EOxs.png" />
       </ImageView>
       <ImageView fx:id="artist5" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" styleClass="album-cover" GridPane.columnIndex="4">
-         <Image url="https://i.imgur.com/CH0lAYM.png" />
       </ImageView>
       <ImageView fx:id="artist6" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" styleClass="album-cover" GridPane.rowIndex="1">
-         <Image url="https://i.imgur.com/BR0P8Er.png" />
       </ImageView>
       <ImageView fx:id="artist7" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" styleClass="album-cover" GridPane.columnIndex="1" GridPane.rowIndex="1">
-         <Image url="https://i.imgur.com/4MVUyqP.png" />
       </ImageView>
       <ImageView fx:id="artist8" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" styleClass="album-cover" GridPane.columnIndex="2" GridPane.rowIndex="1">
-         <Image url="https://i.imgur.com/VrUnZbE.png" />
       </ImageView>
       <ImageView fx:id="artist9" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" styleClass="album-cover" GridPane.columnIndex="3" GridPane.rowIndex="1">
-         <Image url="https://i.imgur.com/hMylE9I.png" />
       </ImageView>
       <ImageView fx:id="artist10" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" styleClass="album-cover" GridPane.columnIndex="4" GridPane.rowIndex="1">
-         <Image url="https://i.imgur.com/9HDHoIA.png" />
       </ImageView>
+      </HBox>
    </GridPane>
 
 
