@@ -73,3 +73,4 @@
    <TextField fx:id="searchField" layoutX="9.0" layoutY="99.0" prefHeight="32.0" prefWidth="527.0" />
    <ListView fx:id="resultsList" layoutX="9.0" layoutY="129.0" prefWidth="527" prefHeight="400" visible="false"/>
 </AnchorPane>
+
