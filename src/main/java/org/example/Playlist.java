@@ -30,10 +30,6 @@ public class Playlist {
         return songs;
     }
 
-    public int getTotalDuration() {
-        return songs.stream().mapToInt(Song::getDuration).sum();
-    }
-
 
 
     public String getPlaylistName() {
