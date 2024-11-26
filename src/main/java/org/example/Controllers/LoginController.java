@@ -118,6 +118,7 @@ public class LoginController implements Initializable {
             String userId = "admin";
             playlistController.saveLoggedInUserId(userId);
             openClientScene(username);
+            error_lbl.setVisible(false);
 
         } else {
             // Έλεγχος διαπιστευτηρίων χρήστη
@@ -125,6 +126,7 @@ public class LoginController implements Initializable {
                 String userId = db.getUserId(username); // Λήψη του νέου userId
                 playlistController.saveLoggedInUserId(userId);
                 openClientScene(username);
+                error_lbl.setVisible(false);
 
             } else {
                 error_lbl.setText("Invalid username or password");
