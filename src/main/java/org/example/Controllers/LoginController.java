@@ -134,6 +134,7 @@ public class LoginController implements Initializable {
     }
 
 
+
     private void openClientScene(String username) {
         try {
             // Φόρτωση του Client.fxml

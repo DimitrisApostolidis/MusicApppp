@@ -48,6 +48,9 @@ public class DataBaseConnection {
         }
     }
 
+
+
+
     public boolean registerUser(String username, String email, String password) {
         String checkUserQuery = "SELECT * FROM user WHERE username = ? OR email = ?";
         String insertUserQuery = "INSERT INTO user (username, email, password) VALUES (?, ?, ?)";

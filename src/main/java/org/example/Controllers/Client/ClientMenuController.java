@@ -63,6 +63,8 @@ public class ClientMenuController implements Initializable {
 
 
 
+
+
     private void changeScene(String fxmlPath) {
         if (sceneCache.containsKey(fxmlPath)) {
             Stage currentStage = (Stage) dashboard_btn.getScene().getWindow(); // Get the current stage from any button

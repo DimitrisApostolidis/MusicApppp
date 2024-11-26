@@ -71,6 +71,7 @@ public class PlaylistController {
     }
 
 
+
     @FXML
     private void handleAddPlaylist(ActionEvent event) {
         // Παίρνουμε το όνομα της νέας playlist
