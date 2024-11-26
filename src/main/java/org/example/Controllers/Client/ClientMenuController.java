@@ -11,7 +11,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+
 import org.example.Controllers.LoginController;
+import org.example.PlaylistController;
+
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -27,11 +31,12 @@ public class ClientMenuController implements Initializable {
     public Button profile_btn;
     public Button logout_btn;
     public Button report_btn;
+    private PlaylistController playlistController;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         logout_btn.setOnAction(event -> handleLogout());
-        playlist_btn.setOnAction(event -> openPlaylistScene());
+        playlist_btn.setOnAction(event -> openPlaylistScene()); // Άνοιξε τη σκηνή των playlists});
         dashboard_btn.setOnAction(event -> openDashboardScene());
         history_btn.setOnAction(event -> openHistoryScene());
     }
@@ -49,8 +54,14 @@ public class ClientMenuController implements Initializable {
     }
 
     private void handleLogout() {
+        PlaylistController playlistController = new PlaylistController();
+        playlistController.clearLoggedInUserId();
         changeScene("/Fxml/Client/LoginClient.fxml");
+
     }
+
+
+
 
     private void changeScene(String fxmlPath) {
         if (sceneCache.containsKey(fxmlPath)) {

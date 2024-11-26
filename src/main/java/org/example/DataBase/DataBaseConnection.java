@@ -1,6 +1,9 @@
 package org.example.DataBase;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import org.example.Playlist;
+import org.example.PlaylistController;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -19,6 +22,7 @@ public class DataBaseConnection {
     private static final String USER = "root";
     private static final String PASSWORD = "";
     private int failedAttempts = 0;
+    ObservableList<Playlist> playlists = FXCollections.observableArrayList();
 
     // Επαλήθευση διαπιστευτηρίων
     public boolean verifyCredentials(String username, String password) {
@@ -30,6 +34,7 @@ public class DataBaseConnection {
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
+
                 failedAttempts = 0;
                 return true;
             } else {
@@ -85,13 +90,16 @@ public class DataBaseConnection {
         return connection;
     }
 
-    public boolean addPlaylist(String playlistName) {
-        String query = "INSERT INTO playlist (name) VALUES (?)";
+    public boolean addPlaylist(String playlistName, String userId) {
+        // Εντολή SQL για την προσθήκη νέας playlist με user_id
+        String query = "INSERT INTO playlist (name, user_id) VALUES (?, ?)";
 
         try (Connection conn = this.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query)) {
 
-            stmt.setString(1, playlistName);
+            stmt.setString(1, playlistName);  // Ρύθμιση του ονόματος της playlist
+            stmt.setString(2, userId);  // Ρύθμιση του user_id για τη playlist
+
             int rowsAffected = stmt.executeUpdate();
 
             if (rowsAffected > 0) {
@@ -108,17 +116,22 @@ public class DataBaseConnection {
         }
     }
 
-    public List<Playlist> getPlaylists() {
-        List<Playlist> playlists = new ArrayList<>();
-        String sql = "SELECT * FROM playlist";
+
+    public ObservableList<Playlist> getPlaylists(String userId) {
+        ObservableList<Playlist> playlists = FXCollections.observableArrayList();
+        String sql = "SELECT * FROM playlist WHERE user_id = ?";
 
         try (Connection conn = getConnection();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
-            while (rs.next()) {
-                String name = rs.getString("name");
-                Playlist playlist = new Playlist(name);
-                playlists.add(playlist);
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, userId);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    String name = rs.getString("name");
+                    Playlist playlist = new Playlist(name);
+                    playlists.add(playlist);
+
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -127,15 +140,18 @@ public class DataBaseConnection {
         return playlists;
     }
 
-    public List<String> getPlaylistNames() {
+
+    public List<String> getPlaylistNames(String userId) {
         List<String> playlistNames = new ArrayList<>();
-        String sql = "SELECT name FROM playlist";
+        String sql = "SELECT name FROM playlist WHERE user_id = ?"; // Φιλτράρει βάσει user_id
 
         try (Connection conn = getConnection();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
-            while (rs.next()) {
-                playlistNames.add(rs.getString("name"));
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, userId); // Ορίζει την τιμή του user_id στο query
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    playlistNames.add(rs.getString("name")); // Προσθέτει τα ονόματα στη λίστα
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -143,6 +159,9 @@ public class DataBaseConnection {
 
         return playlistNames;
     }
+
+
+
 
     public boolean addSongToPlaylist(int playlistId, int songId) {
         String sql = "INSERT INTO playlist_song (playlist_id, song_id) VALUES (?, ?)";

@@ -9,11 +9,11 @@ public class Playlist {
     private String name;
     private List<Song> songs;
     private DataBaseConnection dbConnection;  // Αναφορά στη σύνδεση της βάσης δεδομένων
-
+    private String playlistName;
     public Playlist(String name) {
         this.name = name;
         this.songs = new ArrayList<>();
-
+        this.playlistName = playlistName;
         // Αποθήκευση της νέας playlist στη βάση δεδομένων
 
     }
@@ -33,4 +33,15 @@ public class Playlist {
     public int getTotalDuration() {
         return songs.stream().mapToInt(Song::getDuration).sum();
     }
+
+
+
+    public String getPlaylistName() {
+        return playlistName;
+    }
+
+    public void setPlaylistName(String playlistName) {
+        this.playlistName = playlistName;
+    }
+
 }

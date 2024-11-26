@@ -1,9 +1,14 @@
 package org.example;
 
+import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ListView;
+import org.example.Controllers.Client.ClientMenuController;
+import org.example.Controllers.LoginController;
 import org.example.DataBase.DataBaseConnection;
 import org.example.Controllers.Client.LastFmApiClient;
 import javafx.scene.input.MouseEvent;
@@ -21,11 +26,14 @@ import java.sql.Statement;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.prefs.Preferences;
 
 public class PlaylistController {
     private LastFmApiClient lastFmApiClient;
     private List<Playlist> playlists;
     private DataBaseConnection dbConnection;
+    private String userId;
+
 
     @FXML
     private TextField newPlaylistName;
@@ -42,19 +50,26 @@ public class PlaylistController {
     @FXML
     private TextField searchTrackField;
 
+    private ObservableList<String> playlistData;
+
+
     public PlaylistController() {
+
         playlists = new ArrayList<>();
         dbConnection = new DataBaseConnection();
         lastFmApiClient = new LastFmApiClient(); // Αρχικοποίηση του API client
-        playlists = dbConnection.getPlaylists(); // Παίρνει όλες τις playlists από τη βάση δεδομένων
+        playlists = dbConnection.getPlaylists(userId);
+
     }
 
     @FXML
     public void initialize() {
+        getLoggedInUserId();
+
         loadPlaylists();
-        // Ορίζουμε τι θα γίνεται όταν κάνουμε κλικ πάνω σε μία playlist
-        playlistView.setOnMouseClicked(this::showPlaylistSongs);
+        playlistView.setOnMouseClicked(this::showPlaylistSongs);// Φορτώνει τις playlists
     }
+
 
     @FXML
     private void handleAddPlaylist(ActionEvent event) {
@@ -63,11 +78,18 @@ public class PlaylistController {
 
         // Έλεγχος ότι το πεδίο δεν είναι κενό
         if (!playlistName.trim().isEmpty()) {
+            String userId = getLoggedInUserId();
+
+            if (userId == null || userId.trim().isEmpty()) {
+                System.out.println("Σφάλμα: Δεν είναι συνδεδεμένος χρήστης.");
+                return;  // Δεν προχωράμε στην προσθήκη αν δεν υπάρχει userId
+            }
+
             // Δημιουργούμε το αντικείμενο Playlist
             Playlist newPlaylist = new Playlist(playlistName);
 
-            // Προσθέτουμε τη νέα playlist στη βάση δεδομένων
-            if (dbConnection.addPlaylist(playlistName)) {
+            // Προσθέτουμε τη νέα playlist στη βάση δεδομένων για τον συγκεκριμένο χρήστη
+            if (dbConnection.addPlaylist(playlistName, userId)) {
                 // Προσθήκη στη λίστα του ListView μόνο εάν επιτυχής η αποθήκευση
                 playlistView.getItems().add(playlistName);
                 playlists.add(newPlaylist); // Προσθήκη στη λίστα του controller για διαχείριση
@@ -78,6 +100,7 @@ public class PlaylistController {
             }
         }
     }
+
 
     @FXML
     private void handleDeletePlaylist() {
@@ -99,12 +122,28 @@ public class PlaylistController {
         }
     }
 
-
-    private void loadPlaylists() {
+    public void loadPlaylists() {
+        String userId = getLoggedInUserId();
         playlistView.getItems().clear();
-        List<String> playlistNames = dbConnection.getPlaylistNames();
-        playlistView.getItems().addAll(playlistNames);
+
+
+        if (userId != null && !userId.trim().isEmpty()) {
+            List<String> playlistNamesFromDb = dbConnection.getPlaylistNames(userId);
+            playlistView.getItems().addAll(playlistNamesFromDb);
+            playlistView.refresh();
+        } else {
+            System.out.println("Δεν είναι συνδεδεμένος χρήστης.");
+        }
     }
+
+
+
+
+
+
+
+
+
 
     @FXML
     private void showPlaylistSongs(MouseEvent event) {
@@ -119,8 +158,24 @@ public class PlaylistController {
     }
 
     public void addPlaylist(String name) {
-        playlists.add(new Playlist(name));
+
+        String userId = getLoggedInUserId();
+
+
+        // Προσθήκη της playlist στη βάση δεδομένων για τον συγκεκριμένο χρήστη
+        DataBaseConnection db = new DataBaseConnection();
+        String query = "INSERT INTO playlist (user_id,name) VALUES (?, ?)";
+
+        try (PreparedStatement stmt = db.getConnection().prepareStatement(query)) {
+            stmt.setString(1, userId);  // Ρύθμιση του userId
+            stmt.setString(2, name);    // Ρύθμιση του ονόματος της playlist
+            stmt.executeUpdate();       // Εκτέλεση του query
+        } catch (SQLException e) {
+            e.printStackTrace(); // Χειρισμός σφαλμάτων
+        }
     }
+
+
 
     public void addSongToPlaylist(String playlistName, Song song) {
         for (Playlist playlist : playlists) {
@@ -263,5 +318,26 @@ public class PlaylistController {
 
     public List<Playlist> getPlaylists() {
         return playlists;
+    }
+
+    public void clearLoggedInUserId() {
+        Preferences prefs = Preferences.userNodeForPackage(LoginController.class);
+        prefs.remove("loggedInUserId");
+        System.out.println("Το userId διαγράφηκε.");
+
+    }
+    public void saveLoggedInUserId(String userId) {
+        Preferences prefs = Preferences.userNodeForPackage(LoginController.class);
+        prefs.put("loggedInUserId", userId);  // Αποθήκευση του νέου userId
+
+    }
+
+    public String getLoggedInUserId() {
+        Preferences prefs = Preferences.userNodeForPackage(LoginController.class);
+
+        String userId = prefs.get("loggedInUserId", null);  // Επιστρέφει το userId ή null αν δεν είναι αποθηκευμένο
+        System.out.println("Λήψη του userId: " + userId);  // Εκτύπωση του userId
+
+        return userId;
     }
 }

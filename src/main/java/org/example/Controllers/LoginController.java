@@ -3,6 +3,7 @@ package org.example.Controllers;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -14,14 +15,19 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.StageStyle;
+
+import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.util.logging.Logger;
 import java.util.logging.Level;
 
 import javafx.util.Duration;
 import org.example.Controllers.Client.ClientController;
+import org.example.Controllers.Client.ClientMenuController;
 import org.example.DataBase.DataBaseConnection; // Ensure this class exists
 import org.example.Controllers.Client.DashboardController;
+import org.example.PlaylistController;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -32,7 +38,7 @@ public class LoginController implements Initializable {
 
     // Cache for the scene to avoid reloading it multiple times
     private static Scene clientScene;
-
+    PlaylistController playlistController = new PlaylistController();
     @FXML
     private Button createAccount_btn;
     @FXML
@@ -49,8 +55,9 @@ public class LoginController implements Initializable {
     @FXML
     private CheckBox remember_me_chk;  // Το CheckBox για το "Remember me"
 
-    // Για την αποθήκευση και ανάκτηση στοιχείων χρήστη
+
     private Preferences prefs = Preferences.userNodeForPackage(LoginController.class); // Preferences για την εφαρμογή
+    private List playlistView;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -85,37 +92,47 @@ public class LoginController implements Initializable {
         }
     }
 
-    // Handle login
+
+
+
     private void handleLogin() {
         String username = username_fld.getText();
         String password = password_fld.getText();
         DataBaseConnection db = new DataBaseConnection();
 
-        // Αν είναι επιλεγμένο το "Remember me"
+        // playlistController.clearLoggedInUserId();
+        // Remember me επιλογή
         if (remember_me_chk.isSelected()) {
             prefs.put("username", username);  // Αποθήκευση του username
             prefs.put("password", password);  // Αποθήκευση του password
         } else {
-            // Διαγραφή των αποθηκευμένων στοιχείων αν δεν είναι επιλεγμένο το "Remember me"
             prefs.remove("username");
             prefs.remove("password");
-            // Καθαρισμός πεδίων
             username_fld.clear();
             password_fld.clear();
         }
-        if ("admin".equals(username) && "admin".equals(password)) {
-            openClientScene(username);
-        } else {
 
+        // Αν ο χρήστης είναι admin
+        if ("admin".equals(username) && "admin".equals(password)) {
+            // Καθαρισμός του προηγούμενου userId
+            String userId = "admin";
+            playlistController.saveLoggedInUserId(userId);
+            openClientScene(username);
+
+        } else {
+            // Έλεγχος διαπιστευτηρίων χρήστη
             if (db.verifyCredentials(username, password)) {
-                String userId = db.getUserId(username);
+                String userId = db.getUserId(username); // Λήψη του νέου userId
+                playlistController.saveLoggedInUserId(userId);
                 openClientScene(username);
+
             } else {
                 error_lbl.setText("Invalid username or password");
                 error_lbl.setVisible(true);
             }
         }
     }
+
 
     private void openClientScene(String username) {
         try {
@@ -128,6 +145,7 @@ public class LoginController implements Initializable {
             if (clientController != null) {
                 clientController.setUsername(username);
                 clientController.setWelcomeText(username);
+
             }
 
             // Δημιουργία σκηνής και εφαρμογή στυλ
@@ -192,8 +210,6 @@ public class LoginController implements Initializable {
         }
 
     }
-
-
 
 
 
