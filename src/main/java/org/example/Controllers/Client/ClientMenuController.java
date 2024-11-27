@@ -54,7 +54,6 @@ public class ClientMenuController implements Initializable {
     }
 
     private void handleLogout() {
-
             if (playlistController != null) {
                 playlistController.clearLoggedInUserId();
             }

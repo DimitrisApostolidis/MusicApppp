@@ -24,6 +24,8 @@ public class DataBaseConnection {
     private int failedAttempts = 0;
     ObservableList<Playlist> playlists = FXCollections.observableArrayList();
 
+
+
     // Επαλήθευση διαπιστευτηρίων
     public boolean verifyCredentials(String username, String password) {
         String query = "SELECT * FROM user WHERE username = ? AND password = ?";
