@@ -54,11 +54,20 @@ public class ClientMenuController implements Initializable {
     }
 
     private void handleLogout() {
-        PlaylistController playlistController = new PlaylistController();
-        playlistController.clearLoggedInUserId();
-        changeScene("/Fxml/Client/LoginClient.fxml");
 
+            if (playlistController != null) {
+                playlistController.clearLoggedInUserId();
+            }
+            clearSceneCache(); // Καθαρίζει την cache
+            changeScene("/Fxml/Client/LoginClient.fxml"); // Μεταβαίνει στη σελίδα login
+        }
+
+
+    private void clearSceneCache() {
+        sceneCache.clear();
     }
+
+
 
 
 

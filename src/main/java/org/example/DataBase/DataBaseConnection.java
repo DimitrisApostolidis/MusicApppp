@@ -146,14 +146,14 @@ public class DataBaseConnection {
 
     public List<String> getPlaylistNames(String userId) {
         List<String> playlistNames = new ArrayList<>();
-        String sql = "SELECT name FROM playlist WHERE user_id = ?"; // Φιλτράρει βάσει user_id
+        String sql = "SELECT name FROM playlist WHERE user_id = ?";
 
         try (Connection conn = getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString(1, userId); // Ορίζει την τιμή του user_id στο query
+            pstmt.setString(1, userId);
             try (ResultSet rs = pstmt.executeQuery()) {
                 while (rs.next()) {
-                    playlistNames.add(rs.getString("name")); // Προσθέτει τα ονόματα στη λίστα
+                    playlistNames.add(rs.getString("name"));
                 }
             }
         } catch (SQLException e) {
