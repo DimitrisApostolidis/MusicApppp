@@ -200,7 +200,6 @@ public class PlaylistController {
             // Κλήση στο Last.fm API για αναζήτηση τραγουδιών
             JsonNode response = lastFmApiClient.searchTracks(searchQuery);
             if (response != null) {
-                // Αντί να χρησιμοποιήσουμε org.json.JSONObject, χρησιμοποιούμε το JsonNode της Unirest
                 kong.unirest.json.JSONObject results = response.getObject();
                 if (results != null) {
                     kong.unirest.json.JSONArray tracks = results.optJSONObject("results")
@@ -223,19 +222,30 @@ public class PlaylistController {
                                 if (selectedSong != null) {
                                     // Διάσπαση σε τίτλο και καλλιτέχνη
                                     String[] parts = selectedSong.split(" - ");
-                                    String songName = parts[0];
-                                    String artistName = parts[1];
+                                    String songName = parts[0].trim();
+                                    String artistName = parts[1].trim();
 
-                                    // Αποθήκευση στη βάση
-                                    int songId = dbConnection.addSongToDatabase(songName, artistName);
-                                    if (songId != -1) {
-                                        int playlistId = dbConnection.getPlaylistIdByName(selectedPlaylist);
-                                        if (dbConnection.addSongToPlaylist(playlistId, songId)) {
-                                            System.out.println("Το τραγούδι προστέθηκε στην playlist.");
-                                            loadPlaylists();
-                                        } else {
-                                            System.out.println("Σφάλμα κατά την προσθήκη του τραγουδιού στην playlist.");
+                                    // Έλεγχος αν το τραγούδι υπάρχει ήδη στη βάση δεδομένων
+                                    int songId = dbConnection.getSongIdByTitle(songName);
+
+                                    if (songId == -1) {
+                                        // Αν το τραγούδι δεν υπάρχει, το προσθέτουμε στη βάση
+                                        songId = dbConnection.addSongToDatabase(songName, artistName);
+                                        if (songId == -1) {
+                                            System.out.println("Σφάλμα κατά την προσθήκη του τραγουδιού στη βάση δεδομένων.");
+                                            return;
                                         }
+                                    }
+
+                                    // Παίρνει το playlistId από τη βάση δεδομένων
+                                    int playlistId = dbConnection.getPlaylistIdByName(selectedPlaylist);
+
+                                    // Προσθέτει το τραγούδι στην playlist με το υπάρχον songId
+                                    if (dbConnection.addSongToPlaylist(playlistId, songId)) {
+                                        System.out.println("Το τραγούδι προστέθηκε στην playlist.");
+                                        loadPlaylists(); // Ανανεώνει τις playlists
+                                    } else {
+                                        System.out.println("Σφάλμα κατά την προσθήκη του τραγουδιού στην playlist.");
                                     }
                                 }
                             }
@@ -249,6 +259,7 @@ public class PlaylistController {
             System.out.println("Δεν έχει επιλεχθεί κάποια playlist.");
         }
     }
+
 
     @FXML
     private void handleDeleteSongFromPlaylist() {

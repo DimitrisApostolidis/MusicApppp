@@ -185,7 +185,7 @@ public class DataBaseConnection {
     }
 
     public int getSongIdByTitle(String title) {
-        String sql = "SELECT song_id FROM song WHERE name = ?";
+        String sql = "SELECT song_id FROM song WHERE title = ?";
         try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 

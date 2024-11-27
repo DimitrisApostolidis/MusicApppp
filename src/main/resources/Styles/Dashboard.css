@@ -1,124 +1,86 @@
-/* Album Cover Style */
-.album-cover {
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0.0, 1, 1);
-    -fx-background-radius: 10; /* Rounded corners */
-    -fx-padding: 10; /* Increased padding for a more spacious look */
-    -fx-background-color: #f0f0f0; /* Light background for contrast */
-    transition: -fx-opacity 0.3s; /* Smooth transition */
-}
-
-.album-cover:hover {
-    -fx-opacity: 0.60; /* Slightly reduced opacity on hover for effect */
-}
-
-.album-cover:pressed {
-    -fx-opacity: 1; /* Full opacity when clicked */
-}
-
-
-
-/* General Style for Play Buttons */
+/* Default style for buttons */
 .button {
-    -fx-background-radius: 50%; /* Rounded buttons */
+    -fx-background-radius: 50%; /* Στρογγυλό κουμπί */
     -fx-border-radius: 50%;
-    -fx-min-width: 50px; /* Adjusted size */
-    -fx-min-height: 50px;
-    -fx-background-color: transparent; /* Transparent background */
-    -fx-font-size: 24px; /* Slightly larger icon size */
-    -fx-text-fill: #ffffff; /* Darker text color for better visibility */
-    -fx-padding: 5px;
-    -fx-border-color: #ffffff; /* Border color matching the text */
-    -fx-border-width: 2px; /* Slightly thicker border for a bolder look */
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 3, 1.0, 0, 1);
+    -fx-min-width: 50px; /* Πλάτος κουμπιού */
+    -fx-min-height: 50px; /* Ύψος κουμπιού */
+    -fx-background-color: transparent; /* Διαφανές φόντο */
+    -fx-border-color: #ffffff; /* Λευκό περίγραμμα */
+    -fx-border-width: 2px; /* Πάχος περιγράμματος */
+    -fx-font-size: 24px; /* Μέγεθος γραμματοσειράς */
+    -fx-text-fill: #ffffff; /* Λευκό κείμενο */
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 3, 1.0, 0, 1); /* Εφέ σκιάς */
+    -fx-padding: 5px; /* Εσωτερική απόσταση */
+    -fx-transition: background-color 0.2s ease, -fx-text-fill 0.2s ease; /* Ομαλή μετάβαση */
 }
 
-/* Specific Style for the Favorite Button */
-#favoriteButton {
-    -fx-min-width: 30px;  /* Smaller width */
-    -fx-min-height: 30px; /* Smaller height */
-    -fx-pref-width: 30px;  /* Preferred size */
-    -fx-pref-height: 30px; /* Preferred size */
-    -fx-font-size: 14px;    /* Smaller font size */
-    -fx-padding: 0;         /* Remove padding */
-    -fx-border-width: 1px; /* Thinner border */
-    -fx-border-color: #ffffff; /* White border */
-    -fx-background-color: transparent; /* Keep the background transparent */
-}
-/* Style when the button is pressed */
-.button:pressed {
-    -fx-background-color: #ff4081; /* Pink color */
-    -fx-border-color: #ff4081;     /* Matching border color */
-    -fx-text-fill: white;          /* Text color */
-}
-
-/* Style when the button is focused */
-.button:focused {
-    -fx-background-color: #f50057; /* Slightly darker shade */
-    -fx-border-color: #f50057;     /* Matching border color */
-    -fx-text-fill: white;          /* Text color */
-}
-
-
-/* Hover Effect for Buttons */
+/* Hover effect */
 .button:hover {
-    -fx-background-color: rgba(72, 123, 193, 0.2); /* Light blue on hover */
-    -fx-text-fill: #333333; /* Dark text on hover */
+    -fx-background-color: rgba(72, 123, 193, 0.2); /* Ανοιχτό μπλε φόντο κατά το hover */
+    -fx-text-fill: #333333; /* Σκούρο κείμενο κατά το hover */
 }
 
-/* Active Effect for Buttons */
+/* Pressed button state */
 .button:pressed {
-    -fx-background-color: #388E3C; /* Dark green when pressed */
-    -fx-text-fill: #FFFFFF; /* White text on press */
+    -fx-background-color: #4CAF50; /* Πράσινο φόντο όταν πατιέται */
+    -fx-text-fill: #ffffff; /* Λευκό κείμενο όταν πατιέται */
 }
 
-/* Shape Style */
-.shape {
-    -fx-fill: #4a90e2; /* Modern blue color */
-    -fx-stroke: #357ABD; /* Darker border */
-    -fx-stroke-width: 2;
-    -fx-background-radius: 10; /* Rounded corners for shapes */
+/* Specific style for the "favorite" button */
+#favoriteButton {
+    -fx-min-width: 30px;  /* Μικρότερο πλάτος */
+    -fx-min-height: 30px; /* Μικρότερο ύψος */
+    -fx-pref-width: 30px;  /* Προτιμώμενο πλάτος */
+    -fx-pref-height: 30px; /* Προτιμώμενο ύψος */
+    -fx-font-size: 14px;    /* Μικρότερη γραμματοσειρά */
+    -fx-padding: 0;         /* Αφαίρεση padding */
+    -fx-border-width: 1px; /* Πιο λεπτό περίγραμμα */
+    -fx-border-color: #ffffff; /* Λευκό περίγραμμα */
+    -fx-background-color: transparent; /* Διαφανές φόντο */
 }
 
-/* Style for Text Over the Shape */
-.shape-text {
-    -fx-font-family: 'Segoe UI', 'Roboto', 'Open Sans', sans-serif; /* Font family with fallbacks */
-    -fx-font-size: 24px; /* Increased font size for better readability */
-    -fx-font-weight: 600; /* Bold text */
-    -fx-text-fill: #f0e68c; /* Light yellow for better visibility */
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 2, 1.0, 0, 1); /* Subtle shadow for hovering effect */
+/* Pressed style for "favorite" button */
+#favoriteButton:pressed {
+    -fx-background-color: #ff4081; /* Ροζ φόντο */
+    -fx-border-color: #ff4081;     /* Ροζ περίγραμμα */
+    -fx-text-fill: white;          /* Λευκό κείμενο */
 }
 
-/* Additional spacing for better layout */
-.shape-container {
-    -fx-padding: 15; /* Add padding around the shape container */
-    -fx-alignment: center; /* Center alignment for contents */
-    -fx-background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent dark background for contrast */
-    -fx-background-radius: 10; /* Rounded corners for the shape container */
+/* Hover effect for favorite button */
+#favoriteButton:hover {
+    -fx-background-color: rgba(255, 64, 129, 0.2); /* Ροζ ημιδιαφανές φόντο */
 }
 
-/* Slider Style */
-.slider {
-    -fx-background-color: transparent; /* Makes the background transparent */
+/* Album cover style */
+.album-cover {
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0.0, 1, 1); /* Εφέ σκιάς */
+    -fx-background-radius: 10; /* Στρογγυλές γωνίες */
+    -fx-padding: 10; /* Εσωτερική απόσταση */
+    -fx-background-color: #f0f0f0; /* Ανοιχτό φόντο */
+    -fx-transition: -fx-opacity 0.3s; /* Ομαλή μετάβαση διαφάνειας */
 }
 
+/* Hover effect for album covers */
+.album-cover:hover {
+    -fx-opacity: 0.60; /* Μείωση διαφάνειας κατά το hover */
+}
 
+/* Pressed effect for album covers */
+.album-cover:pressed {
+    -fx-opacity: 1; /* Επιστροφή πλήρους διαφάνειας */
+}
 
-
-
-/* Track Style */
+/* Slider track style */
 .slider .track {
-    -fx-background-color: rgba(255, 255, 255, 0.6); /* Semi-transparent track */
-    -fx-background-radius: 5; /* Rounded corners for the track */
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 3, 1.0, 0, 1);
+    -fx-background-color: rgba(255, 255, 255, 0.6); /* Ημιδιαφανές λευκό */
+    -fx-background-radius: 5; /* Στρογγυλές γωνίες */
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 3, 1.0, 0, 1); /* Σκιά */
 }
 
-/* Thumb Style */
+/* Slider thumb style */
 .slider .thumb {
-    -fx-background-color: #ffffff; /* Color for the slider thumb */
-    -fx-background-radius: 10; /* Rounded corners for the thumb */
-    -fx-min-width: 15px; /* Minimum width for the thumb */
-    -fx-min-height: 15px; /* Minimum height for the thumb */
-}
-
-
+    -fx-background-color: #ffffff; /* Λευκό χρώμα */
+    -fx-background-radius: 10; /* Στρογγυλό */
+    -fx-min-width: 15px; /* Πλάτος */
+    -fx-min-height: 15px; /* Ύψος */
 }
