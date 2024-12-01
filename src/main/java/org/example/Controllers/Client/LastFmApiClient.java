@@ -3,24 +3,66 @@ package org.example.Controllers.Client;
 import kong.unirest.HttpResponse;
 import kong.unirest.JsonNode;
 import kong.unirest.Unirest;
+import kong.unirest.json.JSONObject;
+
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.util.List;
-import java.util.ArrayList;
 
 public class LastFmApiClient {
     private static final String API_KEY = "829ba83ee4aab86e1d130b2c514ef802";
     private static final String BASE_URL = "http://ws.audioscrobbler.com/2.0/";
 
+
     public JsonNode getArtistInfo(String artistName) {
-        return Unirest.get("https://ws.audioscrobbler.com/2.0/")
-                .queryString("method", "artist.getinfo")
-                .queryString("artist", artistName)
-                .queryString("api_key", "829ba83ee4aab86e1d130b2c514ef802")
-                .queryString("format", "json")
-                .asJson()
-                .getBody();
+        try {
+            HttpResponse<JsonNode> response = Unirest.get(BASE_URL)
+                    .queryString("method", "artist.getinfo")
+                    .queryString("artist", artistName)
+                    .queryString("api_key", API_KEY)
+                    .queryString("format", "json")
+                    .asJson();
+
+            // Ελέγχουμε τον κωδικό HTTP Status για να διασφαλίσουμε ότι η κλήση ήταν επιτυχής
+            if (response.getStatus() == 200) {
+
+                JsonNode body = response.getBody();
+
+                // Ελέγχουμε αν το JSON περιέχει τα απαιτούμενα δεδομένα
+                if (body.getObject().has("artist")) {
+                    JSONObject artist = body.getObject().getJSONObject("artist");
+
+                    // Ελέγχουμε αν υπάρχει το bio και το περιεχόμενο του bio
+                    if (artist.has("bio")) {
+                        JSONObject bio = artist.getJSONObject("bio");
+                        if (bio.has("content")) {
+                            String bioContent = bio.getString("content");
+                            System.out.println("Artist Bio: " + bioContent);
+                        } else {
+                            System.out.println("No bio content found for " + artistName);
+                        }
+                    } else {
+                        System.out.println("No bio found for " + artistName);
+                    }
+
+                    // Επιστρέφουμε τα δεδομένα JSON
+                    return body; // Επιστρέφει το πλήρες JSON για περαιτέρω επεξεργασία
+                } else {
+                    System.out.println("Artist data not found for " + artistName);
+                }
+            } else {
+                System.out.println("Failed to fetch artist info. HTTP Status: " + response.getStatus());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Exception occurred: Unable to fetch artist info.");
+        }
+        return null; // Επιστρέφει null σε περίπτωση σφάλματος
     }
+
+
+
+
+
 
 
     public JsonNode searchArtists(String artistName) {
