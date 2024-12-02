@@ -9,7 +9,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import kong.unirest.json.JSONObject;
 import javafx.scene.layout.VBox;
-
+import kong.unirest.JsonNode;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -61,6 +61,10 @@ public class DashboardController {
     private final ObservableList<Image> imageList = FXCollections.observableArrayList();
 
     private boolean isFavorite = false; // Μεταβλητή για να παρακολουθεί αν είναι στα αγαπημένα
+
+    public Text songTitleText;
+    public ImageView songImageView;
+    public Label labelNowPlaying;
 
     private int userId; // Ο χρήστης που είναι συνδεδεμένος
     private int selectedSongId; // Αποθηκεύει το ID του τρέχοντος τραγουδιού
@@ -119,17 +123,17 @@ public class DashboardController {
                 String genre = "Unknown";
                 String duration = "Unknown";
                 String trackName = null;
-
                 try {
                     if (selectedItem.startsWith("Track: ")) {
                         trackName = selectedItem.substring(7); // Αφαίρεση του prefix "Track: "
+                        setNowPlayingImage(trackName);
                         JSONObject response = apiClient.searchTracks(trackName).getObject();
+                        setNowPlayingSongName(trackName);
                         if (response.has("track")) {
                             imageUrl = response.getJSONObject("track").getJSONArray("image").getJSONObject(3).getString("#text");
                             artistName = response.getJSONObject("track").getString("artist");
                             genre = response.getJSONObject("track").optString("genre", "Unknown");
                             duration = response.getJSONObject("track").optString("duration", "Unknown");
-
                         }
                     }
                     resultsList.setVisible(false); // Απόκρυψη λίστας μετά την επιλογή
@@ -166,6 +170,29 @@ public class DashboardController {
                 removeFromFavorites(songId, userId);
             }
         });
+    }
+
+    private void setNowPlayingSongName(String trackName) {
+        songTitleText.setText(trackName);
+        songTitleText.setVisible(true);
+        labelNowPlaying.setVisible(true);
+    }
+
+
+    private void setNowPlayingImage(String trackName) {
+        new Thread(() -> {
+            JsonNode trackResponse = discogsApiClient.searchTracks(trackName);
+            List<String> results = new ArrayList<>();
+            List<String> imageUrls = new ArrayList<>();
+            List<String> itemTypes = new ArrayList<>();
+            List<String> bios = new ArrayList<>();
+            if (trackResponse != null) extractDiscogsTracks(trackResponse, results, imageUrls, itemTypes, bios);
+            if (!imageUrls.isEmpty()) {
+                songImageView.setImage(new Image(imageUrls.get(0)));
+            }else {
+                System.out.println("imageUrls are empty");
+            }
+        }).start();
     }
 
 
@@ -334,7 +361,7 @@ public class DashboardController {
                     String imageUrl = imageUrls.get(index);
                     String itemType = itemTypes.get(index); // Πάρε τον τύπο
                     String title = results.get(index).substring(itemType.length() + 2); // Αφαίρεσε το "Track: ", "Album: ", κλπ.
-                updateImage(imageUrl, title, itemType); // Ενημέρωση εικόνας
+                    updateImage(imageUrl, title, itemType); // Ενημέρωση εικόνας
 
                     if ("artist".equals(itemType)) {
                         updateArtistImages(title); // Καλέστε τη μέθοδο με το όνομα του καλλιτέχνη
