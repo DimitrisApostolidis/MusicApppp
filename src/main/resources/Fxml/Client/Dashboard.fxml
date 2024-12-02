@@ -7,9 +7,9 @@
 <?import javafx.scene.text.*?>
 
 <AnchorPane fx:id="rootPane" prefHeight="750.0" prefWidth="850.0" stylesheets="@../../Styles/Dashboard.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.Controllers.Client.DashboardController">
-   <Text fx:id="songTitleText" layoutX="199.0" layoutY="637.0" style="-fx-font-size: 25px; -fx-fill: white;" text="Τίτλος Τραγουδιού" textAlignment="CENTER" visible="false" wrappingWidth="429.5419921875" AnchorPane.bottomAnchor="106.7255859375">
+   <Text fx:id="songTitleText" layoutX="199.0" layoutY="637.0" style="-fx-font-size: 20px; -fx-fill: white;" text="Τίτλος Τραγουδιού" textAlignment="CENTER" visible="false" wrappingWidth="429.5419921875" AnchorPane.bottomAnchor="106.7255859375">
       <font>
-         <Font size="17.0" />
+         <Font size="63.0" />
       </font>
    </Text>
 
@@ -70,11 +70,11 @@
    <TextField fx:id="searchField" layoutX="9.0" layoutY="99.0" prefHeight="32.0" prefWidth="527.0" />
    <ListView fx:id="resultsList" layoutX="9.0" layoutY="129.0" prefHeight="400" prefWidth="527" visible="false" />
    <Button fx:id="addplaylist" layoutX="191.0" layoutY="666.0" minHeight="30.0" minWidth="30.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="50.0" text="+" />
-   <Label fx:id="labelNowPlaying" alignment="CENTER" layoutY="520.0" prefHeight="63.0" prefWidth="176.0" text="Now playing" textFill="#5e7c5c" visible="false">
+   <Label fx:id="labelNowPlaying" alignment="CENTER" layoutX="2.0" layoutY="561.0" prefHeight="50.0" prefWidth="165.0" text="Now playing" textFill="#5e7c5c" visible="false">
       <font>
          <Font size="26.0" />
       </font>
    </Label>
-   <ImageView fx:id="songImageView" fitHeight="150.0" fitWidth="150.0" layoutY="591.0" pickOnBounds="true" preserveRatio="true">
+   <ImageView fx:id="songImageView" fitHeight="102.0" fitWidth="114.0" layoutX="27.0" layoutY="611.0" pickOnBounds="true" preserveRatio="true">
       </ImageView>
 </AnchorPane>
