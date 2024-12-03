@@ -3,14 +3,12 @@ package org.example.DataBase;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.example.Playlist;
-import org.example.PlaylistController;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -349,23 +347,22 @@ public class DataBaseConnection {
         }
     }
 
-    public int getUserId(String username) {
+    public String getUserId(String username) {
         String query = "SELECT user_id FROM user WHERE username = ?";
-
-        try (Connection conn = this.getConnection();
+        try (Connection conn = DataBaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query)) {
-            stmt.setString(1, username);
-            ResultSet rs = stmt.executeQuery();
 
-            if (rs.next()) {
-                return rs.getInt("user_id"); // Επιστροφή του user_id
+            stmt.setString(1, username);
+            ResultSet resultSet = stmt.executeQuery();
+            if (resultSet.next()) {
+                return resultSet.getString("user_id");
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
-        return -1; // Επιστροφή -1 αν δεν βρέθηκε ο χρήστης
+        return null; // Επιστρέφει null αν δεν βρεθεί ο χρήστης
     }
+
 
     public int addSongToDatabase(String songTitle, String artistName) {
         String sql = "INSERT INTO song (title, artist) VALUES (?, ?)";

@@ -124,10 +124,10 @@ public class LoginController implements Initializable {
             // Έλεγχος διαπιστευτηρίων χρήστη
 
             if (db.verifyCredentials(username, password)) {
-                int userId = db.getUserId(username); // Λήψη του userId από τη βάση
-                DashboardController controller = new DashboardController();
-                controller.setUserId(userId);
-                // Ορισμός του userId στο DashboardController
+                String userId = db.getUserId(username); // Λήψη του νέου userId
+                playlistController.saveLoggedInUserId(userId);
+                openClientScene(username);
+                error_lbl.setVisible(false);
                 openClientScene(username);
                 error_lbl.setVisible(false);
             } else {
@@ -203,6 +203,8 @@ public class LoginController implements Initializable {
             logger.log(Level.SEVERE, "Failed to load SignUp scene", e);
         }
     }
+
+
     public String getUsernameFromDatabase(String userId) {
         DataBaseConnection db = new DataBaseConnection();
         String query = "SELECT username FROM user WHERE user_id = ?";
