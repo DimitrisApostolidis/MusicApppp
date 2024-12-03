@@ -26,6 +26,7 @@ import java.util.ArrayList;
 
 
 public class DashboardController {
+
     @FXML
     private Text welcomeText;
 
@@ -55,9 +56,9 @@ public class DashboardController {
     private ObservableList<ImageView> artistImages = FXCollections.observableArrayList();
     private static final int MAX_IMAGES = 10;
 
-    private final DiscogsApiClient discogsApiClient = new DiscogsApiClient();
+    private    DiscogsApiClient discogsApiClient = new DiscogsApiClient();
     private LastFmApiClient apiClient = new LastFmApiClient();
-    private final LastFmApiClient lastFmApiClient = new LastFmApiClient();
+    private  LastFmApiClient lastFmApiClient = new LastFmApiClient();
     private final ObservableList<Image> imageList = FXCollections.observableArrayList();
 
     private boolean isFavorite = false; // Μεταβλητή για να παρακολουθεί αν είναι στα αγαπημένα
@@ -82,8 +83,15 @@ public class DashboardController {
         return selectedSongId;
     }
 
+    public DashboardController() {
 
+    }
 
+    public DashboardController(DiscogsApiClient discogsApiClient, LastFmApiClient lastFmApiClient, ListView<String> resultsList) {
+        this.resultsList = resultsList;
+        this.discogsApiClient = discogsApiClient;
+        this.lastFmApiClient = lastFmApiClient;
+    }
 
     @FXML
     public void initialize() {
@@ -135,6 +143,8 @@ public class DashboardController {
                             genre = response.getJSONObject("track").optString("genre", "Unknown");
                             duration = response.getJSONObject("track").optString("duration", "Unknown");
                         }
+                        // Αποθήκευση στο ιστορικό
+                        saveToHistory(trackName, artistName, genre, imageUrl);
                     }
                     resultsList.setVisible(false); // Απόκρυψη λίστας μετά την επιλογή
                 } catch (Exception e) {
@@ -142,6 +152,7 @@ public class DashboardController {
                 }
             }
         });
+
 
 
 
@@ -272,7 +283,7 @@ public class DashboardController {
 
 
 
-    private void extractDiscogsArtists(JsonNode response, List<String> results, List<String> imageUrls, List<String> itemTypes, List<String> bios) {
+    public void extractDiscogsArtists(JsonNode response, List<String> results, List<String> imageUrls, List<String> itemTypes, List<String> bios) {
         var resultsArray = response.getObject().getJSONArray("results");
         for (int i = 0; i < resultsArray.length(); i++) {
             var artist = resultsArray.getJSONObject(i);
@@ -288,7 +299,7 @@ public class DashboardController {
 
         }
     }
-    private void extractDiscogsTracks(JsonNode response, List<String> results, List<String> imageUrls, List<String> itemTypes, List<String> bios) {
+    public void extractDiscogsTracks(JsonNode response, List<String> results, List<String> imageUrls, List<String> itemTypes, List<String> bios) {
         var resultsArray = response.getObject().getJSONArray("results");
         for (int i = 0; i < resultsArray.length(); i++) {
             var track = resultsArray.getJSONObject(i);
@@ -304,7 +315,7 @@ public class DashboardController {
         }
     }
 
-    private void extractLastFmAlbums(JsonNode response, List<String> results, List<String> imageUrls, List<String> itemTypes, List<String> bios) {
+    public void extractLastFmAlbums(JsonNode response, List<String> results, List<String> imageUrls, List<String> itemTypes, List<String> bios) {
         var albums = response.getObject().getJSONObject("results").getJSONObject("albummatches").getJSONArray("album");
         for (int i = 0; i < albums.length(); i++) {
             var album = albums.getJSONObject(i);
@@ -460,5 +471,21 @@ public class DashboardController {
     private void updateUI() {
         imageContainer.getChildren().clear(); // imageContainer είναι το VBox/HBox
         imageContainer.getChildren().addAll(artistImages);
+    }
+
+    private void saveToHistory(String title, String artist, String genre, String imageUrl) {
+        String query = "INSERT INTO history (user_id, title, artist, genre, image_url) VALUES (?, ?, ?, ?, ?)";
+        try (Connection connection = DataBaseConnection.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setInt(1, userId);
+            preparedStatement.setString(2, title);
+            preparedStatement.setString(3, artist);
+            preparedStatement.setString(4, genre);
+            preparedStatement.setString(5, imageUrl);
+            preparedStatement.executeUpdate();
+            System.out.println("Το κομμάτι αποθηκεύτηκε στο ιστορικό.");
+        } catch (SQLException e) {
+            System.err.println("Σφάλμα κατά την αποθήκευση στο ιστορικό: " + e.getMessage());
+        }
     }
 }

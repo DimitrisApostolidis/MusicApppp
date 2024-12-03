@@ -17,11 +17,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DataBaseConnection {
-    private Connection connection;
-    private static final String URL = "jdbc:mysql://localhost:3306/rapsodiaplayer";
-    private static final String USER = "root";
-    private static final String PASSWORD = "";
-    private int failedAttempts = 0;
+    public Connection connection;
+    public static final String URL = "jdbc:mysql://localhost:3306/rapsodiaplayer";
+    public static final String USER = "root";
+    public static final String PASSWORD = "";
+    public int failedAttempts = 0;
     ObservableList<Playlist> playlists = FXCollections.observableArrayList();
 
 
@@ -349,20 +349,22 @@ public class DataBaseConnection {
         }
     }
 
-    public String getUserId(String username) {
+    public int getUserId(String username) {
         String query = "SELECT user_id FROM user WHERE username = ?";
-        try (Connection conn = DataBaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(query)) {
 
+        try (Connection conn = this.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setString(1, username);
-            ResultSet resultSet = stmt.executeQuery();
-            if (resultSet.next()) {
-                return resultSet.getString("user_id");
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt("user_id"); // Επιστροφή του user_id
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return null; // Επιστρέφει null αν δεν βρεθεί ο χρήστης
+
+        return -1; // Επιστροφή -1 αν δεν βρέθηκε ο χρήστης
     }
 
     public int addSongToDatabase(String songTitle, String artistName) {

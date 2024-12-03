@@ -122,12 +122,14 @@ public class LoginController implements Initializable {
 
         } else {
             // Έλεγχος διαπιστευτηρίων χρήστη
+
             if (db.verifyCredentials(username, password)) {
-                String userId = db.getUserId(username); // Λήψη του νέου userId
-                playlistController.saveLoggedInUserId(userId);
+                int userId = db.getUserId(username); // Λήψη του userId από τη βάση
+                DashboardController controller = new DashboardController();
+                controller.setUserId(userId);
+                // Ορισμός του userId στο DashboardController
                 openClientScene(username);
                 error_lbl.setVisible(false);
-
             } else {
                 error_lbl.setText("Invalid username or password");
                 error_lbl.setVisible(true);
@@ -213,7 +215,5 @@ public class LoginController implements Initializable {
         }
 
     }
-
-
 
 }

@@ -8,11 +8,12 @@
 <?import javafx.scene.text.Text?>
 
 <AnchorPane prefHeight="750.0" prefWidth="850.0" stylesheets="@../../Styles/Dashboard.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.Controllers.Client.HistoryController">
-    <Text fill="WHITE" layoutX="20.0" layoutY="30.0" text="Listening History" style="-fx-font-size: 24px; -fx-font-weight: bold;" />
+    <Text fill="WHITE" layoutX="20.0" layoutY="50.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="shape-text" text="Listening History" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="30.0" />
 
     <VBox fx:id="historyContainer" layoutX="20.0" layoutY="80.0" prefHeight="650.0" prefWidth="810.0" spacing="10">
-        <!-- Εδώ θα προστεθούν οι καταχωρήσεις τραγουδιών -->
+        <!-- Εδώ θα προστεθούν οι καταχωρήσεις τραγουδιών δυναμικά -->
     </VBox>
 </AnchorPane>
+
 
 
