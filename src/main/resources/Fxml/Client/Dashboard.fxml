@@ -29,26 +29,26 @@
          <RowConstraints maxHeight="150.0" minHeight="100.0" prefHeight="150.0" vgrow="SOMETIMES" />
       </rowConstraints>
       <HBox fx:id="imageContainer" alignment="CENTER" spacing="10">
-      <ImageView fx:id="artist1" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" styleClass="album-cover">
-      </ImageView>
-      <ImageView fx:id="artist2" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" styleClass="album-cover" GridPane.columnIndex="1">
-      </ImageView>
-      <ImageView fx:id="artist3" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" styleClass="album-cover" GridPane.columnIndex="2">
-      </ImageView>
-      <ImageView fx:id="artist4" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" styleClass="album-cover" GridPane.columnIndex="3">
-      </ImageView>
-      <ImageView fx:id="artist5" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" styleClass="album-cover" GridPane.columnIndex="4">
-      </ImageView>
-      <ImageView fx:id="artist6" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" styleClass="album-cover" GridPane.rowIndex="1">
-      </ImageView>
-      <ImageView fx:id="artist7" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" styleClass="album-cover" GridPane.columnIndex="1" GridPane.rowIndex="1">
-      </ImageView>
-      <ImageView fx:id="artist8" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" styleClass="album-cover" GridPane.columnIndex="2" GridPane.rowIndex="1">
-      </ImageView>
-      <ImageView fx:id="artist9" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" styleClass="album-cover" GridPane.columnIndex="3" GridPane.rowIndex="1">
-      </ImageView>
-      <ImageView fx:id="artist10" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" styleClass="album-cover" GridPane.columnIndex="4" GridPane.rowIndex="1">
-      </ImageView>
+         <ImageView fx:id="artist1" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" styleClass="album-cover">
+         </ImageView>
+         <ImageView fx:id="artist2" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" styleClass="album-cover" GridPane.columnIndex="1">
+         </ImageView>
+         <ImageView fx:id="artist3" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" styleClass="album-cover" GridPane.columnIndex="2">
+         </ImageView>
+         <ImageView fx:id="artist4" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" styleClass="album-cover" GridPane.columnIndex="3">
+         </ImageView>
+         <ImageView fx:id="artist5" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" styleClass="album-cover" GridPane.columnIndex="4">
+         </ImageView>
+         <ImageView fx:id="artist6" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" styleClass="album-cover" GridPane.rowIndex="1">
+         </ImageView>
+         <ImageView fx:id="artist7" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" styleClass="album-cover" GridPane.columnIndex="1" GridPane.rowIndex="1">
+         </ImageView>
+         <ImageView fx:id="artist8" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" styleClass="album-cover" GridPane.columnIndex="2" GridPane.rowIndex="1">
+         </ImageView>
+         <ImageView fx:id="artist9" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" styleClass="album-cover" GridPane.columnIndex="3" GridPane.rowIndex="1">
+         </ImageView>
+         <ImageView fx:id="artist10" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" styleClass="album-cover" GridPane.columnIndex="4" GridPane.rowIndex="1">
+         </ImageView>
       </HBox>
    </GridPane>
 
@@ -76,5 +76,5 @@
       </font>
    </Label>
    <ImageView fx:id="songImageView" fitHeight="102.0" fitWidth="114.0" layoutX="27.0" layoutY="611.0" pickOnBounds="true" preserveRatio="true">
-      </ImageView>
+   </ImageView>
 </AnchorPane>

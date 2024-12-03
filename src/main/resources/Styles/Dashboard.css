@@ -84,3 +84,27 @@
     -fx-min-width: 15px; /* Πλάτος */
     -fx-min-height: 15px; /* Ύψος */
 }
+
+.history-item {
+    -fx-background-color: #333333;
+    -fx-padding: 10;
+    -fx-spacing: 10;
+    -fx-border-color: #555555;
+    -fx-border-width: 1px;
+}
+
+.history-item Label {
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+}
+.history-entry {
+    -fx-font-size: 14px;
+    -fx-text-fill: white;
+    -fx-background-color: #333;
+    -fx-padding: 10;
+    -fx-border-color: #555;
+    -fx-border-width: 1;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+}
+
