@@ -42,19 +42,19 @@ public class LoginController implements Initializable {
     @FXML
     private Button createAccount_btn;
     @FXML
-    private Label error_lbl;
+    public Label error_lbl;
     @FXML
-    private TextField username_fld;
+    public TextField username_fld;
     @FXML
-    private TextField password_fld;
+    public TextField password_fld;
     @FXML
-    private Button login_btn;
+    public Button login_btn;
 
     public Label username_lbl;
 
 
     @FXML
-    private CheckBox remember_me_chk;  // Το CheckBox για το "Remember me"
+    public CheckBox remember_me_chk;  // Το CheckBox για το "Remember me"
 
 
     private Preferences prefs = Preferences.userNodeForPackage(LoginController.class); // Preferences για την εφαρμογή
@@ -96,7 +96,7 @@ public class LoginController implements Initializable {
 
 
 
-    private void handleLogin() {
+    public void handleLogin() {
         String username = username_fld.getText();
         String password = password_fld.getText();
         DataBaseConnection db = new DataBaseConnection();

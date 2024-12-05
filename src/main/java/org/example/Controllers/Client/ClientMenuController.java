@@ -39,6 +39,7 @@ public class ClientMenuController implements Initializable {
         playlist_btn.setOnAction(event -> openPlaylistScene()); // Άνοιξε τη σκηνή των playlists});
         dashboard_btn.setOnAction(event -> openDashboardScene());
         history_btn.setOnAction(event -> openHistoryScene());
+        likedsong_btn.setOnAction(event -> openLikedSongsScene());
     }
 
     private void openDashboardScene() {
@@ -52,6 +53,11 @@ public class ClientMenuController implements Initializable {
     private void openHistoryScene() {
         changeScene("/Fxml/Client/HistoryClient.fxml");
     }
+
+    private void openLikedSongsScene() {
+        changeScene("/Fxml/Client/LikedClient.fxml");
+    }
+
 
     private void handleLogout() {
             if (playlistController != null) {
