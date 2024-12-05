@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="750.0" prefWidth="850.0" stylesheets="@../../Styles/Dashboard.css" xmlns:fx="http://javafx.com/fxml" fx:controller="org.example.Controllers.Client.LikedController">
+    <!-- Τίτλος -->
+    <Label text="Liked Songs" layoutX="10.0" layoutY="10.0" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #facece;" />
+
+    <!-- Λίστα αγαπημένων τραγουδιών -->
+    <ListView fx:id="likedSongsList" layoutX="10.0" layoutY="50.0" prefHeight="600.0" prefWidth="600.0" style="-fx-background-color: #656464; -fx-border-color: #ccc; -fx-border-radius: 5px;" />
+
+</AnchorPane>
+
