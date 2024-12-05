@@ -18,7 +18,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
 import kong.unirest.JsonNode;
 import javafx.application.Platform;
-
+import org.example.Controllers.LoginController;
 import java.util.ArrayList;
 
 
@@ -71,7 +71,7 @@ public class DashboardController {
     private int selectedSongId; // Αποθηκεύει το ID του τρέχοντος τραγουδιού
     private String lastImageUrl=null;
     // Μέθοδος για να ορίσουμε το userId κατά τη σύνδεση
-
+    private String username;
     public void setUserId(int userId) {
         this.userId = userId;
     }
@@ -82,7 +82,9 @@ public class DashboardController {
     private int getSelectedSongId() {
         return selectedSongId;
     }
-
+    public void setUsername(String username) {
+        this.username = username;
+    }
     public DashboardController() {
 
     }
@@ -92,11 +94,17 @@ public class DashboardController {
         this.discogsApiClient = discogsApiClient;
         this.lastFmApiClient = lastFmApiClient;
     }
-
+    public DashboardController(String username) {
+        this.username = username;
+    }
     @FXML
     public void initialize() {
+        // Παίρνεις το username από τον LoginController
+
+
         imageContainer.setStyle("-fx-padding: 20 0 0 0;");
         displayLatestSearches();
+
         rootPane.addEventFilter(javafx.scene.input.MouseEvent.MOUSE_PRESSED, event -> {
             if (resultsList.isVisible()) {
                 // Υπολογισμός των συντεταγμένων του `resultsList` στη σκηνή
@@ -143,8 +151,8 @@ public class DashboardController {
                             genre = response.getJSONObject("track").optString("genre", "Unknown");
                             duration = response.getJSONObject("track").optString("duration", "Unknown");
                         }
-                        // Αποθήκευση στο ιστορικό
-                        saveToHistory(trackName, artistName, genre, imageUrl);
+                        // Αποθήκευση στο ιστορικό χρησιμοποιώντας το userId που πήρες
+                        saveToHistory(trackName, artistName, genre, imageUrl); // Χρησιμοποιείς το userId εδώ
                     }
                     resultsList.setVisible(false); // Απόκρυψη λίστας μετά την επιλογή
                 } catch (Exception e) {
@@ -473,19 +481,25 @@ public class DashboardController {
         imageContainer.getChildren().addAll(artistImages);
     }
 
-    private void saveToHistory(String title, String artist, String genre, String imageUrl) {
+    private void saveToHistory(String trackName, String artistName, String genre, String imageUrl) {
         String query = "INSERT INTO history (user_id, title, artist, genre, image_url) VALUES (?, ?, ?, ?, ?)";
+
         try (Connection connection = DataBaseConnection.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-            preparedStatement.setInt(1, userId);
-            preparedStatement.setString(2, title);
-            preparedStatement.setString(3, artist);
-            preparedStatement.setString(4, genre);
-            preparedStatement.setString(5, imageUrl);
+
+            preparedStatement.setString(1, LoginController.userId); // Χρήση του userId
+            preparedStatement.setString(2, trackName);
+            preparedStatement.setString(3, artistName != null ? artistName : "Unknown");
+            preparedStatement.setString(4, genre != null ? genre : "Unknown");
+            preparedStatement.setString(5, imageUrl != null ? imageUrl : "");
+
             preparedStatement.executeUpdate();
-            System.out.println("Το κομμάτι αποθηκεύτηκε στο ιστορικό.");
+            System.out.println("Το ιστορικό αποθηκεύτηκε στη βάση δεδομένων.");
         } catch (SQLException e) {
-            System.err.println("Σφάλμα κατά την αποθήκευση στο ιστορικό: " + e.getMessage());
+            System.err.println("Σφάλμα κατά την αποθήκευση του ιστορικού: " + e.getMessage());
         }
     }
+
 }
+
+

@@ -52,13 +52,14 @@ public class LoginController implements Initializable {
 
     public Label username_lbl;
 
+
     @FXML
     private CheckBox remember_me_chk;  // Το CheckBox για το "Remember me"
 
 
     private Preferences prefs = Preferences.userNodeForPackage(LoginController.class); // Preferences για την εφαρμογή
     private List playlistView;
-
+    public static String userId;
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         preloadClientScene();
@@ -124,7 +125,7 @@ public class LoginController implements Initializable {
             // Έλεγχος διαπιστευτηρίων χρήστη
 
             if (db.verifyCredentials(username, password)) {
-                String userId = db.getUserId(username); // Λήψη του νέου userId
+                userId = db.getUserId(username); // Λήψη του νέου userId
                 playlistController.saveLoggedInUserId(userId);
                 openClientScene(username);
                 error_lbl.setVisible(false);

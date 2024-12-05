@@ -3,11 +3,13 @@ package org.example.Controllers.Client;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
+import org.example.Controllers.LoginController;
 import org.example.DataBase.DataBaseConnection;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.SQLException;
 
 public class HistoryController {
 
@@ -19,10 +21,22 @@ public class HistoryController {
     }
 
     private void loadHistory() {
-        String query = "SELECT id, title, genre FROM history";
+        // Παίρνουμε το userId από το LoginController
+        String userId = LoginController.userId; // Πάρε το userId από το LoginController
+
+        if (userId == null || userId.isEmpty()) {
+            return; // Αν δεν υπάρχει έγκυρο userId, δεν φορτώνουμε τα δεδομένα
+        }
+
+        // Η query τώρα παίρνει το user_id και εμφανίζει το ιστορικό του χρήστη
+        String query = "SELECT id, title, genre FROM history WHERE user_id = ?";
+
         try (Connection connection = DataBaseConnection.getConnection();
-             Statement statement = connection.createStatement();
-             ResultSet resultSet = statement.executeQuery(query)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+
+            preparedStatement.setString(1, userId); // Χρησιμοποιούμε το userId για το preparedStatement
+
+            ResultSet resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next()) {
                 int id = resultSet.getInt("id");
@@ -36,9 +50,8 @@ public class HistoryController {
                 // Προσθήκη στο VBox
                 historyContainer.getChildren().add(entryLabel);
             }
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 }
-
