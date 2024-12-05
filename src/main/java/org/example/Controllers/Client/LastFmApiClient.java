@@ -22,16 +22,11 @@ public class LastFmApiClient {
                     .queryString("format", "json")
                     .asJson();
 
-            // Ελέγχουμε τον κωδικό HTTP Status για να διασφαλίσουμε ότι η κλήση ήταν επιτυχής
+
             if (response.getStatus() == 200) {
-
                 JsonNode body = response.getBody();
-
-                // Ελέγχουμε αν το JSON περιέχει τα απαιτούμενα δεδομένα
                 if (body.getObject().has("artist")) {
                     JSONObject artist = body.getObject().getJSONObject("artist");
-
-                    // Ελέγχουμε αν υπάρχει το bio και το περιεχόμενο του bio
                     if (artist.has("bio")) {
                         JSONObject bio = artist.getJSONObject("bio");
                         if (bio.has("content")) {
@@ -44,8 +39,7 @@ public class LastFmApiClient {
                         System.out.println("No bio found for " + artistName);
                     }
 
-                    // Επιστρέφουμε τα δεδομένα JSON
-                    return body; // Επιστρέφει το πλήρες JSON για περαιτέρω επεξεργασία
+                    return body;
                 } else {
                     System.out.println("Artist data not found for " + artistName);
                 }
@@ -56,7 +50,7 @@ public class LastFmApiClient {
             e.printStackTrace();
             System.out.println("Exception occurred: Unable to fetch artist info.");
         }
-        return null; // Επιστρέφει null σε περίπτωση σφάλματος
+        return null;
     }
 
 

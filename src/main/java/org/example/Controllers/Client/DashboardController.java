@@ -3,6 +3,7 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.fxml.FXML;
+import org.example.Controllers.LoginController;
 import org.example.DataBase.DataBaseConnection;
 import javafx.scene.layout.HBox;
 import javafx.collections.FXCollections;
@@ -12,6 +13,7 @@ import javafx.scene.layout.VBox;
 import kong.unirest.JsonNode;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import javafx.scene.layout.AnchorPane;
@@ -68,20 +70,18 @@ public class DashboardController {
     public Label labelNowPlaying;
 
     private int userId; // Ο χρήστης που είναι συνδεδεμένος
-    private int selectedSongId; // Αποθηκεύει το ID του τρέχοντος τραγουδιού
+     // Αποθηκεύει το ID του τρέχοντος τραγουδιού
     private String lastImageUrl=null;
+
+    private int selectedSongId = -1;
     // Μέθοδος για να ορίσουμε το userId κατά τη σύνδεση
 
     public void setUserId(int userId) {
         this.userId = userId;
     }
 
-    public void setSelectedSongId(int songId) {
-        this.selectedSongId = songId;
-    }
-    private int getSelectedSongId() {
-        return selectedSongId;
-    }
+
+
 
     public DashboardController() {
 
@@ -134,6 +134,7 @@ public class DashboardController {
                 try {
                     if (selectedItem.startsWith("Track: ")) {
                         trackName = selectedItem.substring(7); // Αφαίρεση του prefix "Track: "
+                        resetFavoriteButton();
                         setNowPlayingImage(trackName);
                         JSONObject response = apiClient.searchTracks(trackName).getObject();
                         setNowPlayingSongName(trackName);
@@ -142,6 +143,7 @@ public class DashboardController {
                             artistName = response.getJSONObject("track").getString("artist");
                             genre = response.getJSONObject("track").optString("genre", "Unknown");
                             duration = response.getJSONObject("track").optString("duration", "Unknown");
+
                         }
                         // Αποθήκευση στο ιστορικό
                         saveToHistory(trackName, artistName, genre, imageUrl);
@@ -163,25 +165,52 @@ public class DashboardController {
 
         // Ενέργεια κουμπιού
         favoriteButton.setOnAction(event -> {
-            int songId = getSelectedSongId(); // Παίρνουμε το songId
-            if (songId == -1) {
-                System.err.println("Κανένα τραγούδι δεν είναι επιλεγμένο.");
-                return;
-            }
+             // Παίρνουμε το songId
+
 
             if (!isFavorite) {
                 System.out.println("Το τραγούδι προστέθηκε στα αγαπημένα!");
                 favoriteButton.setStyle("-fx-background-color: #ff4081; -fx-border-color: #ff4081; -fx-text-fill: white;");
                 isFavorite = true;
-                addToFavorites(songId, userId);
+                addToFavorites();
             } else {
                 System.out.println("Το τραγούδι αφαιρέθηκε από τα αγαπημένα!");
                 favoriteButton.setStyle("-fx-background-color: transparent; -fx-border-color: #ffffff; -fx-text-fill: #ffffff;");
                 isFavorite = false;
-                removeFromFavorites(songId, userId);
+                removeFromFavorites();
             }
         });
     }
+
+        private int getSongIdFromHistory(String userId) {
+        int songId = -1;
+        String query = "SELECT id FROM history WHERE user_id = ? "; // Ανακτούμε το πιο πρόσφατο τραγούδι από το ιστορικό
+
+        try (Connection connection = DataBaseConnection.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+
+            preparedStatement.setString(1, userId); // Ορίζουμε το userId
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    songId = resultSet.getInt("id");
+                } else {
+                    System.err.println("Δεν βρέθηκε τραγούδι στο ιστορικό για τον χρήστη.");
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Σφάλμα κατά την ανάκτηση του song_id από το ιστορικό: " + e.getMessage());
+        }
+
+        return songId;
+    }
+
+    private void resetFavoriteButton() {
+        // Επαναφέρουμε την κατάσταση του κουμπιού favouriteButton
+        favoriteButton.setStyle("-fx-background-color: transparent; -fx-border-color: #ffffff; -fx-text-fill: #ffffff;");
+        isFavorite = false; // Επαναφέρουμε την κατάσταση του τραγουδιού από αγαπημένο σε μη αγαπημένο
+    }
+
 
     private void setNowPlayingSongName(String trackName) {
         songTitleText.setText(trackName);
@@ -206,38 +235,131 @@ public class DashboardController {
         }).start();
     }
 
+    private void addToFavorites() {
+        // Ανάκτηση του userId από το LoginController
+        String userId = LoginController.userId;
+        System.out.println("User ID: " + userId);
 
-    private void addToFavorites(int songId, int userId) {
-        String query = "INSERT INTO favourite_songs WHERE user_id = ? AND song_id = ?";
+        if (userId == null || userId.isEmpty()) {
+            System.err.println("Το userId δεν είναι έγκυρο. Ο χρήστης δεν έχει συνδεθεί.");
+            return;
+        }
 
-        try (Connection connection = DataBaseConnection.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+        // Ανάκτηση του τελευταίου songId από το ιστορικό
+        int songId = getLastSongIdFromHistory(userId);
 
-            preparedStatement.setInt(1, userId);
-            preparedStatement.setInt(2, songId);
-            preparedStatement.executeUpdate();
+        if (songId == -1) {
+            System.err.println("Δεν βρέθηκε τραγούδι στο ιστορικό.");
+            return;
+        }
 
-            System.out.println("Το τραγούδι αποθηκεύτηκε στα αγαπημένα στη βάση δεδομένων.");
+        // Ερώτημα για την εισαγωγή στα favourite_songs
+        String queryInsertFavorite = "INSERT INTO favourite_songs (user_id, song_id) VALUES (?, ?)";
+
+        try (Connection connection = DataBaseConnection.getConnection()) {
+            // Εισαγωγή του song_id και user_id στα αγαπημένα
+            try (PreparedStatement preparedStatement = connection.prepareStatement(queryInsertFavorite)) {
+                preparedStatement.setString(1, userId); // Εισάγουμε το user_id
+                preparedStatement.setInt(2, songId);   // Εισάγουμε το song_id που έχουμε ανακτήσει από το ιστορικό
+                preparedStatement.executeUpdate();
+
+                System.out.println("Το τραγούδι αποθηκεύτηκε στα αγαπημένα.");
+            }
         } catch (SQLException e) {
             System.err.println("Σφάλμα κατά την προσθήκη του τραγουδιού στα αγαπημένα: " + e.getMessage());
         }
     }
 
-    private void removeFromFavorites(int songId, int userId) {
-        String query = "DELETE FROM favourite_songs WHERE user_id = ? AND song_id = ?";
+    // Μέθοδος για να ανακτήσεις το τελευταίο songId από το ιστορικό
+    private int getLastSongIdFromHistory(String userId) {
+        int songId = -1;
+
+        // Ερώτημα για να πάρεις το τελευταίο songId από το ιστορικό
+        String query = "SELECT id FROM history WHERE user_id = ? ORDER BY created_at DESC LIMIT 1";
 
         try (Connection connection = DataBaseConnection.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
 
-            preparedStatement.setInt(1, userId);
-            preparedStatement.setInt(2, songId);
-            preparedStatement.executeUpdate();
+            preparedStatement.setString(1, userId); // Εισάγουμε το user_id
+            ResultSet resultSet = preparedStatement.executeQuery();
 
-            System.out.println("Το τραγούδι αφαιρέθηκε από τα αγαπημένα στη βάση δεδομένων.");
+            if (resultSet.next()) {
+                songId = resultSet.getInt("id"); // Παίρνουμε το τελευταίο song_id
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Σφάλμα κατά την ανάκτηση του τελευταίου τραγουδιού από το ιστορικό: " + e.getMessage());
+        }
+
+        return songId;
+    }
+
+
+    private void removeFromFavorites() {
+        String userId = LoginController.userId; // Παίρνουμε το userId από το LoginController
+        if (userId == null || userId.isEmpty()) {
+            System.err.println("Το userId δεν είναι έγκυρο. Ο χρήστης δεν έχει συνδεθεί.");
+            return;
+        }
+
+        // Βήμα 1: Ανάκτηση του τελευταίου song_id από τα αγαπημένα
+        int songId = getLastSongIdFromFavorites(userId); // Χρησιμοποιούμε την ίδια μέθοδο για να πάρουμε το τελευταίο song_id
+
+        if (songId == -1) {
+            System.err.println("Δεν βρέθηκε τραγούδι στα αγαπημένα για τον χρήστη.");
+            return;
+        }
+
+        // Βήμα 2: Διαγραφή του τραγουδιού από τα αγαπημένα
+        String queryDelete = "DELETE FROM favourite_songs WHERE user_id = ? AND song_id = ? LIMIT 1"; // Διαγραφή ΜΟΝΟ του πρώτου τραγουδιού που βρέθηκε
+
+        try (Connection connection = DataBaseConnection.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(queryDelete)) {
+
+            preparedStatement.setString(1, userId); // userId από το LoginController
+            preparedStatement.setInt(2, songId); // songId που βρήκαμε από τα αγαπημένα
+
+            int rowsAffected = preparedStatement.executeUpdate();
+
+            if (rowsAffected > 0) {
+                System.out.println("Το τραγούδι αφαιρέθηκε από τα αγαπημένα στη βάση δεδομένων.");
+            } else {
+                System.out.println("Δεν βρέθηκε το τραγούδι στα αγαπημένα για τον χρήστη.");
+            }
         } catch (SQLException e) {
             System.err.println("Σφάλμα κατά την αφαίρεση του τραγουδιού από τα αγαπημένα: " + e.getMessage());
         }
     }
+
+    // Μέθοδος για να ανακτήσεις το τελευταίο songId από τα αγαπημένα
+    private int getLastSongIdFromFavorites(String userId) {
+        int songId = -1;
+
+        // Ερώτημα για να πάρεις το τελευταίο songId από τα αγαπημένα
+        String query = "SELECT song_id FROM favourite_songs WHERE user_id = ? ORDER BY created_at DESC LIMIT 1";
+
+        try (Connection connection = DataBaseConnection.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+
+            preparedStatement.setString(1, userId); // Εισάγουμε το user_id
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                songId = resultSet.getInt("song_id"); // Παίρνουμε το τελευταίο song_id
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Σφάλμα κατά την ανάκτηση του τελευταίου τραγουδιού από τα αγαπημένα: " + e.getMessage());
+        }
+
+        return songId;
+    }
+
+
+
+
+
+
     public void searchAll(String query) {
         new Thread(() -> {
             try {
@@ -473,19 +595,50 @@ public class DashboardController {
         imageContainer.getChildren().addAll(artistImages);
     }
 
-    private void saveToHistory(String title, String artist, String genre, String imageUrl) {
-        String query = "INSERT INTO history (user_id, title, artist, genre, image_url) VALUES (?, ?, ?, ?, ?)";
+    private void saveToHistory(String trackName, String artistName, String genre, String imageUrl) {
+        // Ερώτημα για να ελέγξουμε αν υπάρχει ήδη το τραγούδι στην βάση για τον συγκεκριμένο χρήστη
+        String checkQuery = "SELECT id FROM history WHERE user_id = ? AND title = ?";
+
         try (Connection connection = DataBaseConnection.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-            preparedStatement.setInt(1, userId);
-            preparedStatement.setString(2, title);
-            preparedStatement.setString(3, artist);
-            preparedStatement.setString(4, genre);
-            preparedStatement.setString(5, imageUrl);
-            preparedStatement.executeUpdate();
-            System.out.println("Το κομμάτι αποθηκεύτηκε στο ιστορικό.");
+             PreparedStatement checkStatement = connection.prepareStatement(checkQuery)) {
+
+            // Ρύθμιση των παραμέτρων για τον χρήστη και το τραγούδι
+            checkStatement.setString(1, LoginController.userId);
+            checkStatement.setString(2, trackName);
+
+            ResultSet resultSet = checkStatement.executeQuery();
+
+            // Αν βρούμε το τραγούδι, το διαγράφουμε
+            if (resultSet.next()) {
+                int id = resultSet.getInt("id");
+
+                // Ερώτημα διαγραφής της παλιάς καταχώρησης
+                String deleteQuery = "DELETE FROM history WHERE id = ?";
+                try (PreparedStatement deleteStatement = connection.prepareStatement(deleteQuery)) {
+                    deleteStatement.setInt(1, id);
+                    deleteStatement.executeUpdate();
+                    System.out.println("Η παλιά καταχώρηση διαγράφηκε.");
+                }
+            }
+
+            // Ερώτημα για την εισαγωγή του νέου τραγουδιού
+            String insertQuery = "INSERT INTO history (user_id, title, artist, genre, image_url) VALUES (?, ?, ?, ?, ?)";
+
+            try (PreparedStatement insertStatement = connection.prepareStatement(insertQuery)) {
+                insertStatement.setString(1, LoginController.userId); // Χρήση του userId
+                insertStatement.setString(2, trackName);
+                insertStatement.setString(3, artistName != null ? artistName : "Unknown");
+                insertStatement.setString(4, genre != null ? genre : "Unknown");
+                insertStatement.setString(5, imageUrl != null ? imageUrl : "");
+
+                insertStatement.executeUpdate();
+                System.out.println("Το ιστορικό αποθηκεύτηκε στη βάση δεδομένων.");
+
+            } catch (SQLException e) {
+                System.err.println("Σφάλμα κατά την αποθήκευση του ιστορικού: " + e.getMessage());
+            }
         } catch (SQLException e) {
-            System.err.println("Σφάλμα κατά την αποθήκευση στο ιστορικό: " + e.getMessage());
+            System.err.println("Σφάλμα κατά την αναζήτηση του τραγουδιού στο ιστορικό: " + e.getMessage());
         }
     }
 }

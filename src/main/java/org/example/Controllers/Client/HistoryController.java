@@ -1,5 +1,6 @@
 package org.example.Controllers.Client;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
@@ -17,10 +18,14 @@ public class HistoryController {
     private VBox historyContainer;
 
     public void initialize() {
-        loadHistory();
+
+        historyContainer.getChildren().clear();
+            loadHistory(); // Καλείς το loadHistory για να ανανεώσεις το ιστορικό
+
+
     }
 
-    private void loadHistory() {
+    public void loadHistory() {
         // Παίρνουμε το userId από το LoginController
         String userId = LoginController.userId; // Πάρε το userId από το LoginController
 
@@ -49,6 +54,7 @@ public class HistoryController {
 
                 // Προσθήκη στο VBox
                 historyContainer.getChildren().add(entryLabel);
+
             }
         } catch (SQLException e) {
             e.printStackTrace();
