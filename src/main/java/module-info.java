@@ -10,6 +10,7 @@ module org.example {
     requires java.net.http;
     requires com.fasterxml.jackson.databind;
     requires java.prefs;
+    requires javafx.media;
     opens org.example.DataBase to org.mockito;
 
     opens org.example.Controllers to javafx.fxml;
