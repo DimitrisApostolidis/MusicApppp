@@ -77,4 +77,6 @@
    </Label>
    <ImageView fx:id="songImageView" fitHeight="102.0" fitWidth="114.0" layoutX="27.0" layoutY="611.0" pickOnBounds="true" preserveRatio="true">
    </ImageView>
+   <Label fx:id="labelCurrentTime" layoutX="113.0" layoutY="728.0" text="Label" textFill="WHITE" />
+   <Label fx:id="labelTotalDuration" layoutX="689.0" layoutY="728.0" text="Label" textFill="WHITE" />
 </AnchorPane>
