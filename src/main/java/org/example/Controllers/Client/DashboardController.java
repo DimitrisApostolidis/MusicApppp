@@ -18,10 +18,13 @@ import java.sql.SQLException;
 import java.util.List;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
-import kong.unirest.JsonNode;
 import javafx.application.Platform;
-
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import java.util.ArrayList;
+import java.util.Objects;
+
+
 
 
 
@@ -57,12 +60,13 @@ public class DashboardController {
 
     private ObservableList<ImageView> artistImages = FXCollections.observableArrayList();
     private static final int MAX_IMAGES = 10;
-
+    private MediaPlayer mediaPlayer;
     private    DiscogsApiClient discogsApiClient = new DiscogsApiClient();
     private LastFmApiClient apiClient = new LastFmApiClient();
     private  LastFmApiClient lastFmApiClient = new LastFmApiClient();
     private final ObservableList<Image> imageList = FXCollections.observableArrayList();
-
+    private List<String> playlist;  // Η λίστα με τα τραγούδια
+    private int currentTrackIndex = 0;  // Ο δείκτης του τρέχοντος τραγουδιού
     private boolean isFavorite = false; // Μεταβλητή για να παρακολουθεί αν είναι στα αγαπημένα
 
     public Text songTitleText;
@@ -111,6 +115,30 @@ public class DashboardController {
                     resultsList.setVisible(false); // Απόκρυψη λίστας
                 }
             }
+        });
+
+        playlist = new ArrayList<>();
+        playlist.add(getClass().getResource("/music/song1.mp3").toString());
+        playlist.add(getClass().getResource("/music/song2.mp3").toString());
+        playlist.add(getClass().getResource("/music/song3.mp3").toString());
+
+        // Αρχικοποίηση του πρώτου τραγουδιού
+        loadTrack(currentTrackIndex);
+
+        playy.setOnMouseClicked(mouseEvent -> {
+            playMusic();
+        });
+
+        pausee.setOnMouseClicked(mouseEvent -> {
+            mediaPlayer.pause();
+        });
+
+        nextt.setOnMouseClicked(mouseEvent -> {
+            playNext();
+        });
+
+        previouss.setOnMouseClicked(mouseEvent -> {
+            playPrevious();
         });
 
         searchField.setOnKeyReleased(event -> {
@@ -640,5 +668,36 @@ public class DashboardController {
         } catch (SQLException e) {
             System.err.println("Σφάλμα κατά την αναζήτηση του τραγουδιού στο ιστορικό: " + e.getMessage());
         }
+    }
+
+    private void loadTrack(int index) {
+        if (mediaPlayer != null) {
+            mediaPlayer.stop();  // Σταμάτημα του τρέχοντος τραγουδιού
+        }
+
+        // Φόρτωση του νέου τραγουδιού
+        Media media = new Media(playlist.get(index));
+        mediaPlayer = new MediaPlayer(media);
+
+        // Προαιρετικά, μπορείς να κάνεις το τραγούδι να παίζει αυτόματα όταν φορτώνεται
+        mediaPlayer.setOnEndOfMedia(this::playNext); // Αυτόματη μετάβαση στο επόμενο τραγούδι όταν τελειώνει
+    }
+
+    public void playMusic() {
+        if (mediaPlayer != null) {
+            mediaPlayer.play();
+        }
+    }
+
+    public void playNext() {
+        currentTrackIndex = (currentTrackIndex + 1) % playlist.size(); // Κυκλική εναλλαγή
+        loadTrack(currentTrackIndex);
+        playMusic();
+    }
+
+    public void playPrevious() {
+        currentTrackIndex = (currentTrackIndex - 1 + playlist.size()) % playlist.size(); // Κυκλική εναλλαγή προς τα πίσω
+        loadTrack(currentTrackIndex);
+        playMusic();
     }
 }

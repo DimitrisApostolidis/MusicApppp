@@ -129,8 +129,6 @@ public class LoginController implements Initializable {
                 playlistController.saveLoggedInUserId(userId);
                 openClientScene(username);
                 error_lbl.setVisible(false);
-                openClientScene(username);
-                error_lbl.setVisible(false);
             } else {
                 error_lbl.setText("Invalid username or password");
                 error_lbl.setVisible(true);
