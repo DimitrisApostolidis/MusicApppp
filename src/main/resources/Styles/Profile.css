@@ -1,0 +1,71 @@
+/* Profile.css */
+
+/* General Styling */
+.profile-container {
+    -fx-background-color: #1c1d21; /* Dark background */
+    -fx-padding: 20; /* Padding around the container */
+    -fx-background-radius: 15; /* Rounded corners */
+    -fx-text-fill: #ffffff; /* White text */
+}
+
+/* Title Label Style */
+.profile-title {
+    -fx-font-family: 'Segoe UI', 'Roboto', 'Open Sans', sans-serif;
+    -fx-font-size: 26px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #ffffff; /* Light text for contrast */
+}
+
+/* Button Style */
+.profile-button {
+    -fx-background-radius: 10; /* Rounded buttons */
+    -fx-min-width: 150px;      /* Adjusted size */
+    -fx-min-height: 35px;
+    -fx-background-color: #388E3C; /* Green background */
+    -fx-font-size: 16px;       /* Font size for readability */
+    -fx-text-fill: #ffffff;    /* White text */
+    -fx-border-color: #2e7d32; /* Darker green border */
+    -fx-border-width: 1px;     /* Border thickness */
+}
+
+.profile-button:hover {
+    -fx-background-color: #2e7d32; /* Darker green on hover */
+}
+
+.profile-button:pressed {
+    -fx-background-color: #1b5e20; /* Darkest green when pressed */
+}
+
+/* Text Field Style */
+.profile-text-field {
+    -fx-background-radius: 10; /* Rounded corners matching the button */
+    -fx-padding: 8;            /* Comfortable padding */
+    -fx-border-color: #ffffff; /* White border */
+    -fx-border-width: 1px;     /* Border thickness */
+    -fx-font-size: 14px;       /* Font size */
+    -fx-background-color: #2a2a2a; /* Dark matching background color */
+    -fx-text-fill: #ffffff;    /* White text for readability */
+}
+
+.profile-text-field2 {
+    -fx-background-radius: 10; /* Rounded corners matching the button */
+    -fx-padding: 8;            /* Comfortable padding */
+    -fx-border-color: #ffffff; /* White border */
+    -fx-border-width: 1px;     /* Border thickness */
+    -fx-font-size: 14px;       /* Font size */
+    -fx-background-color: #2a2a2a; /* Dark matching background color */
+    -fx-text-fill: #ffffff;    /* White text for readability */
+}
+
+/* Label Style */
+.profile-label {
+    -fx-font-family: 'Segoe UI', 'Roboto', 'Open Sans', sans-serif;
+    -fx-font-size: 18px;
+    -fx-text-fill: #ffffff; /* Light text for contrast */
+}
+
+/* Spacing for fields and sections */
+.profile-section {
+    -fx-spacing: 15; /* Space between elements in a section */
+}
+
