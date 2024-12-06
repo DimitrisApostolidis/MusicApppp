@@ -1,8 +1,12 @@
 package org.example.Controllers.Client;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.beans.value.ChangeListener;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.fxml.FXML;
+import javafx.util.Duration;
 import org.example.Controllers.LoginController;
 import org.example.DataBase.DataBaseConnection;
 import javafx.scene.layout.HBox;
@@ -30,8 +34,12 @@ import java.util.Objects;
 
 
 
+
+
 public class DashboardController {
 
+    public Label labelCurrentTime;
+    public Label labelTotalDuration;
     @FXML
     private Text welcomeText;
 
@@ -49,6 +57,7 @@ public class DashboardController {
 
     @FXML
     private Slider time;
+
 
     @FXML
     private ListView<String> resultsList;
@@ -69,6 +78,7 @@ public class DashboardController {
     private int currentTrackIndex = 0;  // Ο δείκτης του τρέχοντος τραγουδιού
     private boolean isFavorite = false; // Μεταβλητή για να παρακολουθεί αν είναι στα αγαπημένα
 
+    private Timeline sliderUpdater;
     public Text songTitleText;
     public ImageView songImageView;
     public Label labelNowPlaying;
@@ -121,6 +131,8 @@ public class DashboardController {
         playlist.add(getClass().getResource("/music/song1.mp3").toString());
         playlist.add(getClass().getResource("/music/song2.mp3").toString());
         playlist.add(getClass().getResource("/music/song3.mp3").toString());
+        labelCurrentTime.setVisible(false);
+        labelTotalDuration.setVisible(false);
 
         // Αρχικοποίηση του πρώτου τραγουδιού
         loadTrack(currentTrackIndex);
@@ -670,32 +682,114 @@ public class DashboardController {
         }
     }
 
+    private void setLabelTotalDuration(){
+        int totalTime = (int) mediaPlayer.getMedia().getDuration().toSeconds();
+        int totalMinutes = (int) totalTime / 60;
+        int totalSeconds = (int) totalTime % 60;
+        labelTotalDuration.setText(String.format("%d:%02d", totalMinutes, totalSeconds));
+    }
+
+    private void setLabelCurrentTime(){
+        mediaPlayer.currentTimeProperty().addListener((observable, oldValue, newValue) -> {
+            // Λήψη του τρέχοντος χρόνου σε δευτερόλεπτα
+            double currentTime = newValue.toSeconds();
+
+            int currentMinutes = (int) currentTime / 60;
+            int currentSeconds = (int) currentTime % 60;
+
+            // Ενημέρωση του label με τον τρέχοντα χρόνο σε μορφή mm:ss
+            labelCurrentTime.setText(String.format("%d:%02d", currentMinutes, currentSeconds));
+        });
+    }
+
     private void loadTrack(int index) {
         if (mediaPlayer != null) {
             mediaPlayer.stop();  // Σταμάτημα του τρέχοντος τραγουδιού
+            mediaPlayer.dispose(); // Απελευθέρωση πόρων του προηγούμενου MediaPlayer
         }
 
         // Φόρτωση του νέου τραγουδιού
         Media media = new Media(playlist.get(index));
         mediaPlayer = new MediaPlayer(media);
 
+        bindSlider();
+
         // Προαιρετικά, μπορείς να κάνεις το τραγούδι να παίζει αυτόματα όταν φορτώνεται
         mediaPlayer.setOnEndOfMedia(this::playNext); // Αυτόματη μετάβαση στο επόμενο τραγούδι όταν τελειώνει
     }
 
+    private void bindSlider() {
+        // Δημιουργούμε το sliderUpdater μόνο μία φορά
+        if (sliderUpdater != null) {
+            sliderUpdater.stop();
+        }
+
+        // Ρύθμιση της διάρκειας του slider όταν το MediaPlayer είναι έτοιμο
+        mediaPlayer.setOnReady(() -> {
+            time.setMax(mediaPlayer.getMedia().getDuration().toSeconds());
+            setLabelTotalDuration();
+            setLabelCurrentTime();
+        });
+
+        mediaPlayer.setOnError(() -> {
+            System.out.println("Error occurred in MediaPlayer: " + mediaPlayer.getError().getMessage());
+        });
+
+        // Δημιουργία Timeline για την ενημέρωση του Slider
+        sliderUpdater = new Timeline(new KeyFrame(Duration.seconds(3), event -> {
+            // Ενημερώνουμε το Slider μόνο αν ο χρήστης δεν το μετακινεί και ο ήχος παίζει
+           // if (!time.isValueChanging() && mediaPlayer.getStatus() == MediaPlayer.Status.PLAYING) {
+                time.setValue(mediaPlayer.getCurrentTime().toSeconds());
+           // }
+        }));
+        sliderUpdater.setCycleCount(Timeline.INDEFINITE);
+        sliderUpdater.play();
+
+        // Όταν ο χρήστης αρχίζει και σταματά να μετακινεί τον Slider
+        time.valueChangingProperty().addListener((observable, wasChanging, isChanging) -> {
+            if (!isChanging) {
+                // Όταν ο χρήστης αφήνει τον Slider, αλλάζουμε τη θέση του MediaPlayer
+                if (mediaPlayer.getStatus() == MediaPlayer.Status.READY || mediaPlayer.getStatus() == MediaPlayer.Status.PLAYING) {
+                    mediaPlayer.seek(Duration.seconds(time.getValue()));
+                }
+            }
+        });
+
+        // Εναλλακτική ενημέρωση του MediaPlayer αν ο χρήστης αφήσει τον Slider χωρίς αλλαγές
+        time.valueProperty().addListener((observable, oldValue, newValue) -> {
+            // Εκτελούμε το seek μόνο αν ο χρήστης δεν αλλάζει την τιμή μέσω dragging
+            if (!time.isValueChanging()) {
+                mediaPlayer.seek(Duration.seconds(newValue.doubleValue()));
+            }
+        });
+
+        // Κλείσιμο του slider αν το τραγούδι ολοκληρωθεί
+        mediaPlayer.setOnEndOfMedia(() -> {
+            time.setValue(time.getMax()); // Ενημερώνουμε το slider όταν το τραγούδι τελειώνει
+        });
+    }
+
+
+
     public void playMusic() {
         if (mediaPlayer != null) {
+            labelTotalDuration.setVisible(true);
+            labelCurrentTime.setVisible(true);
+            mediaPlayer.setRate(1.0); // Ρυθμίζουμε την ταχύτητα στην κανονική
             mediaPlayer.play();
         }
     }
 
     public void playNext() {
+        time.setValue(time.getMin());
         currentTrackIndex = (currentTrackIndex + 1) % playlist.size(); // Κυκλική εναλλαγή
         loadTrack(currentTrackIndex);
+
         playMusic();
     }
 
     public void playPrevious() {
+        time.setValue(time.getMin());
         currentTrackIndex = (currentTrackIndex - 1 + playlist.size()) % playlist.size(); // Κυκλική εναλλαγή προς τα πίσω
         loadTrack(currentTrackIndex);
         playMusic();
