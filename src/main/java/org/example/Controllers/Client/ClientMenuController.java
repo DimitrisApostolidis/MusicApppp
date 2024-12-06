@@ -15,6 +15,7 @@ import java.util.logging.Logger;
 
 import org.example.Controllers.LoginController;
 import org.example.PlaylistController;
+import org.example.Controllers.Client.ProfileController;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -32,6 +33,7 @@ public class ClientMenuController implements Initializable {
     public Button logout_btn;
     public Button report_btn;
     private PlaylistController playlistController;
+    private ProfileController profileController;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -40,6 +42,7 @@ public class ClientMenuController implements Initializable {
         dashboard_btn.setOnAction(event -> openDashboardScene());
         history_btn.setOnAction(event -> openHistoryScene());
         likedsong_btn.setOnAction(event -> openLikedSongsScene());
+        profile_btn.setOnAction(event -> openProfileScene());
     }
 
     private void openDashboardScene() {
@@ -58,6 +61,10 @@ public class ClientMenuController implements Initializable {
         changeScene("/Fxml/Client/LikedClient.fxml");
     }
 
+    private void openProfileScene() {
+        changeScene("/Fxml/Client/ProfilePageClient.fxml");
+    }
+
 
     private void handleLogout() {
             if (playlistController != null) {
@@ -71,13 +78,6 @@ public class ClientMenuController implements Initializable {
     private void clearSceneCache() {
         sceneCache.clear();
     }
-
-
-
-
-
-
-
 
     private void changeScene(String fxmlPath) {
         if (sceneCache.containsKey(fxmlPath)) {

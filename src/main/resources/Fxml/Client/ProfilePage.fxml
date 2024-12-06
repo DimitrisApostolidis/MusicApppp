@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane prefHeight="750.0" prefWidth="850.0" stylesheets="@../../Styles/Profile.css" xmlns:fx="http://javafx.com/fxml" fx:controller="org.example.Controllers.Client.ProfileController">
+
+    <!-- Τίτλος της Σελίδας -->
+    <Label text="My Profile" layoutX="20.0" layoutY="20.0" styleClass="profile-title" />
+
+    <!-- Προφίλ Εικόνα -->
+    <VBox layoutX="20.0" layoutY="60.0" spacing="20.0" alignment="CENTER">
+        <ImageView fx:id="profileImage" fitHeight="140.0" fitWidth="140.0" preserveRatio="true" style="-fx-border-color: #ccc; -fx-border-width: 2px; -fx-border-radius: 5px;" />
+        <Button text="Upload Profile Picture" styleClass="profile-button" onAction="#uploadProfilePicture" />
+    </VBox>
+
+    <!-- Προσωπικά Στοιχεία -->
+    <VBox layoutX="200.0" layoutY="60.0" spacing="15.0" alignment="CENTER_LEFT">
+        <Label text="Personal Information" styleClass="profile-label"/>
+
+        <HBox spacing="10.0" alignment="CENTER_LEFT">
+            <Label text="Name:" styleClass="profile-label"/>
+            <Label fx:id="usernameLabel" text="John Doe" styleClass="profile-label" />
+        </HBox>
+
+        <HBox spacing="10.0" alignment="CENTER_LEFT">
+            <Label text="Email:" styleClass="profile-label"/>
+            <Label fx:id="emailLabel" text="johndoe@example.com" styleClass="profile-label" />
+        </HBox>
+    </VBox>
+
+    <!-- Αλλαγή Κωδικού Πρόσβασης -->
+    <VBox layoutX="20.0" layoutY="400.0" spacing="20.0" alignment="CENTER_LEFT">
+        <Label text="Change Password" styleClass="profile-label"/>
+
+        <VBox spacing="15.0">
+            <HBox spacing="10.0" alignment="CENTER_LEFT">
+                <Label text="Current Password:" styleClass="profile-label"/>
+                <PasswordField fx:id="currentPasswordField" promptText="Enter your current password" styleClass="profile-text-field" prefWidth="200"/>
+            </HBox>
+
+            <HBox spacing="10.0" alignment="CENTER_LEFT">
+                <Label text="New Password:" styleClass="profile-label"/>
+                <PasswordField fx:id="newPasswordField" promptText="Enter your new password" styleClass="profile-text-field" prefWidth="200"/>
+            </HBox>
+
+            <HBox spacing="10.0" alignment="CENTER_LEFT">
+                <Label text="Confirm Password:" styleClass="profile-label"/>
+                <PasswordField fx:id="confirmPasswordField" promptText="Confirm your new password" styleClass="profile-text-field" prefWidth="200"/>
+            </HBox>
+        </VBox>
+
+        <!-- Κουμπιά σε οριζόντια διάταξη -->
+        <HBox spacing="20.0" alignment="CENTER_LEFT">
+            <Button text="Save Changes" styleClass="profile-button" onAction="#saveProfileChanges"/>
+            <Button text="Change Password" styleClass="profile-button" onAction="#changePassword"/>
+        </HBox>
+    </VBox>
+</AnchorPane>
+
+
+
+
+
