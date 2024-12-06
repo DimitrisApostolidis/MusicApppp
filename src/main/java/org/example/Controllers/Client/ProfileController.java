@@ -12,10 +12,11 @@ import org.example.Controllers.LoginController;
 import org.example.DataBase.DataBaseConnection;
 import org.example.PlaylistController;
 
-import java.io.File;
+import java.io.*;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import static org.example.Controllers.LoginController.userId;
 
@@ -52,11 +53,11 @@ public class ProfileController {
     }
     @FXML
     public void initialize() {
-        String userId = LoginController.userId; // Χρησιμοποιώντας getter για το userId
+        String userId = LoginController.userId;
 
         if (userId != null) {
             try (Connection connection = DataBaseConnection.getConnection()) {
-                String query = "SELECT username, email FROM user WHERE user_id = ?";
+                String query = "SELECT username, email, profile_picture FROM user WHERE user_id = ?";
                 PreparedStatement statement = connection.prepareStatement(query);
                 statement.setString(1, userId);
 
@@ -68,6 +69,15 @@ public class ProfileController {
                     // Ενημέρωση των Labels
                     usernameLabel.setText(name);
                     emailLabel.setText(email);
+
+                    // Ανάκτηση και εμφάνιση εικόνας προφίλ
+                    byte[] imageBytes = resultSet.getBytes("profile_picture");
+
+                    if (imageBytes != null) {
+                        InputStream is = new ByteArrayInputStream(imageBytes);
+                        Image image = new Image(is);
+                        profileImage.setImage(image);
+                    }
                 } else {
                     System.out.println("No user found with ID: " + userId);
                 }
@@ -79,8 +89,6 @@ public class ProfileController {
         }
     }
 
-
-
     public void uploadProfilePicture(ActionEvent event) {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Select Profile Picture");
@@ -90,30 +98,41 @@ public class ProfileController {
         File selectedFile = fileChooser.showOpenDialog(null);
 
         if (selectedFile != null) {
-            Image image = new Image(selectedFile.toURI().toString());
-            profileImage.setImage(image);
-            System.out.println("New profile picture selected: " + selectedFile.getName());
+            try (Connection connection = DataBaseConnection.getConnection();
+                 FileInputStream fis = new FileInputStream(selectedFile)) {
+
+                // Ενημέρωση της βάσης δεδομένων
+                String userId = LoginController.userId; // Λήψη του ID του συνδεδεμένου χρήστη
+                if (userId == null) {
+                    System.out.println("No user is logged in.");
+                    return;
+                }
+
+                String updateQuery = "UPDATE user SET profile_picture = ? WHERE user_id = ?";
+                PreparedStatement statement = connection.prepareStatement(updateQuery);
+                statement.setBinaryStream(1, fis, (int) selectedFile.length());
+                statement.setString(2, userId);
+
+                int rowsUpdated = statement.executeUpdate();
+                if (rowsUpdated > 0) {
+                    System.out.println("Profile picture updated successfully.");
+                    // Εμφάνιση της εικόνας στην εφαρμογή
+                    Image image = new Image(selectedFile.toURI().toString());
+                    profileImage.setImage(image);
+                } else {
+                    System.out.println("Failed to update profile picture.");
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
-    /**
-     * Αποθηκεύει τις αλλαγές στο προφίλ του χρήστη.
-     */
-    public void saveProfileChanges(ActionEvent event) {
-        String name = nameField.getText();
-        String email = emailField.getText();
 
-        if (name.isEmpty() || email.isEmpty()) {
-            System.out.println("Please fill in all fields.");
-            return;
-        }
 
-        System.out.println("Profile updated: Name - " + name + ", Email - " + email);
-    }
 
-    /**
-     * Αλλάζει τον κωδικό πρόσβασης του χρήστη.
-     */
+
     public void changePassword(ActionEvent event) {
         String currentPassword = currentPasswordField.getText();
         String newPassword = newPasswordField.getText();
@@ -129,6 +148,44 @@ public class ProfileController {
             return;
         }
 
-        System.out.println("Password changed successfully.");
+        String userId = LoginController.userId;
+        if (userId == null) {
+            System.out.println("No user is logged in.");
+            return;
+        }
+
+        try (Connection connection = DataBaseConnection.getConnection()) {
+
+            String verifyPasswordQuery = "SELECT password FROM user WHERE user_id = ?";
+            PreparedStatement verifyStmt = connection.prepareStatement(verifyPasswordQuery);
+            verifyStmt.setString(1, userId);
+            ResultSet resultSet = verifyStmt.executeQuery();
+
+            if (resultSet.next()) {
+                String storedPassword = resultSet.getString("password");
+                if (!storedPassword.equals(currentPassword)) {
+                    System.out.println("Current password is incorrect.");
+                    return;
+                }
+            } else {
+                System.out.println("User not found.");
+                return;
+            }
+
+            String updatePasswordQuery = "UPDATE user SET password = ? WHERE user_id = ?";
+            PreparedStatement updateStmt = connection.prepareStatement(updatePasswordQuery);
+            updateStmt.setString(1, newPassword);
+            updateStmt.setString(2, userId);
+
+            int rowsUpdated = updateStmt.executeUpdate();
+            if (rowsUpdated > 0) {
+                System.out.println("Password changed successfully.");
+            } else {
+                System.out.println("Failed to update password.");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
+
 }

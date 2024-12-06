@@ -66,7 +66,7 @@ public class DashboardController {
     private HBox imageContainer;
 
     private List<String> latestSearches = new ArrayList<>();
-
+    HistoryController historyController = new HistoryController();
     private ObservableList<ImageView> artistImages = FXCollections.observableArrayList();
     private static final int MAX_IMAGES = 10;
     private MediaPlayer mediaPlayer;
@@ -660,39 +660,41 @@ public class DashboardController {
 
             ResultSet resultSet = checkStatement.executeQuery();
 
-            // Αν βρούμε το τραγούδι, το διαγράφουμε
+            // Αν βρούμε το τραγούδι, το ενημερώνουμε
             if (resultSet.next()) {
                 int id = resultSet.getInt("id");
 
-                // Ερώτημα διαγραφής της παλιάς καταχώρησης
-                String deleteQuery = "DELETE FROM history WHERE id = ?";
-                try (PreparedStatement deleteStatement = connection.prepareStatement(deleteQuery)) {
-                    deleteStatement.setInt(1, id);
-                    deleteStatement.executeUpdate();
-                    System.out.println("Η παλιά καταχώρηση διαγράφηκε.");
+                // Ερώτημα ενημέρωσης της υπάρχουσας καταχώρησης
+                String updateQuery = "UPDATE history SET artist = ?, genre = ?, image_url = ? WHERE id = ?";
+                try (PreparedStatement updateStatement = connection.prepareStatement(updateQuery)) {
+                    updateStatement.setString(1, artistName != null ? artistName : "Unknown");
+                    updateStatement.setString(2, genre != null ? genre : "Unknown");
+                    updateStatement.setString(3, imageUrl != null ? imageUrl : "");
+                    updateStatement.setInt(4, id);
+                    updateStatement.executeUpdate();
+                    System.out.println("Η υπάρχουσα καταχώρηση ενημερώθηκε.");
+                }
+            } else {
+                // Αν το τραγούδι δεν υπάρχει, το προσθέτουμε
+                String insertQuery = "INSERT INTO history (user_id, title, artist, genre, image_url) VALUES (?, ?, ?, ?, ?)";
+                try (PreparedStatement insertStatement = connection.prepareStatement(insertQuery)) {
+                    insertStatement.setString(1, LoginController.userId); // Χρήση του userId
+                    insertStatement.setString(2, trackName);
+                    insertStatement.setString(3, artistName != null ? artistName : "Unknown");
+                    insertStatement.setString(4, genre != null ? genre : "Unknown");
+                    insertStatement.setString(5, imageUrl != null ? imageUrl : "");
+
+                    insertStatement.executeUpdate();
+                    System.out.println("Το ιστορικό αποθηκεύτηκε στη βάση δεδομένων.");
                 }
             }
 
-            // Ερώτημα για την εισαγωγή του νέου τραγουδιού
-            String insertQuery = "INSERT INTO history (user_id, title, artist, genre, image_url) VALUES (?, ?, ?, ?, ?)";
-
-            try (PreparedStatement insertStatement = connection.prepareStatement(insertQuery)) {
-                insertStatement.setString(1, LoginController.userId); // Χρήση του userId
-                insertStatement.setString(2, trackName);
-                insertStatement.setString(3, artistName != null ? artistName : "Unknown");
-                insertStatement.setString(4, genre != null ? genre : "Unknown");
-                insertStatement.setString(5, imageUrl != null ? imageUrl : "");
-
-                insertStatement.executeUpdate();
-                System.out.println("Το ιστορικό αποθηκεύτηκε στη βάση δεδομένων.");
-
-            } catch (SQLException e) {
-                System.err.println("Σφάλμα κατά την αποθήκευση του ιστορικού: " + e.getMessage());
-            }
+            historyController.loadHistory();
         } catch (SQLException e) {
-            System.err.println("Σφάλμα κατά την αναζήτηση του τραγουδιού στο ιστορικό: " + e.getMessage());
+            System.err.println("Σφάλμα κατά την αποθήκευση του ιστορικού: " + e.getMessage());
         }
     }
+
 
     private void setLabelTotalDuration(){
         int totalTime = (int) mediaPlayer.getMedia().getDuration().toSeconds();

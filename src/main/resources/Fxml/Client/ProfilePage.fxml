@@ -58,7 +58,7 @@
 
         <!-- Κουμπιά σε οριζόντια διάταξη -->
         <HBox spacing="20.0" alignment="CENTER_LEFT">
-            <Button text="Save Changes" styleClass="profile-button" onAction="#saveProfileChanges"/>
+
             <Button text="Change Password" styleClass="profile-button" onAction="#changePassword"/>
         </HBox>
     </VBox>

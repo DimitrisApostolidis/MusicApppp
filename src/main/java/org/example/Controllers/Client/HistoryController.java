@@ -19,14 +19,14 @@ public class HistoryController {
 
     public void initialize() {
 
-        historyContainer.getChildren().clear();
-            loadHistory(); // Καλείς το loadHistory για να ανανεώσεις το ιστορικό
+
+            loadHistory();
 
 
     }
 
     public void loadHistory() {
-        // Παίρνουμε το userId από το LoginController
+
         String userId = LoginController.userId; // Πάρε το userId από το LoginController
 
         if (userId == null || userId.isEmpty()) {
@@ -39,9 +39,10 @@ public class HistoryController {
         try (Connection connection = DataBaseConnection.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
 
-            preparedStatement.setString(1, userId); // Χρησιμοποιούμε το userId για το preparedStatement
+            preparedStatement.setString(1, userId);
 
             ResultSet resultSet = preparedStatement.executeQuery();
+
 
             while (resultSet.next()) {
                 int id = resultSet.getInt("id");
@@ -52,8 +53,11 @@ public class HistoryController {
                 Label entryLabel = new Label("ID: " + id + " | Title: " + title + " | Genre: " + genre);
                 entryLabel.getStyleClass().add("history-entry"); // Στυλ από CSS
 
-                // Προσθήκη στο VBox
-                historyContainer.getChildren().add(entryLabel);
+                Platform.runLater(() -> {
+                    if (historyContainer != null) {
+                        historyContainer.getChildren().add(entryLabel);
+                    }
+                });
 
             }
         } catch (SQLException e) {
