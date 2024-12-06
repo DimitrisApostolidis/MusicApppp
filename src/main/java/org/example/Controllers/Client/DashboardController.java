@@ -84,7 +84,7 @@ public class DashboardController {
     public Label labelNowPlaying;
 
     private int userId; // Ο χρήστης που είναι συνδεδεμένος
-     // Αποθηκεύει το ID του τρέχοντος τραγουδιού
+    // Αποθηκεύει το ID του τρέχοντος τραγουδιού
     private String lastImageUrl=null;
 
     private int selectedSongId = -1;
@@ -205,7 +205,7 @@ public class DashboardController {
 
         // Ενέργεια κουμπιού
         favoriteButton.setOnAction(event -> {
-             // Παίρνουμε το songId
+            // Παίρνουμε το songId
 
 
             if (!isFavorite) {
@@ -222,7 +222,7 @@ public class DashboardController {
         });
     }
 
-        private int getSongIdFromHistory(String userId) {
+    private int getSongIdFromHistory(String userId) {
         int songId = -1;
         String query = "SELECT id FROM history WHERE user_id = ? "; // Ανακτούμε το πιο πρόσφατο τραγούδι από το ιστορικό
 
@@ -285,22 +285,27 @@ public class DashboardController {
             return;
         }
 
-        // Ανάκτηση του τελευταίου songId από το ιστορικό
-        int songId = getLastSongIdFromHistory(userId);
+        // Ανάκτηση του τελευταίου songId και songName από το ιστορικό
+        String[] songData = getLastSongFromHistory(userId);
 
-        if (songId == -1) {
+        if (songData == null) {
             System.err.println("Δεν βρέθηκε τραγούδι στο ιστορικό.");
             return;
         }
 
+        String songId = songData[0];    // songId ως String
+        String songName = songData[1];  // songName ως String
+
         // Ερώτημα για την εισαγωγή στα favourite_songs
-        String queryInsertFavorite = "INSERT INTO favourite_songs (user_id, song_id) VALUES (?, ?)";
+        String queryInsertFavorite = "INSERT INTO favourite_songs (user_id, song_id, name) VALUES (?, ?, ?)";
 
         try (Connection connection = DataBaseConnection.getConnection()) {
-            // Εισαγωγή του song_id και user_id στα αγαπημένα
+            // Εισαγωγή του song_id, user_id και song_name στα αγαπημένα
             try (PreparedStatement preparedStatement = connection.prepareStatement(queryInsertFavorite)) {
-                preparedStatement.setString(1, userId); // Εισάγουμε το user_id
-                preparedStatement.setInt(2, songId);   // Εισάγουμε το song_id που έχουμε ανακτήσει από το ιστορικό
+                preparedStatement.setString(1, userId);   // Εισάγουμε το user_id
+                preparedStatement.setString(2, songId);   // Εισάγουμε το song_id ως String
+                preparedStatement.setString(3, songName); // Εισάγουμε το song_name
+
                 preparedStatement.executeUpdate();
 
                 System.out.println("Το τραγούδι αποθηκεύτηκε στα αγαπημένα.");
@@ -310,12 +315,12 @@ public class DashboardController {
         }
     }
 
-    // Μέθοδος για να ανακτήσεις το τελευταίο songId από το ιστορικό
-    private int getLastSongIdFromHistory(String userId) {
+    private String[] getLastSongFromHistory(String userId) {
         int songId = -1;
+        String songName = null;
 
-        // Ερώτημα για να πάρεις το τελευταίο songId από το ιστορικό
-        String query = "SELECT id FROM history WHERE user_id = ? ORDER BY created_at DESC LIMIT 1";
+        // Ερώτημα για να πάρεις το τελευταίο songId και songName από το ιστορικό
+        String query = "SELECT id, title FROM history WHERE user_id = ? ORDER BY created_at DESC LIMIT 1";
 
         try (Connection connection = DataBaseConnection.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
@@ -324,14 +329,20 @@ public class DashboardController {
             ResultSet resultSet = preparedStatement.executeQuery();
 
             if (resultSet.next()) {
-                songId = resultSet.getInt("id"); // Παίρνουμε το τελευταίο song_id
+                songId = resultSet.getInt("id");        // Παίρνουμε το τελευταίο song_id
+                songName = resultSet.getString("title"); // Παίρνουμε το όνομα του τραγουδιού
             }
 
         } catch (SQLException e) {
             System.err.println("Σφάλμα κατά την ανάκτηση του τελευταίου τραγουδιού από το ιστορικό: " + e.getMessage());
         }
 
-        return songId;
+        // Επιστρέφουμε το songId και songName σε ένα πίνακα
+        if (songId != -1 && songName != null) {
+            return new String[]{String.valueOf(songId), songName};
+        } else {
+            return null;  // Αν δεν βρέθηκαν δεδομένα
+        }
     }
 
 
@@ -351,7 +362,7 @@ public class DashboardController {
         }
 
         // Βήμα 2: Διαγραφή του τραγουδιού από τα αγαπημένα
-        String queryDelete = "DELETE FROM favourite_songs WHERE user_id = ? AND song_id = ? LIMIT 1"; // Διαγραφή ΜΟΝΟ του πρώτου τραγουδιού που βρέθηκε
+        String queryDelete = "DELETE FROM favourite_songs WHERE user_id = ? AND song_id = ? "; // Διαγραφή ΜΟΝΟ του πρώτου τραγουδιού που βρέθηκε
 
         try (Connection connection = DataBaseConnection.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(queryDelete)) {
@@ -376,7 +387,7 @@ public class DashboardController {
         int songId = -1;
 
         // Ερώτημα για να πάρεις το τελευταίο songId από τα αγαπημένα
-        String query = "SELECT song_id FROM favourite_songs WHERE user_id = ? ORDER BY created_at DESC LIMIT 1";
+        String query = "SELECT song_id FROM favourite_songs WHERE user_id = ? ";
 
         try (Connection connection = DataBaseConnection.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
@@ -394,6 +405,7 @@ public class DashboardController {
 
         return songId;
     }
+
 
 
 
@@ -738,9 +750,9 @@ public class DashboardController {
         // Δημιουργία Timeline για την ενημέρωση του Slider
         sliderUpdater = new Timeline(new KeyFrame(Duration.seconds(3), event -> {
             // Ενημερώνουμε το Slider μόνο αν ο χρήστης δεν το μετακινεί και ο ήχος παίζει
-           // if (!time.isValueChanging() && mediaPlayer.getStatus() == MediaPlayer.Status.PLAYING) {
-                time.setValue(mediaPlayer.getCurrentTime().toSeconds());
-           // }
+            // if (!time.isValueChanging() && mediaPlayer.getStatus() == MediaPlayer.Status.PLAYING) {
+            time.setValue(mediaPlayer.getCurrentTime().toSeconds());
+            // }
         }));
         sliderUpdater.setCycleCount(Timeline.INDEFINITE);
         sliderUpdater.play();
