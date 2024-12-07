@@ -5,12 +5,16 @@
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.layout.AnchorPane?>
 
+<?import javafx.scene.layout.VBox?>
 <AnchorPane prefHeight="750.0" prefWidth="850.0" stylesheets="@../../Styles/Dashboard.css" xmlns:fx="http://javafx.com/fxml" fx:controller="org.example.Controllers.Client.LikedController">
     <!-- Τίτλος -->
     <Label text="Liked Songs" layoutX="10.0" layoutY="10.0" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #facece;" />
 
     <!-- Λίστα αγαπημένων τραγουδιών -->
-    <ListView fx:id="likedSongsList" layoutX="10.0" layoutY="50.0" prefHeight="600.0" prefWidth="600.0" style="-fx-background-color: #656464; -fx-border-color: #ccc; -fx-border-radius: 5px;" />
+    <VBox fx:id="likedSongsContainer" layoutX="10.0" layoutY="50.0" prefHeight="600.0" prefWidth="800.0"
+          spacing="10" style="-fx-background-color: #656464; -fx-padding: 10; -fx-border-color: #ccc; -fx-border-radius: 5px;" />
+
+
 
 </AnchorPane>
 
