@@ -509,15 +509,6 @@ public class DashboardController {
         }
     }
 
-
-
-
-
-
-
-
-
-
     private void updateImage(String imageUrl, String title, String itemType) {
         Platform.runLater(() -> {
             imageContainer.getChildren().clear();
@@ -557,11 +548,6 @@ public class DashboardController {
             }
         });
     }
-
-
-
-
-
 
 
 
