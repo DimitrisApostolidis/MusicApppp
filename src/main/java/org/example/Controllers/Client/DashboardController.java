@@ -15,6 +15,8 @@ import javafx.collections.ObservableList;
 import kong.unirest.json.JSONObject;
 import javafx.scene.layout.VBox;
 import kong.unirest.JsonNode;
+
+import java.io.File;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -752,9 +754,9 @@ public class DashboardController {
         // Δημιουργία Timeline για την ενημέρωση του Slider
         sliderUpdater = new Timeline(new KeyFrame(Duration.seconds(3), event -> {
             // Ενημερώνουμε το Slider μόνο αν ο χρήστης δεν το μετακινεί και ο ήχος παίζει
-            // if (!time.isValueChanging() && mediaPlayer.getStatus() == MediaPlayer.Status.PLAYING) {
+            if (!time.isValueChanging() && mediaPlayer.getStatus() == MediaPlayer.Status.PLAYING) {
             time.setValue(mediaPlayer.getCurrentTime().toSeconds());
-            // }
+            }
         }));
         sliderUpdater.setCycleCount(Timeline.INDEFINITE);
         sliderUpdater.play();
@@ -791,6 +793,13 @@ public class DashboardController {
             labelCurrentTime.setVisible(true);
             mediaPlayer.setRate(1.0); // Ρυθμίζουμε την ταχύτητα στην κανονική
             mediaPlayer.play();
+            if(!mediaPlayer.isMute()){
+                String mediaSource = mediaPlayer.getMedia().getSource();
+                String songName = new File(mediaSource).getName(); // Παίρνουμε το όνομα του αρχείου
+                setNowPlayingSongName(songName);
+                Image image = new Image(getClass().getResource("/Fxml/Client/icons/play.png").toExternalForm());
+                songImageView.setImage(image);
+            }
         }
     }
 
@@ -798,7 +807,6 @@ public class DashboardController {
         time.setValue(time.getMin());
         currentTrackIndex = (currentTrackIndex + 1) % playlist.size(); // Κυκλική εναλλαγή
         loadTrack(currentTrackIndex);
-
         playMusic();
     }
 
