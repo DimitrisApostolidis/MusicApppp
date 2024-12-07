@@ -20,6 +20,7 @@ public class DataBaseConnection {
     public static final String USER = "root";
     public static final String PASSWORD = "";
     public int failedAttempts = 0;
+
     ObservableList<Playlist> playlists = FXCollections.observableArrayList();
 
 
@@ -27,6 +28,8 @@ public class DataBaseConnection {
     // Επαλήθευση διαπιστευτηρίων
     public boolean verifyCredentials(String username, String password) {
         String query = "SELECT * FROM user WHERE username = ? AND password = ?";
+
+
         try (Connection conn = this.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setString(1, username);
@@ -52,6 +55,10 @@ public class DataBaseConnection {
 
 
     public boolean registerUser(String username, String email, String password) {
+        if (username == null || username.trim().isEmpty() || email == null || email.trim().isEmpty() || password == null || password.trim().isEmpty()) {
+            System.out.println("Όλα τα πεδία είναι υποχρεωτικά.");
+            return false;
+        }
         String checkUserQuery = "SELECT * FROM user WHERE username = ? OR email = ?";
         String insertUserQuery = "INSERT INTO user (username, email, password) VALUES (?, ?, ?)";
 
@@ -93,7 +100,23 @@ public class DataBaseConnection {
         return connection;
     }
 
+    public void setConnection(String url, String user, String password) throws SQLException {
+        try {
+            connection = DriverManager.getConnection(url, user, password);
+        } catch (SQLException e) {
+            // Χειρισμός σφάλματος
+            throw new SQLException("Δεν μπορεί να γίνει σύνδεση με τη βάση δεδομένων.", e);
+        }
+    }
+
+
     public boolean addPlaylist(String playlistName, String userId) {
+        // Έλεγχος αν το όνομα της playlist ή το userId είναι κενά
+        if (playlistName.isEmpty() || userId.isEmpty()) {
+            System.out.println("Όνομα playlist ή user_id δεν μπορεί να είναι κενό.");
+            return false;
+        }
+
         // Εντολή SQL για την προσθήκη νέας playlist με user_id
         String query = "INSERT INTO playlist (name, user_id) VALUES (?, ?)";
 
@@ -118,6 +141,8 @@ public class DataBaseConnection {
             return false;
         }
     }
+
+
 
 
     public ObservableList<Playlist> getPlaylists(String userId) {

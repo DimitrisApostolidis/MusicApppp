@@ -38,7 +38,7 @@ public class LikedController implements Initializable {
 
 
     private void loadLikedSongs() {
-        String query = "SELECT name, created_at FROM favourite_songs WHERE user_id = ?";
+        String query = "SELECT  DISTINCT name, created_at FROM favourite_songs WHERE user_id = ?";
         System.out.println("Loading liked songs for user ID: " + userId);
 
         try (Connection connection = DataBaseConnection.getConnection();
