@@ -108,3 +108,16 @@
     -fx-background-radius: 5;
 }
 
+/* Styles/Dashboard.css */
+#bioScrollPane {
+    -fx-background-color: transparent;
+    -fx-padding: 10;
+}
+
+#bioText {
+    -fx-fill: white;
+    -fx-font-size: 14px;
+    -fx-wrap-text: true;
+}
+
+
