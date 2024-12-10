@@ -7,6 +7,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.fxml.FXML;
 import javafx.util.Duration;
+import kong.unirest.json.JSONArray;
 import org.example.Controllers.LoginController;
 import org.example.DataBase.DataBaseConnection;
 import javafx.scene.layout.HBox;
@@ -15,6 +16,7 @@ import javafx.collections.ObservableList;
 import kong.unirest.json.JSONObject;
 import javafx.scene.layout.VBox;
 import kong.unirest.JsonNode;
+import org.example.Controllers.Client.DiscogsApiClient;
 
 import java.io.File;
 import java.sql.Connection;
@@ -170,23 +172,29 @@ public class DashboardController {
             if (selectedItem != null) {
                 String imageUrl = null;
                 String artistName = null;
-                String genre = "Unknown";
-                String duration = "Unknown";
+                String genre = "Unknown"; // Προεπιλεγμένη τιμή
                 String trackName = null;
+
                 try {
                     if (selectedItem.startsWith("Track: ")) {
                         trackName = selectedItem.substring(7); // Αφαίρεση του prefix "Track: "
                         resetFavoriteButton();
                         setNowPlayingImage(trackName);
+
                         JSONObject response = apiClient.searchTracks(trackName).getObject();
                         setNowPlayingSongName(trackName);
+
                         if (response.has("track")) {
                             imageUrl = response.getJSONObject("track").getJSONArray("image").getJSONObject(3).getString("#text");
                             artistName = response.getJSONObject("track").getString("artist");
-                            genre = response.getJSONObject("track").optString("genre", "Unknown");
-                            duration = response.getJSONObject("track").optString("duration", "Unknown");
 
+                            // Ανάκτηση του είδους
+                            JSONArray genres = response.getJSONObject("track").optJSONArray("genres");
+                            if (genres != null && genres.length() > 0) {
+                                genre = genres.getString(0); // Παίρνει το πρώτο είδος
+                            }
                         }
+
                         // Αποθήκευση στο ιστορικό
                         saveToHistory(trackName, artistName, genre, imageUrl);
                     }
@@ -196,6 +204,7 @@ public class DashboardController {
                 }
             }
         });
+
 
 
 
@@ -635,49 +644,42 @@ public class DashboardController {
         imageContainer.getChildren().addAll(artistImages);
     }
 
-    private void saveToHistory(String trackName, String artistName, String genre, String imageUrl) {
-        // Ερώτημα για να ελέγξουμε αν υπάρχει ήδη το τραγούδι στην βάση για τον συγκεκριμένο χρήστη
-        String checkQuery = "SELECT id FROM history WHERE user_id = ? AND title = ?";
 
+    private void saveToHistory(String trackName, String artistName, String genre, String imageUrl) {
+        String checkQuery = "SELECT id FROM history WHERE user_id = ? AND title = ?";
         try (Connection connection = DataBaseConnection.getConnection();
              PreparedStatement checkStatement = connection.prepareStatement(checkQuery)) {
 
-            // Ρύθμιση των παραμέτρων για τον χρήστη και το τραγούδι
             checkStatement.setString(1, LoginController.userId);
             checkStatement.setString(2, trackName);
 
             ResultSet resultSet = checkStatement.executeQuery();
 
-            // Αν βρούμε το τραγούδι, το ενημερώνουμε
             if (resultSet.next()) {
                 int id = resultSet.getInt("id");
 
-                // Ερώτημα ενημέρωσης της υπάρχουσας καταχώρησης
                 String updateQuery = "UPDATE history SET artist = ?, genre = ?, image_url = ? WHERE id = ?";
                 try (PreparedStatement updateStatement = connection.prepareStatement(updateQuery)) {
                     updateStatement.setString(1, artistName != null ? artistName : "Unknown");
-                    updateStatement.setString(2, genre != null ? genre : "Unknown");
+                    updateStatement.setString(2, genre); // Αποθήκευση του είδους
                     updateStatement.setString(3, imageUrl != null ? imageUrl : "");
                     updateStatement.setInt(4, id);
                     updateStatement.executeUpdate();
-                    System.out.println("Η υπάρχουσα καταχώρηση ενημερώθηκε.");
                 }
             } else {
-                // Αν το τραγούδι δεν υπάρχει, το προσθέτουμε
-                String insertQuery = "INSERT INTO history (user_id, title, artist, genre, image_url) VALUES (?, ?, ?, ?, ?)";
+                String insertQuery = "INSERT INTO history (user_id, title, artist, genre, image_url, created_at) VALUES (?, ?, ?, ?, ?, NOW())";
                 try (PreparedStatement insertStatement = connection.prepareStatement(insertQuery)) {
-                    insertStatement.setString(1, LoginController.userId); // Χρήση του userId
+                    insertStatement.setString(1, LoginController.userId);
                     insertStatement.setString(2, trackName);
                     insertStatement.setString(3, artistName != null ? artistName : "Unknown");
-                    insertStatement.setString(4, genre != null ? genre : "Unknown");
+                    insertStatement.setString(4, genre); // Αποθήκευση του είδους
                     insertStatement.setString(5, imageUrl != null ? imageUrl : "");
 
                     insertStatement.executeUpdate();
-                    System.out.println("Το ιστορικό αποθηκεύτηκε στη βάση δεδομένων.");
                 }
             }
 
-            historyController.loadHistory();
+            historyController.loadHistory(); // Φόρτωση ιστορικού μετά την αποθήκευση
         } catch (SQLException e) {
             System.err.println("Σφάλμα κατά την αποθήκευση του ιστορικού: " + e.getMessage());
         }
@@ -741,7 +743,7 @@ public class DashboardController {
         sliderUpdater = new Timeline(new KeyFrame(Duration.seconds(3), event -> {
             // Ενημερώνουμε το Slider μόνο αν ο χρήστης δεν το μετακινεί και ο ήχος παίζει
             if (!time.isValueChanging() && mediaPlayer.getStatus() == MediaPlayer.Status.PLAYING) {
-            time.setValue(mediaPlayer.getCurrentTime().toSeconds());
+                time.setValue(mediaPlayer.getCurrentTime().toSeconds());
             }
         }));
         sliderUpdater.setCycleCount(Timeline.INDEFINITE);

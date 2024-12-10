@@ -3,6 +3,8 @@ package org.example.Controllers.Client;
 import kong.unirest.HttpResponse;
 import kong.unirest.JsonNode;
 import kong.unirest.Unirest;
+import kong.unirest.json.JSONArray;
+import kong.unirest.json.JSONObject;
 
 public class DiscogsApiClient {
     private static final String API_KEY = "szIiVuKbWPUHTuUWNKVo";
@@ -40,4 +42,22 @@ public class DiscogsApiClient {
             return null;
         }
     }
+
+    public String getTrackGenre(String trackName) {
+        try {
+            JsonNode response = searchTracks(trackName);
+            if (response != null && response.getObject().has("results")) {
+                JSONArray results = response.getObject().getJSONArray("results");
+                if (!results.isEmpty()) {
+                    JSONObject firstResult = results.getJSONObject(0);
+                    JSONArray genres = firstResult.optJSONArray("genre");
+                    return genres != null && !genres.isEmpty() ? genres.getString(0) : "Unknown";
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "Unknown";
+    }
+
 }

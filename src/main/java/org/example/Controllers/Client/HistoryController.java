@@ -18,23 +18,23 @@ public class HistoryController {
     private VBox historyContainer;
 
     public void initialize() {
-
-
+        if (historyContainer == null) {
+            System.err.println("Το historyContainer είναι null!");
+        } else {
+            System.out.println("Το historyContainer φορτώθηκε επιτυχώς!");
             loadHistory();
-
-
+        }
     }
 
-    public void loadHistory() {
 
+    public void loadHistory() {
         String userId = LoginController.userId; // Πάρε το userId από το LoginController
 
         if (userId == null || userId.isEmpty()) {
             return; // Αν δεν υπάρχει έγκυρο userId, δεν φορτώνουμε τα δεδομένα
         }
 
-        // Η query τώρα παίρνει το user_id και εμφανίζει το ιστορικό του χρήστη
-        String query = "SELECT id, title, genre FROM history WHERE user_id = ?";
+        String query = "SELECT created_at, title, genre FROM history WHERE user_id = ? ORDER BY created_at DESC";
 
         try (Connection connection = DataBaseConnection.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
@@ -43,14 +43,21 @@ public class HistoryController {
 
             ResultSet resultSet = preparedStatement.executeQuery();
 
+            Platform.runLater(() -> {
+                if (historyContainer != null) {
+                    historyContainer.getChildren().clear(); // Καθαρισμός παλιών εγγραφών
+                }
+            });
 
             while (resultSet.next()) {
-                int id = resultSet.getInt("id");
+                String createdAt = resultSet.getString("created_at");
                 String title = resultSet.getString("title");
                 String genre = resultSet.getString("genre");
 
-                // Δημιουργία Label για την καταχώρηση
-                Label entryLabel = new Label("ID: " + id + " | Title: " + title + " | Genre: " + genre);
+                // Δημιουργία ετικέτας για κάθε εγγραφή
+                Label entryLabel = new Label(
+                        String.format("Date: %s | Title: %s | Genre: %s", createdAt, title, genre)
+                );
                 entryLabel.getStyleClass().add("history-entry"); // Στυλ από CSS
 
                 Platform.runLater(() -> {
@@ -58,10 +65,11 @@ public class HistoryController {
                         historyContainer.getChildren().add(entryLabel);
                     }
                 });
-
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
+
+
 }
