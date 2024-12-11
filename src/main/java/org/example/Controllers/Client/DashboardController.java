@@ -740,7 +740,7 @@ public class DashboardController {
         });
 
         // Δημιουργία Timeline για την ενημέρωση του Slider
-        sliderUpdater = new Timeline(new KeyFrame(Duration.seconds(3), event -> {
+        sliderUpdater = new Timeline(new KeyFrame(Duration.seconds(0.2), event -> {
             // Ενημερώνουμε το Slider μόνο αν ο χρήστης δεν το μετακινεί και ο ήχος παίζει
             if (!time.isValueChanging() && mediaPlayer.getStatus() == MediaPlayer.Status.PLAYING) {
                 time.setValue(mediaPlayer.getCurrentTime().toSeconds());
@@ -760,12 +760,12 @@ public class DashboardController {
         });
 
         // Εναλλακτική ενημέρωση του MediaPlayer αν ο χρήστης αφήσει τον Slider χωρίς αλλαγές
-        time.valueProperty().addListener((observable, oldValue, newValue) -> {
-            // Εκτελούμε το seek μόνο αν ο χρήστης δεν αλλάζει την τιμή μέσω dragging
-            if (!time.isValueChanging()) {
-                mediaPlayer.seek(Duration.seconds(newValue.doubleValue()));
-            }
-        });
+//        time.valueProperty().addListener((observable, oldValue, newValue) -> {
+//            // Εκτελούμε το seek μόνο αν ο χρήστης δεν αλλάζει την τιμή μέσω dragging
+//            if (!time.isValueChanging()) {
+//                mediaPlayer.seek(Duration.seconds(newValue.doubleValue()));
+//            }
+//        });
 
         // Κλείσιμο του slider αν το τραγούδι ολοκληρωθεί
         mediaPlayer.setOnEndOfMedia(() -> {
