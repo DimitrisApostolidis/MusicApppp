@@ -34,12 +34,6 @@ import java.util.Objects;
 
 
 
-
-
-
-
-
-
 public class DashboardController {
 
     public Label labelCurrentTime;
@@ -69,13 +63,16 @@ public class DashboardController {
     @FXML
     private HBox imageContainer;
 
+    @FXML
+    private ListView<String> topTracksList;
+
     private List<String> latestSearches = new ArrayList<>();
     HistoryController historyController = new HistoryController();
     private ObservableList<ImageView> artistImages = FXCollections.observableArrayList();
     private static final int MAX_IMAGES = 10;
     private MediaPlayer mediaPlayer;
     private    DiscogsApiClient discogsApiClient = new DiscogsApiClient();
-    private LastFmApiClient apiClient = new LastFmApiClient();
+    private final LastFmApiClient apiClient = new LastFmApiClient();
     private  LastFmApiClient lastFmApiClient = new LastFmApiClient();
     private final ObservableList<Image> imageList = FXCollections.observableArrayList();
     private List<String> playlist;  // Η λίστα με τα τραγούδια
@@ -113,6 +110,7 @@ public class DashboardController {
 
     @FXML
     public void initialize() {
+        loadTopTracks();
         imageContainer.setStyle("-fx-padding: 20 0 0 0;");
         displayLatestSearches();
         rootPane.addEventFilter(javafx.scene.input.MouseEvent.MOUSE_PRESSED, event -> {
@@ -204,10 +202,6 @@ public class DashboardController {
                 }
             }
         });
-
-
-
-
 
         // Ρύθμιση εμφάνισης κουμπιού
         favoriteButton.setPrefSize(12, 12);
@@ -803,5 +797,41 @@ public class DashboardController {
         currentTrackIndex = (currentTrackIndex - 1 + playlist.size()) % playlist.size(); // Κυκλική εναλλαγή προς τα πίσω
         loadTrack(currentTrackIndex);
         playMusic();
+    }
+
+    private void loadTopTracks() {
+        JsonNode response = apiClient.getTopTracks();
+        if (response != null) {
+            List<String> tracks = parseTopTracks(response);
+            topTracksList.getItems().addAll(tracks);
+        } else {
+            showError("Δεν ήταν δυνατή η φόρτωση των Top Tracks από το Last.fm.");
+        }
+    }
+    private List<String> parseTopTracks(JsonNode response) {
+        List<String> tracks = new ArrayList<>();
+        try {
+            JSONObject jsonObject = response.getObject();
+            JSONObject tracksObject = jsonObject.getJSONObject("tracks");
+            JSONArray trackArray = tracksObject.getJSONArray("track");
+
+            for (int i = 0; i < trackArray.length(); i++) {
+                JSONObject track = trackArray.getJSONObject(i);
+                String name = track.getString("name");
+                String artist = track.getJSONObject("artist").getString("name");
+                tracks.add(name + " - " + artist);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            showError("Πρόβλημα κατά την επεξεργασία των δεδομένων.");
+        }
+        return tracks;
+    }
+
+    private void showError(String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Σφάλμα");
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 }
