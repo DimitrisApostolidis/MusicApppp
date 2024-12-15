@@ -130,5 +130,23 @@ public class LastFmApiClient {
                 .getBody();
     }
 
+    public JsonNode getTopTracks() {
+        try {
+            HttpResponse<JsonNode> response = Unirest.get(BASE_URL)
+                    .queryString("method", "chart.gettoptracks")
+                    .queryString("api_key", API_KEY)
+                    .queryString("format", "json")
+                    .asJson();
 
+            if (response.getStatus() == 200) {
+                return response.getBody();
+            } else {
+                System.out.println("Error: " + response.getStatus());
+                return null;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 }

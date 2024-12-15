@@ -14,8 +14,9 @@
    </Text>
 
    <Button fx:id="pausee" layoutX="453.0" layoutY="666.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="28.0" text="⏸" />
-   <Text fill="WHITE" layoutX="9.0" layoutY="171.8984375" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="shape-text" text="Latest Search" wrappingWidth="164.513671875" AnchorPane.leftAnchor="9.0" AnchorPane.topAnchor="146.0" />
+   <Text  fill="WHITE" layoutX="9.0" layoutY="171.8984375" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="shape-text" text="Latest Search" wrappingWidth="164.513671875" AnchorPane.leftAnchor="9.0" AnchorPane.topAnchor="146.0" />
    <Text fill="WHITE" layoutX="14.0" layoutY="385.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="shape-text" text="What's Trending" />
+   <ListView fx:id="topTracksList"  layoutX="9.0" layoutY="395.0" prefHeight="150.0" prefWidth="808.0" styleClass="list-view"/>
    <GridPane hgap="10.0" layoutX="9.0" layoutY="183.0" prefHeight="320.0" prefWidth="808.0" vgap="10.0">
       <columnConstraints>
          <ColumnConstraints hgrow="SOMETIMES" maxWidth="200.0" minWidth="10.0" prefWidth="150.0" />
