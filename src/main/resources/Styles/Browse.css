@@ -1,0 +1,73 @@
+/* browse.css */
+
+.root {
+    -fx-font-family: "Arial", sans-serif;
+    -fx-background-color: #121212; /* Σκούρο φόντο */
+}
+
+.title {
+    -fx-font-size: 24px;
+    -fx-text-fill: #ffffff; /* Λευκό κείμενο */
+    -fx-font-weight: bold;
+}
+
+.browse-container {
+    -fx-background-color: #1e1e1e; /* Σκούρο γκρι για contrast */
+    -fx-border-color: #333333; /* Περίγραμμα */
+    -fx-border-width: 2px;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+    -fx-padding: 20px;
+}
+
+.browse-container Label {
+    -fx-text-fill: #e0e0e0; /* Λευκό-γκρι για τα labels */
+    -fx-font-size: 16px;
+    -fx-font-weight: 500;
+}
+
+.browse-container ComboBox, .browse-container TextField {
+    -fx-background-color: white; /* Σκούρο γκρι για input πεδία */
+    -fx-text-fill: #ffffff;
+    -fx-border-color: #444444;
+    -fx-border-width: 1px;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+    -fx-padding: 5px;
+}
+
+.browse-container ComboBox:hover,
+.browse-container TextField:hover {
+    -fx-background-color: white; /* Ελαφρώς πιο φωτεινό όταν περνάει το ποντίκι */
+}
+
+.browse-container ComboBox:focused,
+.browse-container TextField:focused {
+    -fx-border-color: #ff9800; /* Πορτοκαλί περίγραμμα όταν είναι ενεργό */
+}
+
+.primary-button {
+    -fx-background-color: #ff9800; /* Πορτοκαλί κουμπί */
+    -fx-text-fill: #ffffff;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+    -fx-padding: 10px 15px;
+    -fx-cursor: hand; /* Αλλαγή του κέρσορα σε pointer */
+}
+
+.primary-button:hover {
+    -fx-background-color: #e68900; /* Πιο σκούρο πορτοκαλί κατά το hover */
+}
+
+.primary-button:pressed {
+    -fx-background-color: #cc7700; /* Ακόμα πιο σκούρο όταν πατηθεί */
+}
+
+.suggestion {
+    -fx-font-size: 14px;
+    -fx-text-fill: #bdbdbd; /* Ανοιχτό γκρι για το feedback */
+    -fx-padding: 10px 0 0 0;
+    -fx-alignment: center;
+}
