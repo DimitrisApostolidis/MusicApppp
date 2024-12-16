@@ -32,6 +32,7 @@ public class ClientMenuController implements Initializable {
     public Button profile_btn;
     public Button logout_btn;
     public Button report_btn;
+    public Button explore_btn;
     private PlaylistController playlistController;
     private ProfileController profileController;
 
@@ -43,6 +44,7 @@ public class ClientMenuController implements Initializable {
         history_btn.setOnAction(event -> openHistoryScene());
         likedsong_btn.setOnAction(event -> openLikedSongsScene());
         profile_btn.setOnAction(event -> openProfileScene());
+        explore_btn.setOnAction(event -> openExploreScene());
     }
 
     private void openDashboardScene() {
@@ -63,6 +65,10 @@ public class ClientMenuController implements Initializable {
 
     private void openProfileScene() {
         changeScene("/Fxml/Client/ProfilePageClient.fxml");
+    }
+
+    private void openExploreScene () {
+        changeScene("/Fxml/Client/BrowseClient.fxml");
     }
 
 
