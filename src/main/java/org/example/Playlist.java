@@ -10,7 +10,7 @@ public class Playlist {
     private List<Song> songs;
     private DataBaseConnection dbConnection;  // Αναφορά στη σύνδεση της βάσης δεδομένων
     private String playlistName;
-    public Playlist(String name) {
+    public Playlist() {
         this.name = name;
         this.songs = new ArrayList<>();
         this.playlistName = playlistName;

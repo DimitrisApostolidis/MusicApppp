@@ -156,7 +156,7 @@ public class DataBaseConnection {
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
                     String name = rs.getString("name");
-                    Playlist playlist = new Playlist(name);
+                    Playlist playlist = new Playlist();
                     playlists.add(playlist);
 
                 }
@@ -191,13 +191,15 @@ public class DataBaseConnection {
 
 
 
-    public boolean addSongToPlaylist(int playlistId, int songId) {
-        String sql = "INSERT INTO playlist_song (playlist_id, song_id) VALUES (?, ?)";
+    public boolean addSongToPlaylist(int playlistId, int songId,String song_name) {
+        String sql = "INSERT INTO playlist_song (playlist_id, song_id,song_name) VALUES (?, ?,?)";
         try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setInt(1, playlistId);
             stmt.setInt(2, songId);
+            stmt.setString(3, song_name);
+
 
             int rowsAffected = stmt.executeUpdate();
             return rowsAffected > 0;
@@ -261,7 +263,7 @@ public class DataBaseConnection {
         List<String> songs = new ArrayList<>();
         try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD)) {
             // Ανακοίνωση για το SQL με join στους πίνακες playlist_song και song
-            String sql = "SELECT song.title AS song_name, song.artist FROM playlist_song "
+            String sql = "SELECT song.title AS song_name,song.artist FROM playlist_song "
                     + "JOIN song ON playlist_song.song_id = song.song_id WHERE playlist_song.playlist_id = ?";
 
 
@@ -358,19 +360,27 @@ public class DataBaseConnection {
     }
 
 
-    public String executeQuery(String query, String userId) throws Exception {
-        Connection connection = DataBaseConnection.getConnection(); // Μέθοδος για σύνδεση με τη βάση
-        try (PreparedStatement stmt = connection.prepareStatement(query)) {
-            stmt.setString(1, userId); // Ρύθμιση του userId στην query
+    public String executeQuery(String username, String password) throws SQLException {
+        String query = "SELECT * FROM user WHERE username = ? AND password = ?"; // SQL query με παραμέτρους
 
-            ResultSet resultSet = stmt.executeQuery();
-            if (resultSet.next()) {
-                return resultSet.getString("username"); // Επιστροφή του username
-            } else {
-                return null; // Αν δεν βρέθηκε το όνομα χρήστη
+        try (Connection connection = DataBaseConnection.getConnection(); // Σύνδεση με τη βάση δεδομένων
+             PreparedStatement stmt = connection.prepareStatement(query)) {
+
+            // Ορίζουμε τις παραμέτρους στην prepared statement
+            stmt.setString(1, username);  // Ρύθμιση του πρώτου παραμέτρου (username)
+            stmt.setString(2, password);  // Ρύθμιση του δεύτερου παραμέτρου (password)
+
+            try (ResultSet resultSet = stmt.executeQuery()) { // Εκτέλεση της query
+                if (resultSet.next()) {
+                    return resultSet.getString("username"); // Επιστροφή του username αν υπάρχει
+                } else {
+                    return null; // Αν δεν βρεθεί ο χρήστης με τα δεδομένα που δώσαμε
+                }
             }
         }
     }
+
+
 
     public String getUserId(String username) {
         String query = "SELECT user_id FROM user WHERE username = ?";
@@ -390,6 +400,11 @@ public class DataBaseConnection {
 
 
     public int addSongToDatabase(String songTitle, String artistName) {
+        // Έλεγχος για κενές παραμέτρους
+        if (songTitle == null || songTitle.trim().isEmpty() || artistName == null || artistName.trim().isEmpty()) {
+            return -1; // Επιστρέφει -1 αν ο τίτλος ή ο καλλιτέχνης είναι κενός
+        }
+
         String sql = "INSERT INTO song (title, artist) VALUES (?, ?)";
         try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
              PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
@@ -400,15 +415,14 @@ public class DataBaseConnection {
 
             ResultSet rs = stmt.getGeneratedKeys();
             if (rs.next()) {
-                return rs.getInt(1); // Επιστρέφουμε το songId
+                return rs.getInt(1); // Επιστρέφουμε το songId αν η εισαγωγή ήταν επιτυχής
             } else {
-                return -1;
+                return -1; // Επιστρέφει -1 αν δεν επιστραφεί songId
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            return -1;
+            return -1; // Επιστρέφει -1 σε περίπτωση σφάλματος κατά την εκτέλεση
         }
-
-
     }
+
 }

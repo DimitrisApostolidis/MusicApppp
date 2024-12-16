@@ -27,7 +27,7 @@ public class ArtistController {
     }
 
     public void addPlaylist(String name) {
-        playlists.add(new Playlist(name));
+        playlists.add(new Playlist());
     }
 
     public void addSongToPlaylist(String playlistName, Song song) {

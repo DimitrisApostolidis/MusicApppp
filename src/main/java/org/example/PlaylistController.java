@@ -1,27 +1,19 @@
 package org.example;
 
-import javafx.application.Platform;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ListView;
-import org.example.Controllers.Client.ClientMenuController;
 import org.example.Controllers.LoginController;
 import org.example.DataBase.DataBaseConnection;
 import org.example.Controllers.Client.LastFmApiClient;
 import javafx.scene.input.MouseEvent;
 import kong.unirest.JsonNode;
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 
 
 import java.util.ArrayList;
@@ -87,7 +79,7 @@ public class PlaylistController {
             }
 
             // Δημιουργούμε το αντικείμενο Playlist
-            Playlist newPlaylist = new Playlist(playlistName);
+            Playlist newPlaylist = new Playlist();
 
             // Προσθέτουμε τη νέα playlist στη βάση δεδομένων για τον συγκεκριμένο χρήστη
             if (dbConnection.addPlaylist(playlistName, userId)) {
@@ -241,7 +233,7 @@ public class PlaylistController {
                                     int playlistId = dbConnection.getPlaylistIdByName(selectedPlaylist);
 
                                     // Προσθέτει το τραγούδι στην playlist με το υπάρχον songId
-                                    if (dbConnection.addSongToPlaylist(playlistId, songId)) {
+                                    if (dbConnection.addSongToPlaylist(playlistId, songId,songName)) {
                                         System.out.println("Το τραγούδι προστέθηκε στην playlist.");
                                         loadPlaylists(); // Ανανεώνει τις playlists
                                     } else {

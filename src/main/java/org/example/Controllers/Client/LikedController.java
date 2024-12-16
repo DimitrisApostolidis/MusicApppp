@@ -44,21 +44,21 @@ public class LikedController implements Initializable {
         try (Connection connection = DataBaseConnection.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
 
-            preparedStatement.setString(1, userId); // Χρησιμοποιούμε setString αντί για setInt
+            preparedStatement.setString(1, userId);
             ResultSet resultSet = preparedStatement.executeQuery();
 
-            // Καθαρισμός του VBox πριν την προσθήκη νέων στοιχείων
+
             likedSongsContainer.getChildren().clear();
 
             while (resultSet.next()) {
                 String name = resultSet.getString("name");
                 String createdAt = resultSet.getString("created_at");
 
-                // Δημιουργία Label για κάθε τραγούδι
+
                 Label songLabel = new Label(name + " - Added on: " + createdAt);
                 songLabel.setStyle("-fx-font-size: 16px; -fx-text-fill: #facece; -fx-padding: 5px;");
 
-                // Προσθήκη στο VBox
+
                 likedSongsContainer.getChildren().add(songLabel);
 
                 System.out.println("Added song: " + name + " - " + createdAt);

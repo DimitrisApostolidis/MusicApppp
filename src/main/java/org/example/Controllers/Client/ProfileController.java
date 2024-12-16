@@ -66,11 +66,11 @@ public class ProfileController {
                     String name = resultSet.getString("username");
                     String email = resultSet.getString("email");
 
-                    // Ενημέρωση των Labels
+
                     usernameLabel.setText(name);
                     emailLabel.setText(email);
 
-                    // Ανάκτηση και εμφάνιση εικόνας προφίλ
+
                     byte[] imageBytes = resultSet.getBytes("profile_picture");
 
                     if (imageBytes != null) {

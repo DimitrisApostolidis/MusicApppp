@@ -1,22 +1,8 @@
 package org.example.Views;
 
 
-import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.stage.Stage;
-import java.io.IOException;
-import java.net.URL;
-import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.example.Playlist;
 import org.example.Song;
-import javafx.stage.StageStyle;
 
 
 import java.util.ArrayList;
@@ -30,7 +16,7 @@ public class PlaylistController {
     }
 
     public void addPlaylist(String name) {
-        playlists.add(new Playlist(name));
+        playlists.add(new Playlist());
     }
 
     public void addSongToPlaylist(String playlistName, Song song) {
