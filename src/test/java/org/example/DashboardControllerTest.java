@@ -17,8 +17,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
 
-
-
 class DashboardControllerTest {
 
     // Χρησιμοποιούμε μια in-memory βάση δεδομένων για το test (π.χ., H2)

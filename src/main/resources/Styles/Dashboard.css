@@ -89,6 +89,8 @@
 /* Hover effect for album covers */
 .album-cover:hover {
     -fx-opacity: 0.60; /* Μείωση διαφάνειας κατά το hover */
+
+
 }
 
 /* Pressed effect for album covers */

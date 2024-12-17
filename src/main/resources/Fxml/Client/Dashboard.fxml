@@ -6,6 +6,8 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
+
+
 <AnchorPane fx:id="rootPane" prefHeight="750.0" prefWidth="850.0" stylesheets="@../../Styles/Dashboard.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.Controllers.Client.DashboardController">
    <Text fx:id="songTitleText" layoutX="199.0" layoutY="637.0" style="-fx-font-size: 20px; -fx-fill: white;" text="Τίτλος Τραγουδιού" textAlignment="CENTER" visible="false" wrappingWidth="429.5419921875" AnchorPane.bottomAnchor="106.7255859375">
       <font>
@@ -82,3 +84,4 @@
    <Label fx:id="labelCurrentTime" layoutX="113.0" layoutY="728.0" text="Label" textFill="WHITE" />
    <Label fx:id="labelTotalDuration" layoutX="689.0" layoutY="728.0" text="Label" textFill="WHITE" />
 </AnchorPane>
+
