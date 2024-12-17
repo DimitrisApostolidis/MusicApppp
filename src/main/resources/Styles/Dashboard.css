@@ -51,6 +51,32 @@
     -fx-background-color: rgba(255, 64, 129, 0.2); /* Ροζ ημιδιαφανές φόντο */
 }
 
+/* Specific style for the "addtoplaylist" button */
+#addtoplaylist {
+    -fx-min-width: 30px;  /* Μικρότερο πλάτος */
+    -fx-min-height: 30px; /* Μικρότερο ύψος */
+    -fx-pref-width: 30px;  /* Προτιμώμενο πλάτος */
+    -fx-pref-height: 30px; /* Προτιμώμενο ύψος */
+    -fx-font-size: 14px;    /* Μικρότερη γραμματοσειρά */
+    -fx-padding: 0;         /* Αφαίρεση padding */
+    -fx-border-width: 1px; /* Πιο λεπτό περίγραμμα */
+    -fx-border-color: #ffffff; /* Λευκό περίγραμμα */
+    -fx-background-color: transparent; /* Διαφανές φόντο */
+}
+
+/* Pressed style for "addtoplaylist" button */
+#addtoplaylist:pressed {
+    -fx-background-color: #4CAF50; /* Πράσινο φόντο όταν πατιέται */
+    -fx-border-color: #4CAF50;     /* Πράσινο περίγραμμα */
+    -fx-text-fill: white;          /* Λευκό κείμενο */
+}
+
+/* Hover effect for addtoplaylist button */
+#addtoplaylist:hover {
+    -fx-background-color: rgba(76, 175, 80, 0.2); /* Πράσινο ημιδιαφανές φόντο κατά το hover */
+}
+
+
 /* Album cover style */
 .album-cover {
     -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0.0, 1, 1); /* Εφέ σκιάς */
@@ -107,80 +133,4 @@
     -fx-border-radius: 5;
     -fx-background-radius: 5;
 }
-
-/* Styles/Dashboard.css */
-#bioScrollPane {
-    -fx-background-color: transparent;
-    -fx-padding: 10;
-}
-
-#bioText {
-    -fx-fill: white;
-    -fx-font-size: 14px;
-    -fx-wrap-text: true;
-}
-
-.trending-track {
-    -fx-font-size: 16px;
-    -fx-text-fill: white;
-    -fx-background-color: #333;
-    -fx-padding: 5px;
-    -fx-border-radius: 5px;
-    -fx-margin: 2px;
-}
-
-/* ListView Styling */
-.list-view {
-    -fx-background-color: transparent; /* Αφαιρούμε το φόντο */
-    -fx-border-color: white; /* Μπλε περίγραμμα */
-    -fx-border-width: 1px;
-    -fx-border-radius: 10; /* Στρογγυλεμένες γωνίες */
-    -fx-padding: 5; /* Εσωτερικό padding */
-    -fx-z-index: 10;
-}
-
-/* Styling των κελιών μέσα στη λίστα */
-.list-view .cell {
-    -fx-background-color: #e0e0e0; /* Γκρι φόντο για τα cells */
-    -fx-background-radius: 10; /* Στρογγυλεμένες γωνίες */
-    -fx-padding: 10; /* Άνετο padding */
-    -fx-font-family: 'Segoe UI', 'Roboto', 'Open Sans', sans-serif; /* Οικογένεια γραμματοσειράς */
-    -fx-font-size: 18px; /* Μέγεθος γραμματοσειράς */
-    -fx-text-fill: #1c1d21; /* Χρώμα κειμένου */
-    -fx-border-color: white; /* Μπλε περίγραμμα */
-    -fx-border-width: 1px;
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 5, 0.0, 2, 2); /* Σκιά */
-    transition: -fx-background-color 0.3s ease; /* Ομαλή μετάβαση */
-}
-
-/* Hover effect για τα cells */
-.list-view .cell:hover {
-    -fx-background-color: white; /* Απαλό μπλε όταν περνάει ο δείκτης */
-}
-
-/* Επιλεγμένο στοιχείο */
-.list-view .cell:selected {
-    -fx-background-color: #1c1d21; /* Σκούρο μπλε για το επιλεγμένο */
-    -fx-text-fill: #ffffff; /* Λευκό κείμενο */
-    -fx-border-color: white; /* Μπλε περίγραμμα */
-    -fx-border-width: 1px;
-}
-
-/* Scroll Bar Styling */
-.scroll-bar {
-    -fx-background-color: transparent;
-}
-
-.scroll-bar .thumb {
-    -fx-background-color: white; /* Μπλε thumb */
-    -fx-background-radius: 5; /* Στρογγυλεμένες γωνίες */
-}
-
-.shape-text {
-    -fx-font-family: "Roboto", "Arial", "Helvetica", sans-serif; /* Προτιμητέες γραμματοσειρές */
-    -fx-font-weight: 500; /* Medium γραμματοσειρά για καλύτερη αισθητική */
-    -fx-letter-spacing: 1px; /* Ελαφρύ spacing μεταξύ των γραμμάτων */
-    -fx-text-fill: #E0E0E0; /* Απαλό λευκό-γκρι χρώμα για καλύτερη αντίθεση */
-}
-
 
