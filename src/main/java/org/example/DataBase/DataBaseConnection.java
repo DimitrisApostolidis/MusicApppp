@@ -2,6 +2,8 @@ package org.example.DataBase;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.fxml.FXML;
+import org.example.Controllers.LoginController;
 import org.example.Playlist;
 
 import java.sql.Connection;
@@ -424,5 +426,46 @@ public class DataBaseConnection {
             return -1; // Επιστρέφει -1 σε περίπτωση σφάλματος κατά την εκτέλεση
         }
     }
+
+
+    public boolean isSongCurrentlyPlayingInHistory(int userId, String songTitle) {
+        String query = "SELECT is_playing FROM history WHERE user_id = ? AND title = ? ORDER BY created_at  DESC LIMIT 1 ";
+        try (Connection connection = getConnection();
+             PreparedStatement statement = connection.prepareStatement(query)) {
+
+            statement.setInt(1, userId);
+            statement.setString(2, songTitle);  // Χρησιμοποιούμε το title για αναζήτηση
+
+            ResultSet resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+                return resultSet.getInt("is_playing") == 1;  // Αν is_playing = 1, επιστρέφει true
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Σφάλμα κατά την ανάκτηση του is_playing: " + e.getMessage());
+        }
+        return false;  // Αν δεν βρεθεί η εγγραφή ή is_playing != 1, επιστρέφει false
+    }
+    public boolean isSongInPlaylist(int playlistId, int songId) {
+        String query = "SELECT COUNT(*) FROM playlist_song WHERE playlist_id = ? AND song_id = ?";
+
+        try (Connection connection = getConnection();
+             PreparedStatement statement = connection.prepareStatement(query)) {
+
+            statement.setInt(1, playlistId);
+            statement.setInt(2, songId);
+
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    return resultSet.getInt(1) > 0;  // Αν COUNT > 0, το τραγούδι υπάρχει ήδη
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Σφάλμα κατά τον έλεγχο της playlist: " + e.getMessage());
+        }
+        return false;  // Αν δεν βρεθεί το τραγούδι, επιστρέφει false
+    }
+
 
 }

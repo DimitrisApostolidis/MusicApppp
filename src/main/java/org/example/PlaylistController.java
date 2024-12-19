@@ -13,12 +13,15 @@ import kong.unirest.JsonNode;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.prefs.Preferences;
+
+import static org.example.DataBase.DataBaseConnection.getConnection;
 
 public class PlaylistController {
     private LastFmApiClient lastFmApiClient;
@@ -143,12 +146,60 @@ public class PlaylistController {
         if (event.getClickCount() == 1) {
             String selectedPlaylistName = playlistView.getSelectionModel().getSelectedItem();
             if (selectedPlaylistName != null) {
+                // Παίρνουμε το playlistId από τη βάση δεδομένων
                 int playlistId = dbConnection.getPlaylistIdByName(selectedPlaylistName);
-                List<String> songs = dbConnection.getPlaylistSongs(playlistId);
-                albumListView.getItems().setAll(songs);
+                if (playlistId != -1) {
+                    // Ανάκτηση των τραγουδιών για αυτή την playlist μέσω του πίνακα playlist_song
+                    List<String> songs = getSongsFromPlaylist(playlistId);  // Μέθοδος που καλεί τη βάση
+                    albumListView.getItems().setAll(songs);  // Ενημέρωση του ListView με τα τραγούδια
+                }
             }
         }
     }
+
+    public List<String> getSongsFromPlaylist(int playlistId) {
+        List<String> songs = new ArrayList<>();
+
+        // 1. Ερώτημα για να πάρεις όλα τα song_id από τον πίνακα playlist_song με το συγκεκριμένο playlist_id
+        String getSongIdsQuery = "SELECT song_id FROM playlist_song WHERE playlist_id = ?";
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn.prepareStatement(getSongIdsQuery)) {
+            stmt.setInt(1, playlistId); // Ορίζουμε το playlist_id στο query
+            ResultSet rs = stmt.executeQuery(); // Εκτελούμε το query για να πάρουμε τα song_id
+
+            // 2. Για κάθε song_id, παίρνουμε το αντίστοιχο όνομα από τον πίνακα history
+            while (rs.next()) {
+                int songId = rs.getInt("song_id"); // Παίρνουμε το song_id
+                String songName = getSongNameById(songId); // Παίρνουμε το όνομα του τραγουδιού με βάση το song_id από τον πίνακα history
+                if (songName != null) {
+                    songs.add(songName); // Προσθέτουμε το τραγούδι στη λίστα
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace(); // Εάν υπάρχει σφάλμα, το εκτυπώνουμε
+        }
+        return songs; // Επιστρέφουμε τη λίστα με τα τραγούδια
+    }
+
+    private String getSongNameById(int songId) {
+        String songName = null;
+        String query = "SELECT title FROM history WHERE id = ?"; // Ερώτημα στον πίνακα History αντί για song
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setInt(1, songId); // Ορίζουμε το song_id στο query
+            ResultSet rs = stmt.executeQuery(); // Εκτελούμε το query για να πάρουμε το όνομα του τραγουδιού
+
+            if (rs.next()) {
+                songName = rs.getString("title"); // Παίρνουμε το όνομα του τραγουδιού από το History
+            }
+        } catch (SQLException e) {
+            e.printStackTrace(); // Εάν υπάρχει σφάλμα, το εκτυπώνουμε
+        }
+        return songName; // Επιστρέφουμε το όνομα του τραγουδιού από το History
+    }
+
+
+
 
     public void addPlaylist(String name) {
 
@@ -159,7 +210,7 @@ public class PlaylistController {
         DataBaseConnection db = new DataBaseConnection();
         String query = "INSERT INTO playlist (user_id,name) VALUES (?, ?)";
 
-        try (PreparedStatement stmt = db.getConnection().prepareStatement(query)) {
+        try (PreparedStatement stmt = getConnection().prepareStatement(query)) {
             stmt.setString(1, userId);  // Ρύθμιση του userId
             stmt.setString(2, name);    // Ρύθμιση του ονόματος της playlist
             stmt.executeUpdate();       // Εκτέλεση του query
@@ -289,7 +340,7 @@ public class PlaylistController {
 
                 // Διαγραφή τραγουδιού από την playlist
                 String deleteQuery = "DELETE FROM playlist_song WHERE playlist_id = ? AND song_id = ?";
-                try (Connection conn = DataBaseConnection.getConnection();
+                try (Connection conn = getConnection();
                      PreparedStatement stmt = conn.prepareStatement(deleteQuery)) {
 
                     System.out.println("Playlist ID: " + playlistId);

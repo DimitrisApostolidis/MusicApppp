@@ -70,7 +70,16 @@
    <Button fx:id="searchButton" layoutX="550.0" layoutY="90.0" minHeight="39.0" minWidth="28.0" mnemonicParsing="false" prefHeight="39.0" prefWidth="28.0" text="🔍" />
    <TextField fx:id="searchField" layoutX="9.0" layoutY="99.0" prefHeight="32.0" prefWidth="527.0" />
    <ListView fx:id="resultsList" layoutX="9.0" layoutY="129.0" prefHeight="400" prefWidth="527" visible="false" />
-   <Button fx:id="addplaylist" layoutX="191.0" layoutY="666.0" minHeight="30.0" minWidth="30.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="50.0" text="+" />
+   <Button fx:id="addtoplaylist" layoutX="212.0" layoutY="666.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="28.0" text="+" onAction="#showPlaylistsPane" />
+
+   <AnchorPane fx:id="playlistPane" layoutX="0.0" layoutY="0.0" prefHeight="200.0" prefWidth="300.0" style="-fx-background-color: #333;" visible="false">
+      <Label layoutX="100.0" layoutY="10.0" text="Select Playlist" textFill="WHITE"/>
+      <ListView fx:id="playlistsList" layoutX="20.0" layoutY="40.0" prefHeight="130.0" prefWidth="260.0"/>
+      <Button layoutX="100.0" layoutY="180.0" text="Add to Playlist" onAction="#addSongToSelectedPlaylist"/>
+
+   </AnchorPane>
+
+
    <Label fx:id="labelNowPlaying" alignment="CENTER" layoutX="2.0" layoutY="561.0" prefHeight="50.0" prefWidth="165.0" text="Now playing" textFill="#5e7c5c" visible="false">
       <font>
          <Font size="26.0" />
