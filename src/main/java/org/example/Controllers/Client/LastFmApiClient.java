@@ -31,7 +31,7 @@ public class LastFmApiClient {
                         JSONObject bio = artist.getJSONObject("bio");
                         if (bio.has("content")) {
                             String bioContent = bio.getString("content");
-                            System.out.println("Artist Bio: " + bioContent);
+
                         } else {
                             System.out.println("No bio content found for " + artistName);
                         }

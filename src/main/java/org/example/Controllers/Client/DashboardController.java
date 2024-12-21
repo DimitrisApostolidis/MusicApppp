@@ -40,6 +40,7 @@ public class DashboardController {
 
     public Label labelCurrentTime;
     public Label labelTotalDuration;
+    public DataBaseConnection dbConnection;
     @FXML
     private Text welcomeText;
 
@@ -68,6 +69,8 @@ public class DashboardController {
     @FXML
     private ListView<String> topTracksList;
 
+    @FXML
+    private Text artistBioText;
     private List<String> latestSearches = new ArrayList<>();
     HistoryController historyController = new HistoryController();
     private ObservableList<ImageView> artistImages = FXCollections.observableArrayList();
@@ -99,9 +102,11 @@ public class DashboardController {
 
     @FXML
     private ListView<String> playlistsList;
-
+@FXML
+private ScrollPane bioScrollPane;
     private String currentSongId;
-
+    @FXML
+    private TextArea artistBioTextArea;
     public void setUserId(int userId) {
         this.userId = userId;
     }
@@ -119,6 +124,7 @@ public class DashboardController {
 
     @FXML
     public void initialize() {
+        //bioScrollPane.setVisible(false);
         loadTopTracks();
         imageContainer.setStyle("-fx-padding: 20 0 0 0;");
         displayLatestSearches();
@@ -236,7 +242,7 @@ public class DashboardController {
         });
     }
 
-    private int getSongIdFromHistory(String userId) {
+    public int getSongIdFromHistory(String userId) {
         int songId = -1;
         String query = "SELECT id FROM history WHERE user_id = ? ORDER BY created_at DESC LIMIT 1";  // Επιλογή του πιο πρόσφατου τραγουδιού
 
@@ -596,7 +602,12 @@ public class DashboardController {
                         var bio = artist.getJSONObject("bio");
                         if (bio.has("content")) {
                             String bioContent = bio.getString("content");
-                            System.out.println("Bio of " + artistName + ": " + bioContent); // Εμφανίζουμε το bio στο terminal
+                            Platform.runLater(() -> {
+                                artistBioTextArea.setText("");
+                                artistBioTextArea.setVisible(true);
+                                artistBioTextArea.setText(bioContent);
+
+                            });
                         } else {
                             System.out.println("No bio content found for " + artistName);
                         }
@@ -957,5 +968,9 @@ public class DashboardController {
         }
     }
 
+    public void updateArtistBio(String bio) {
+        artistBioTextArea.setText("Βιογραφικό Καλλιτέχνη: Ο καλλιτέχνης αυτός είναι γνωστός για την καινοτομία του στη μουσική...");
+
+    }
 
 }
