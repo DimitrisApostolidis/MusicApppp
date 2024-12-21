@@ -4,6 +4,8 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.BorderPane;
+import javafx.stage.StageStyle;
 import org.example.DataBase.DataBaseConnection;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -52,31 +54,38 @@ public class SignUpController {
         boolean registrationSuccessful = dataBaseConnection.registerUser(username, email, password);
         if (registrationSuccessful) {
             try {
-                // Κλείσε το τρέχον παράθυρο εγγραφής
+
                 Stage currentStage = (Stage) createAccount_btn.getScene().getWindow();
                 currentStage.close();
 
-                // Φόρτωσε το client.fxml
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Client/Client.fxml"));
-                Parent clientRoot = loader.load();
+                FXMLLoader clientLoader = new FXMLLoader(getClass().getResource("/Fxml/Client/Client.fxml"));
+                Parent clientRoot = clientLoader.load();
 
-                // Δημιούργησε νέο Stage για το client.fxml
                 Stage newStage = new Stage();
-                newStage.setScene(new Scene(clientRoot));
+                newStage.initStyle(StageStyle.UNDECORATED);
+
+                Scene scene = new Scene(clientRoot);
+
+
+                scene.getStylesheets().add(getClass().getResource("/Styles/Background.css").toExternalForm());
+
+                newStage.setScene(scene);
                 newStage.show();
             } catch (IOException e) {
-                logger.log(Level.SEVERE, "Failed to load client.fxml", e);
+                logger.log(Level.SEVERE, "Failed to load Client.fxml", e);
             }
         } else {
-            // Εμφανίζει μήνυμα λάθους αν το όνομα χρήστη ή το email υπάρχουν ήδη
             error_lbl.setText("Registration failed. Username or email may already exist.");
             error_lbl.setVisible(true);
         }
     }
 
+
+
+
     private void goBackToLogin() {
         try {
-            // Φόρτωσε το login.fxml
+
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Client/LoginClient.fxml"));
             Parent loginRoot = loader.load();
 
@@ -89,4 +98,5 @@ public class SignUpController {
             logger.log(Level.SEVERE, "Failed to load login.fxml", e);
         }
     }
+
 }
