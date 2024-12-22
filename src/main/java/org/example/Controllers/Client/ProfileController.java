@@ -187,5 +187,19 @@ public class ProfileController {
             e.printStackTrace();
         }
     }
-
+    public Label getUsernameLabel() {
+        return usernameLabel;
+    }
+    public Label getEmailLabel() {
+        return emailLabel;
+    }
+    public PasswordField getCurrentPasswordField() {
+        return currentPasswordField;
+    }
+public  PasswordField getConfirmPasswordField(){
+        return confirmPasswordField;
+}
+public PasswordField getNewPasswordField(){
+        return newPasswordField;
+}
 }

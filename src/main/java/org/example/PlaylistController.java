@@ -11,10 +11,7 @@ import org.example.Controllers.Client.LastFmApiClient;
 import javafx.scene.input.MouseEvent;
 import kong.unirest.JsonNode;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 
 
 import java.util.ArrayList;
@@ -25,16 +22,16 @@ import static org.example.DataBase.DataBaseConnection.getConnection;
 
 public class PlaylistController {
     private LastFmApiClient lastFmApiClient;
-    private List<Playlist> playlists;
-    private DataBaseConnection dbConnection;
+    List<Playlist> playlists;
+    DataBaseConnection dbConnection;
     private String userId;
 
 
     @FXML
-    private TextField newPlaylistName;
+    TextField newPlaylistName;
 
     @FXML
-    private ListView<String> playlistView;
+    ListView<String> playlistView;
 
     @FXML
     private ListView<String> albumListView;
@@ -66,9 +63,8 @@ public class PlaylistController {
     }
 
 
-
     @FXML
-    private void handleAddPlaylist(ActionEvent event) {
+    public void handleAddPlaylist(ActionEvent event) {
         // Παίρνουμε το όνομα της νέας playlist
         String playlistName = newPlaylistName.getText();
 
@@ -84,8 +80,16 @@ public class PlaylistController {
             // Δημιουργούμε το αντικείμενο Playlist
             Playlist newPlaylist = new Playlist();
 
-            // Προσθέτουμε τη νέα playlist στη βάση δεδομένων για τον συγκεκριμένο χρήστη
-            if (dbConnection.addPlaylist(playlistName, userId)) {
+            // Προσθήκη στη βάση δεδομένων μόνο αν είναι επιτυχής
+            boolean isAdded = false;
+            try {
+                isAdded = dbConnection.addPlaylist(playlistName, userId);  // Προσπαθούμε να προσθέσουμε την playlist
+            } catch (Exception e) {
+                // Αν προκύψει κάποιο σφάλμα, εμφανίζουμε μήνυμα και ορίζουμε ότι η προσθήκη απέτυχε
+                System.out.println("Σφάλμα κατά την προσθήκη στη βάση δεδομένων: " + e.getMessage());
+            }
+
+            if (isAdded) {
                 // Προσθήκη στη λίστα του ListView μόνο εάν επιτυχής η αποθήκευση
                 playlistView.getItems().add(playlistName);
                 playlists.add(newPlaylist); // Προσθήκη στη λίστα του controller για διαχείριση
@@ -120,12 +124,13 @@ public class PlaylistController {
 
     public void loadPlaylists() {
         String userId = getLoggedInUserId();
-        playlistView.getItems().clear();
-
+        playlistView.getItems().clear();  // Εκκαθάριση των στοιχείων στη λίστα
 
         if (userId != null && !userId.trim().isEmpty()) {
             List<String> playlistNamesFromDb = dbConnection.getPlaylistNames(userId);
-            playlistView.getItems().addAll(playlistNamesFromDb);
+            if (playlistNamesFromDb != null && !playlistNamesFromDb.isEmpty()) {
+                playlistView.getItems().addAll(playlistNamesFromDb);
+            }
             playlistView.refresh();
         } else {
             System.out.println("Δεν είναι συνδεδεμένος χρήστης.");
@@ -133,17 +138,9 @@ public class PlaylistController {
     }
 
 
-
-
-
-
-
-
-
-
     @FXML
-    private void showPlaylistSongs(MouseEvent event) {
-        if (event.getClickCount() == 1) {
+    public void showPlaylistSongs(MouseEvent event) {
+        if (event != null && event.getClickCount() == 1) {
             String selectedPlaylistName = playlistView.getSelectionModel().getSelectedItem();
             if (selectedPlaylistName != null) {
                 // Παίρνουμε το playlistId από τη βάση δεδομένων
@@ -157,7 +154,12 @@ public class PlaylistController {
         }
     }
 
-    public List<String> getSongsFromPlaylist(int playlistId) {
+
+
+
+
+
+    List<String> getSongsFromPlaylist(int playlistId) {
         List<String> songs = new ArrayList<>();
 
         // 1. Ερώτημα για να πάρεις όλα τα song_id από τον πίνακα playlist_song με το συγκεκριμένο playlist_id
@@ -181,7 +183,7 @@ public class PlaylistController {
         return songs; // Επιστρέφουμε τη λίστα με τα τραγούδια
     }
 
-    private String getSongNameById(int songId) {
+    String getSongNameById(int songId) {
         String songName = null;
         String query = "SELECT title FROM history WHERE id = ?"; // Ερώτημα στον πίνακα History αντί για song
         try (Connection conn = getConnection();
@@ -199,25 +201,26 @@ public class PlaylistController {
     }
 
 
+    public void addPlaylist(String playlistName, String userId) throws SQLException {
+        String sql = "INSERT INTO playlist (name, user_id) VALUES (?, ?)";
 
+        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/rapsodiaplayer", "root", "");
+             PreparedStatement pstmt = connection.prepareStatement(sql)) {
 
-    public void addPlaylist(String name) {
+            // Ρύθμιση των παραμέτρων της SQL
+            pstmt.setString(1, playlistName);
+            pstmt.setString(2, userId);
 
-        String userId = getLoggedInUserId();
+            // Εκτέλεση της προσθήκης
+            int rowsAffected = pstmt.executeUpdate();
 
-
-        // Προσθήκη της playlist στη βάση δεδομένων για τον συγκεκριμένο χρήστη
-        DataBaseConnection db = new DataBaseConnection();
-        String query = "INSERT INTO playlist (user_id,name) VALUES (?, ?)";
-
-        try (PreparedStatement stmt = getConnection().prepareStatement(query)) {
-            stmt.setString(1, userId);  // Ρύθμιση του userId
-            stmt.setString(2, name);    // Ρύθμιση του ονόματος της playlist
-            stmt.executeUpdate();       // Εκτέλεση του query
-        } catch (SQLException e) {
-            e.printStackTrace(); // Χειρισμός σφαλμάτων
+            // Εάν δεν προστέθηκαν γραμμές, ρίχνουμε εξαίρεση
+            if (rowsAffected == 0) {
+                throw new SQLException("Αποτυχία κατά την προσθήκη της playlist στη βάση δεδομένων.");
+            }
         }
     }
+
 
 
 
@@ -386,13 +389,10 @@ public class PlaylistController {
         prefs.put("loggedInUserId", userId);  // Αποθήκευση του νέου userId
 
     }
-
     public String getLoggedInUserId() {
         Preferences prefs = Preferences.userNodeForPackage(LoginController.class);
-
-        String userId = prefs.get("loggedInUserId", null);  // Επιστρέφει το userId ή null αν δεν είναι αποθηκευμένο
-        System.out.println("Λήψη του userId: " + userId);  // Εκτύπωση του userId
-
-        return userId;
+        return prefs.get("loggedInUserId", null);
     }
+
+
 }

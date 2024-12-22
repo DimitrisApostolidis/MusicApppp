@@ -64,7 +64,7 @@ public class DashboardController {
     private ListView<String> resultsList;
 
     @FXML
-    private HBox imageContainer;
+    private AnchorPane imageContainer;
 
     @FXML
     private ListView<String> topTracksList;
@@ -126,7 +126,7 @@ private ScrollPane bioScrollPane;
     public void initialize() {
         //bioScrollPane.setVisible(false);
         loadTopTracks();
-        imageContainer.setStyle("-fx-padding: 20 0 0 0;");
+        //imageContainer.setStyle("-fx-padding: 20 0 0 0;");
         displayLatestSearches();
         rootPane.addEventFilter(javafx.scene.input.MouseEvent.MOUSE_PRESSED, event -> {
             if (resultsList.isVisible()) {

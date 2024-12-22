@@ -513,5 +513,3 @@ class DataBaseConnectionTest {
         assertEquals(-1, songId, "Η εισαγωγή του τραγουδιού πρέπει να αποτύχει.");
     }
 }
-
-
