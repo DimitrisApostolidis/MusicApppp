@@ -102,8 +102,8 @@ public class DashboardController {
 
     @FXML
     private ListView<String> playlistsList;
-@FXML
-private ScrollPane bioScrollPane;
+    @FXML
+    private ScrollPane bioScrollPane;
     private String currentSongId;
     @FXML
     private TextArea artistBioTextArea;
@@ -194,6 +194,13 @@ private ScrollPane bioScrollPane;
                         resetFavoriteButton();
                         setNowPlayingImage(trackName);
 
+                        if (isTrackFavorite(trackName)) {
+                            favoriteButton.setStyle("-fx-background-color: #ff4081; -fx-border-color: #ff4081; -fx-text-fill: white;");
+                            isFavorite = true; // Το τραγούδι είναι ήδη στα αγαπημένα
+                        } else {
+                            favoriteButton.setStyle("-fx-background-color: transparent; -fx-border-color: #ffffff; -fx-text-fill: #ffffff;");
+                            isFavorite = false; // Το τραγούδι δεν είναι στα αγαπημένα
+                        }
                         JSONObject response = apiClient.searchTracks(trackName).getObject();
                         setNowPlayingSongName(trackName);
 
@@ -240,6 +247,35 @@ private ScrollPane bioScrollPane;
                 removeFromFavorites();
             }
         });
+    }
+
+
+    // Μέθοδος για να ελέγξετε αν το τραγούδι υπάρχει ήδη στα αγαπημένα
+    private boolean isTrackFavorite(String trackName) {
+        String userId = LoginController.userId; // Πάρε το userId από το LoginController
+        if (userId == null || userId.isEmpty()) {
+            System.err.println("Ο χρήστης δεν είναι συνδεδεμένος.");
+            return false;
+        }
+
+        // Ερώτημα SQL για να ελέγξετε αν το τραγούδι υπάρχει ήδη στα αγαπημένα του χρήστη
+        String query = "SELECT COUNT(*) FROM favourite_songs WHERE user_id = ? AND name = ?";
+
+        try (Connection connection = DataBaseConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(query)) {
+
+            statement.setString(1, userId);
+            statement.setString(2, trackName);
+
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    return resultSet.getInt(1) > 0; // Επιστρέφει true αν το τραγούδι υπάρχει
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false; // Επιστρέφει false αν δεν βρέθηκε το τραγούδι
     }
 
     public int getSongIdFromHistory(String userId) {
@@ -334,6 +370,8 @@ private ScrollPane bioScrollPane;
             System.err.println("Σφάλμα κατά την προσθήκη του τραγουδιού στα αγαπημένα: " + e.getMessage());
         }
     }
+
+
 
     private String[] getLastSongFromHistory(String userId) {
         int songId = -1;

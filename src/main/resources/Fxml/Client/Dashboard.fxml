@@ -23,20 +23,21 @@
    <Button fx:id="pausee" layoutX="453.0" layoutY="666.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="28.0" text="⏸" />
    <Text fill="WHITE" layoutX="9.0" layoutY="171.8984375" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="shape-text" text="Latest Search" wrappingWidth="164.513671875" AnchorPane.leftAnchor="9.0" AnchorPane.topAnchor="146.0" />
    <Text fill="WHITE" layoutX="14.0" layoutY="385.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="shape-text" text="What's Trending" />
-   <ListView fx:id="topTracksList" layoutX="9.0" layoutY="485.0" prefHeight="150.0" prefWidth="808.0" styleClass="list-view" />
+   <ListView fx:id="topTracksList" layoutX="10.0" layoutY="410.0" prefHeight="150.0" prefWidth="808.0" styleClass="list-view" />
    <TextArea fx:id="artistBioTextArea" editable="false" layoutX="250.0" layoutY="170.0" prefHeight="150.0" prefWidth="316.0" style="-fx-font-size: 16px; -fx-fill: white; -fx-background-color: transparent;" visible="false" wrapText="true" />
 
    <AnchorPane fx:id="imageContainer" layoutX="15.0" layoutY="174.0" prefHeight="181.0" prefWidth="194.0">
       <!-- Τοποθέτηση των στοιχείων με συγκεκριμένες συντεταγμένες -->
       <ImageView fx:id="artist1" fitHeight="150.0" fitWidth="150.0" layoutX="14.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="14.0" />
    </AnchorPane>
-      <AnchorPane fx:id="playlistPane" layoutX="333.0" layoutY="14.0" prefHeight="200.0" prefWidth="300.0" style="-fx-background-color: #333;" visible="false">
-         <Label layoutX="100.0" layoutY="10.0" text="Select Playlist" textFill="WHITE" />
-         <ListView fx:id="playlistsList" layoutX="20.0" layoutY="40.0" prefHeight="130.0" prefWidth="260.0" />
-         <Button layoutX="100.0" layoutY="180.0" onAction="#addSongToSelectedPlaylist" text="Add to Playlist" />
-   
-      </AnchorPane>
+   <AnchorPane fx:id="playlistPane" layoutX="333.0" layoutY="14.0" prefHeight="200.0" prefWidth="300.0" style="-fx-background-color: #333;" visible="false">
+      <Label layoutX="100.0" layoutY="10.0" text="Select Playlist" textFill="WHITE" />
+      <ListView fx:id="playlistsList" layoutX="20.0" layoutY="40.0" prefHeight="130.0" prefWidth="260.0" />
+      <Button layoutX="100.0" layoutY="180.0" onAction="#addSongToSelectedPlaylist" text="Add to Playlist" />
 
+   </AnchorPane>
+
+   <ImageView fx:id="songImageView" fitHeight="130.0" fitWidth="150.0" layoutX="37.0" layoutY="598.0" />
 
 
 
