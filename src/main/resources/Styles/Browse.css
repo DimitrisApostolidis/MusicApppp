@@ -71,3 +71,60 @@
     -fx-padding: 10px 0 0 0;
     -fx-alignment: center;
 }
+
+#suggestionContainer {
+    -fx-background-color: #121212; /* Σκούρο φόντο */
+    -fx-border-radius: 15px; /* Στρογγυλεμένες γωνίες για το container */
+    -fx-background-radius: 15px;
+    -fx-padding: 20px; /* Εσωτερικό κενό γύρω από το label */
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.7), 15, 0.5, 0, 4); /* Σκιά */
+}
+
+#suggestionLabel {
+    -fx-background-color: #1e1e1e; /* Φόντο του label */
+    -fx-text-fill: #1e1e1e; /* Λευκό κείμενο */
+    -fx-font-size: 16px;
+    -fx-font-family: "Arial", sans-serif;
+    -fx-border-color: #333333; /* Σκούρο περίγραμμα */
+    -fx-border-width: 2px;
+    -fx-border-radius: 10px; /* Στρογγυλεμένες γωνίες */
+    -fx-background-radius: 10px;
+    -fx-padding: 15px; /* Εσωτερικό κενό */
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0.5, 0, 4); /* Σκιά */
+}
+
+
+
+#backButton {
+    -fx-background-color: #444444; /* Σκούρο γκρι κουμπί */
+    -fx-text-fill: #ffffff; /* Λευκό κείμενο */
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+    -fx-padding: 10px 15px;
+    -fx-cursor: hand; /* Pointer όταν περνάει το ποντίκι */
+}
+
+#backButton:hover {
+    -fx-background-color: #555555; /* Ελαφρώς φωτεινότερο γκρι στο hover */
+}
+
+#backButton:pressed {
+    -fx-background-color: #333333; /* Πιο σκούρο γκρι όταν πατηθεί */
+}
+
+.error-box {
+    -fx-background-color: #ffe6e6;
+    -fx-border-color: #ff0000;
+    -fx-border-radius: 5px;
+    -fx-padding: 5px;
+    -fx-text-fill: #ff0000;
+    -fx-font-size: 12px;
+    -fx-alignment: center;
+    -fx-wrap-text: true;
+}
+
+
+
+

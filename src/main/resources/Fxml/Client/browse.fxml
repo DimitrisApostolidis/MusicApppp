@@ -7,9 +7,9 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
-<?import java.lang.String?>
-
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.TextArea?>
+<?import java.lang.String?>
 <AnchorPane prefHeight="750.0" prefWidth="850.0" stylesheets="@../../Styles/Browse.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.Controllers.Client.BrowseController">
     <Label text="Find the Perfect Playlist" styleClass="title" layoutX="20.0" layoutY="30.0" />
 
@@ -17,7 +17,7 @@
         <padding>
             <Insets top="20.0" right="20.0" bottom="20.0" left="20.0"/>
         </padding>
-    <Label text="What's your mood?" />
+        <Label text="What's your mood?" />
         <ComboBox fx:id="moodComboBox" promptText="Select your mood">
             <items>
                 <FXCollections fx:factory="observableArrayList">
@@ -58,9 +58,19 @@
 
         <Button fx:id="findPlaylistBtn" text="Find Playlist" onAction="#findPlaylist" styleClass="primary-button" />
     </VBox>
-
-    <Label fx:id="suggestionLabel" text="" wrapText="true" layoutX="20.0" layoutY="750.0" prefWidth="810.0" styleClass="suggestion" />
+    <VBox fx:id="errorContainer" layoutX="20.0" layoutY="350.0" prefHeight="50.0" prefWidth="646.0" spacing="10.0">
+        <Label fx:id="errorMessage" text="Please fill in all required fields."
+               visible="false"
+               styleClass="error-box"
+               alignment="CENTER"
+               wrapText="true"
+               prefHeight="30.0"
+               prefWidth="300.0" />
+    </VBox>
+    <TextArea fx:id="suggestionLabel" wrapText="true" editable="false" prefWidth="760.0" prefHeight="180.0" />
+    <Button fx:id="backButton" text="Back to Options" layoutX="20.0" layoutY="680.0" prefWidth="200.0" styleClass="secondary-button" onAction="#goBackToOptions" visible="false"/>
 </AnchorPane>
+
 
 
 
