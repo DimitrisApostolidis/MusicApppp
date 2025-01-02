@@ -1,14 +1,13 @@
 package org.example;
 
 import org.example.DataBase.DataBaseConnection;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -22,10 +21,21 @@ class DataBaseConnectionTest {
     private final String URL = "jdbc:mysql://localhost:3306/rapsodiaplayer"; // Βάση δεδομένων για δοκιμή
     private final String USER = "root"; // Χρήστης βάσης δεδομένων
     private final String PASSWORD = ""; // Κωδικός βάσης δεδομένων
+    private DataBaseConnection dbConnection;
 
-    @BeforeAll
-    static void setUp() {
-        db = new DataBaseConnection();
+    @BeforeEach
+    void setUp() {
+        dbConnection = new DataBaseConnection();  // Αρχικοποιούμε τη μεταβλητή dbConnection
+        db = new DataBaseConnection();  // Αρχικοποιούμε το αντικείμενο db
+
+        String url = "jdbc:mysql://localhost:3306/rapsodiaplayer";
+        String user = "root";
+        String password = "";
+        try {
+            dbConnection.setConnection(url, user, password);
+        } catch (SQLException e) {
+            fail("Αποτυχία σύνδεσης στη βάση δεδομένων: " + e.getMessage());
+        }
     }
 
     @Test
@@ -512,4 +522,141 @@ class DataBaseConnectionTest {
         int songId = dbConnection.addSongToDatabase(songTitle, artistName);
         assertEquals(-1, songId, "Η εισαγωγή του τραγουδιού πρέπει να αποτύχει.");
     }
+
+    @Test
+    void testIsSongCurrentlyPlayingInHistory_Success() {
+        try (Connection conn = dbConnection.getConnection()) {
+            String insertUser = "INSERT INTO user (user_id, username) VALUES (21, 'testUser')";
+            try (PreparedStatement stmt = conn.prepareStatement(insertUser)) {
+                stmt.executeUpdate();
+            }
+            String insertHistory = "INSERT INTO history (user_id, title, is_playing) VALUES (21, 'Song Title', 1)";
+            try (PreparedStatement stmt = conn.prepareStatement(insertHistory)) {
+                stmt.executeUpdate();
+            }
+            boolean isPlaying = dbConnection.isSongCurrentlyPlayingInHistory(1, "Song Title");
+            assertTrue(isPlaying, "Το τραγούδι θα πρέπει να είναι αυτή τη στιγμή σε αναπαραγωγή.");
+        } catch (SQLException e) {
+            fail("Αποτυχία κατά τη διάρκεια του τεστ: " + e.getMessage());
+        }
+    }
+    @Test
+    void testIsSongCurrentlyPlayingInHistory_Failure() {
+        boolean isPlaying = dbConnection.isSongCurrentlyPlayingInHistory(21, "Nonexistent Song");
+        assertFalse(isPlaying, "Το τραγούδι δεν θα πρέπει να υπάρχει στην ιστορία.");
+    }
+
+
+    @Test
+    void testIsSongInPlaylist_Success() {
+        try (Connection conn = dbConnection.getConnection()) {
+            String insertPlaylist = "INSERT INTO playlist (playlist_id, name) VALUES (1, 'Test Playlist')";
+            try (PreparedStatement stmt = conn.prepareStatement(insertPlaylist)) {
+                stmt.executeUpdate();
+            }
+
+            String insertSong = "INSERT INTO song(song_id, title) VALUES (100, 'Test Song')";
+            try (PreparedStatement stmt = conn.prepareStatement(insertSong)) {
+                stmt.executeUpdate();
+            }
+            String insertPlaylistSong = "INSERT INTO playlist_song (playlist_id, song_id) VALUES (1, 100)";
+            try (PreparedStatement stmt = conn.prepareStatement(insertPlaylistSong)) {
+                stmt.executeUpdate();
+            }
+            boolean isInPlaylist = dbConnection.isSongInPlaylist(1, 100);
+            assertTrue(isInPlaylist, "Το τραγούδι πρέπει να υπάρχει στην playlist.");
+        } catch (SQLException e) {
+            fail("Αποτυχία κατά τη διάρκεια του τεστ: " + e.getMessage());
+        }
+    }
+
+    @Test
+    void testIsSongInPlaylist_Failure() {
+        boolean isInPlaylist = dbConnection.isSongInPlaylist(1, 999); // playlist_id 1, song_id 999 δεν υπάρχουν
+        assertFalse(isInPlaylist, "Το τραγούδι δεν θα πρέπει να υπάρχει στην playlist.");
+    }
+    @AfterEach
+    void tearDown() {
+        try (Connection conn = dbConnection.getConnection()) {
+            String deleteUser = "DELETE FROM user WHERE user_id = 21";
+            try (PreparedStatement stmt = conn.prepareStatement(deleteUser)) {
+                stmt.executeUpdate();
+            }
+
+            String deleteHistory = "DELETE FROM history WHERE user_id = 21";
+            try (PreparedStatement stmt = conn.prepareStatement(deleteHistory)) {
+                stmt.executeUpdate();
+            }
+        } catch (SQLException e) {
+            System.err.println("Αποτυχία καθαρισμού δεδομένων: " + e.getMessage());
+        }
+        try (Connection conn = dbConnection.getConnection()) {
+            String deletePlaylistSong = "DELETE FROM playlist_song WHERE playlist_id = 1 AND song_id = 100";
+            try (PreparedStatement stmt = conn.prepareStatement(deletePlaylistSong)) {
+                stmt.executeUpdate();
+            }
+
+            String deleteSong = "DELETE FROM song WHERE song_id = 100";
+            try (PreparedStatement stmt = conn.prepareStatement(deleteSong)) {
+                stmt.executeUpdate();
+            }
+
+            String deletePlaylist = "DELETE FROM playlist WHERE playlist_id = 1";
+            try (PreparedStatement stmt = conn.prepareStatement(deletePlaylist)) {
+                stmt.executeUpdate();
+            }
+        } catch (SQLException e) {
+            System.err.println("Αποτυχία καθαρισμού δεδομένων: " + e.getMessage());
+        }
+    }
+    @Test
+    public void testGetSongsFromPlaylist() {
+        //Πρεπει να υπαρχει ηδη
+        int playlistId = 2363;
+        addSongToPlaylist( playlistId, 100);
+        addSongToPlaylist( playlistId, 200);
+        List<String> song = db.getSongsFromPlaylist(playlistId);
+        //πρεπει να υπαρχουν ηδη τα τραγουδια μεσα στο song
+        assertNotNull(song, "Η λίστα τραγουδιών δεν πρέπει να είναι null");
+        assertEquals(2,song.size(), "Περιμέναμε 2 τραγούδια");
+        assertTrue(song.contains("Song 1"), "Περιμέναμε το 'Song 1' στη λίστα");
+        assertTrue(song.contains("Song 2"), "Περιμέναμε το 'Song 2' στη λίστα");
+    }
+    private void addSongToPlaylist(int playlistId, int songId) {
+        String query = "INSERT INTO playlist_song (playlist_id, song_id) VALUES (?, ?)";
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setInt(1, playlistId);
+            stmt.setInt(2, songId);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    private Connection getConnection() throws SQLException {
+        return DriverManager.getConnection("jdbc:mysql://localhost:3306/rapsodiaplayer", "root", "");
+    }
+
+    @Test
+    public void testGetSongsFromPlaylist_Failure() {
+        int playlistId = 2363;
+        List<String> songs = db.getSongsFromPlaylist(playlistId); // Δεν περιμένουμε SQLException
+
+        assertNotNull(songs, "Η λίστα τραγουδιών δεν πρέπει να είναι null");
+
+        assertEquals(2, songs.size(), "Περιμέναμε 2 τραγούδια");
+
+        boolean containsSong1 = songs.contains("Song 1");
+        boolean containsSong2 = songs.contains("Song 2");
+        assertTrue(containsSong1, "Περιμέναμε το 'Song 1' στη λίστα");
+        assertTrue(containsSong2, "Περιμέναμε το 'Song 2' στη λίστα");
+
+        if (!containsSong1 || !containsSong2) {
+            fail("Τα τραγούδια 'Song 1' και 'Song 2' δεν βρέθηκαν στην playlist.");
+        }
+    }
+
+
+
+
 }

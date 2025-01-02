@@ -193,7 +193,7 @@ public class DataBaseConnection {
 
 
 
-    public boolean addSongToPlaylist(int playlistId, int songId,String song_name) {
+    public boolean addSongToPlaylist(int playlistId, int songId,String song_name)  {
         String sql = "INSERT INTO playlist_song (playlist_id, song_id,song_name) VALUES (?, ?,?)";
         try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -466,23 +466,45 @@ public class DataBaseConnection {
         }
         return false;  // Αν δεν βρεθεί το τραγούδι, επιστρέφει false
     }
+
+
+
+    public String getSongByTitle(String title) {
+        // Υποθετική υλοποίηση της μεθόδου, θα επιστρέφει το τραγούδι με βάση τον τίτλο
+        return "Song " + title;  // Επιστρέφει τον τίτλο του τραγουδιού
+    }
+
+
     public List<String> getSongsFromPlaylist(int playlistId) {
         List<String> songs = new ArrayList<>();
 
         // Ερώτημα για να πάρουμε τα song_id από τον πίνακα playlist_song για το συγκεκριμένο playlistId
         String getSongIdsQuery = "SELECT song_id FROM playlist_song WHERE playlist_id = ?";
-        try (Connection conn = getConnection();
-             PreparedStatement stmt = conn.prepareStatement(getSongIdsQuery)) {
-            stmt.setInt(1, playlistId); // Θέτουμε το playlistId στο query
-            ResultSet rs = stmt.executeQuery(); // Εκτελούμε το query
 
-            // Για κάθε song_id που επιστρέφεται, παίρνουμε το όνομα του τραγουδιού
-            while (rs.next()) {
-                int songId = rs.getInt("song_id");
-                String songTitle = "Song " + songId;  // Υποθέτουμε ότι έχουμε τίτλο βασισμένο στο song_id
-                String songName = getSongByTitle(songTitle); // Χρησιμοποιούμε τη μέθοδο getSongByTitle
-                if (songName != null) {
-                    songs.add(songName); // Προσθέτουμε το τραγούδι στη λίστα
+        try (Connection conn = getConnection();  // Δημιουργούμε μία σύνδεση
+             PreparedStatement stmt = conn.prepareStatement(getSongIdsQuery)) {
+
+            stmt.setInt(1, playlistId); // Θέτουμε το playlistId στο query
+            try (ResultSet rs = stmt.executeQuery()) { // Εκτελούμε το query και κλείνουμε αυτόματα το ResultSet
+
+                // Για κάθε song_id που επιστρέφεται, παίρνουμε τον τίτλο του τραγουδιού
+                while (rs.next()) {
+                    int songId = rs.getInt("song_id");
+
+                    // Ερώτημα για να πάρουμε τον τίτλο του τραγουδιού από τον πίνακα songs
+                    String getSongTitleQuery = "SELECT title FROM song WHERE song_id = ?";
+                    try (PreparedStatement songStmt = conn.prepareStatement(getSongTitleQuery)) {
+                        songStmt.setInt(1, songId);
+
+                        try (ResultSet songRs = songStmt.executeQuery()) {
+                            if (songRs.next()) {
+                                String songTitle = songRs.getString("title");
+                                if (songTitle != null && !songTitle.isEmpty()) {
+                                    songs.add(songTitle); // Προσθέτουμε το τραγούδι στη λίστα
+                                }
+                            }
+                        }
+                    }
                 }
             }
         } catch (SQLException e) {
@@ -492,10 +514,6 @@ public class DataBaseConnection {
         return songs; // Επιστρέφουμε τη λίστα με τα τραγούδια
     }
 
-    public String getSongByTitle(String title) {
-        // Υποθετική υλοποίηση της μεθόδου, θα επιστρέφει το τραγούδι με βάση τον τίτλο
-        return "Song " + title;  // Επιστρέφει τον τίτλο του τραγουδιού
-    }
 
 
 }
