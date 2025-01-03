@@ -20,11 +20,31 @@ public class DiscogsApiClient {
                     .queryString("secret", SECRET_KEY)
                     .asJson();
 
-            return response.getStatus() == 200 ? response.getBody() : null;
+            if (response.getStatus() == 200 && response.getBody() != null) {
+                JsonNode responseBody = response.getBody();
+                JSONArray results = responseBody.getObject().optJSONArray("results");
+
+                // Έλεγχος αν το πεδίο "results" είναι κενό
+                if (results == null || results.length() == 0) {
+                    return null;  // Δεν υπάρχουν αποτελέσματα
+                }
+
+                // Αν τα αποτελέσματα δεν σχετίζονται με τον καλλιτέχνη που ψάχνετε, επιστρέφετε null
+                for (int i = 0; i < results.length(); i++) {
+                    JSONObject artist = results.getJSONObject(i);
+                    String title = artist.optString("title", "").toLowerCase();
+                    if (title.contains(artistName.toLowerCase())) {
+                        return responseBody;  // Αν βρεθεί ο καλλιτέχνης, επιστρέφουμε τα αποτελέσματα
+                    }
+                }
+
+                // Αν δεν βρεθεί ο καλλιτέχνης, επιστρέφουμε null
+                return null;
+            }
         } catch (Exception e) {
             e.printStackTrace();
-            return null;
         }
+        return null;
     }
 
     public JsonNode searchTracks(String trackName) {
@@ -36,28 +56,70 @@ public class DiscogsApiClient {
                     .queryString("secret", SECRET_KEY)
                     .asJson();
 
-            return response.getStatus() == 200 ? response.getBody() : null;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
+            if (response.getStatus() == 200 && response.getBody() != null) {
+                JsonNode responseBody = response.getBody();
+                JSONArray results = responseBody.getObject().optJSONArray("results");
 
-    public String getTrackGenre(String trackName) {
-        try {
-            JsonNode response = searchTracks(trackName);
-            if (response != null && response.getObject().has("results")) {
-                JSONArray results = response.getObject().getJSONArray("results");
-                if (!results.isEmpty()) {
-                    JSONObject firstResult = results.getJSONObject(0);
-                    JSONArray genres = firstResult.optJSONArray("genre");
-                    return genres != null && !genres.isEmpty() ? genres.getString(0) : "Unknown";
+                // Έλεγχος αν το πεδίο "results" είναι κενό
+                if (results == null || results.length() == 0) {
+                    return null;  // Δεν υπάρχουν αποτελέσματα
                 }
+
+                // Αν τα αποτελέσματα δεν σχετίζονται με το τραγούδι που ψάχνετε, επιστρέφετε null
+                for (int i = 0; i < results.length(); i++) {
+                    JSONObject track = results.getJSONObject(i);
+                    String title = track.optString("title", "").toLowerCase();
+                    if (title.contains(trackName.toLowerCase())) {
+                        return responseBody;  // Αν βρεθεί το τραγούδι, επιστρέφουμε τα αποτελέσματα
+                    }
+                }
+
+                // Αν δεν βρεθεί το τραγούδι, επιστρέφουμε null
+                return null;
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return null;
+    }
+
+    public String getTrackGenre(String trackName) {
+        try {
+            JsonNode response = searchTracks(trackName);  // Κλήση της μεθόδου για αναζήτηση τραγουδιού
+
+            // Ελέγχουμε αν η απάντηση είναι έγκυρη και αν περιέχει το πεδίο "results"
+            if (response != null && response.getObject().has("results")) {
+                JSONArray results = response.getObject().getJSONArray("results");
+
+                // Ελέγχουμε αν η λίστα των αποτελεσμάτων δεν είναι κενή
+                if (results.length() > 0) {
+                    // Εξετάζουμε τα αποτελέσματα και ψάχνουμε για το genre
+                    for (int i = 0; i < results.length(); i++) {
+                        JSONObject track = results.getJSONObject(i);
+                        String title = track.optString("title", "").toLowerCase();
+
+                        // Αν το τραγούδι περιέχει το όνομα που ψάχνουμε
+                        if (title.contains(trackName.toLowerCase())) {
+                            JSONArray genres = track.optJSONArray("genre");
+
+                            // Ελέγχουμε αν το genre είναι διαθέσιμο και επιστρέφουμε το πρώτο genre
+                            if (genres != null && genres.length() > 0) {
+                                return genres.getString(0);  // Επιστρέφουμε το πρώτο genre
+                            }
+                            break;  // Αν το genre δεν υπάρχει, διακόπτουμε την αναζήτηση
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();  // Εκτυπώνουμε το σφάλμα για debugging
+        }
+
+        // Επιστρέφουμε "Unknown" αν δεν βρεθεί genre ή σε περίπτωση σφάλματος
         return "Unknown";
     }
+
+
+
 
 }

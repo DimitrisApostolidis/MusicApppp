@@ -43,6 +43,7 @@
 
 
 
+   <ImageView fx:id="songImageView" fitHeight="137.0" fitWidth="165.0" layoutX="22.4" layoutY="580.8" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="22.0" AnchorPane.topAnchor="581.0" />
 
    <Slider fx:id="time" layoutX="150.0" layoutY="729.0" prefHeight="14.0" prefWidth="527.0" stylesheets="@../../Styles/Dashboard.css" />
    <Button fx:id="playy" layoutX="363.0" layoutY="666.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="28.0" text="▶" />
@@ -61,7 +62,7 @@
    <Button fx:id="addtoplaylist" layoutX="212.0" layoutY="676.0" mnemonicParsing="false" onAction="#showPlaylistsPane" prefHeight="35.0" prefWidth="28.0" text="+" />
 
 
-   <Label fx:id="labelNowPlaying" alignment="CENTER" layoutX="2.0" layoutY="561.0" prefHeight="50.0" prefWidth="165.0" text="Now playing" textFill="#5e7c5c" visible="false">
+   <Label fx:id="labelNowPlaying" alignment="CENTER" layoutX="24.0" layoutY="547.0" prefHeight="39.0" prefWidth="206.0" text="Now playing" textFill="#5e7c5c" visible="false">
       <font>
          <Font size="26.0" />
       </font>

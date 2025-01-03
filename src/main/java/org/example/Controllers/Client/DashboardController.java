@@ -86,6 +86,7 @@ public class DashboardController {
 
     private Timeline sliderUpdater;
     public Text songTitleText;
+    @FXML
     public ImageView songImageView;
     public Label labelNowPlaying;
 
