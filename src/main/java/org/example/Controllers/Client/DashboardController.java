@@ -83,6 +83,7 @@ public class DashboardController {
     private List<String> playlist;  // Η λίστα με τα τραγούδια
     private int currentTrackIndex = 0;  // Ο δείκτης του τρέχοντος τραγουδιού
     private boolean isFavorite = false; // Μεταβλητή για να παρακολουθεί αν είναι στα αγαπημένα
+    private JamendoApiClient jamendoApiClient = new JamendoApiClient();
 
     private Timeline sliderUpdater;
     public Text songTitleText;
@@ -469,26 +470,71 @@ public class DashboardController {
     public void searchAll(String query) {
         new Thread(() -> {
             try {
+                // Αναζήτηση σε όλες τις υπηρεσίες
+                JsonNode trackResponse = jamendoApiClient.searchTracks(query);
                 JsonNode artistResponse = discogsApiClient.searchArtists(query);
-                JsonNode trackResponse = discogsApiClient.searchTracks(query);
                 JsonNode albumResponse = lastFmApiClient.searchAlbums(query);
+
+                // Λίστες για αποτελέσματα και URLs
                 List<String> results = new ArrayList<>();
+                List<String> streamingUrls = new ArrayList<>();
                 List<String> imageUrls = new ArrayList<>();
                 List<String> itemTypes = new ArrayList<>();
                 List<String> bios = new ArrayList<>();  // Δημιουργία της λίστας bios
 
-                if (artistResponse != null) extractDiscogsArtists(artistResponse, results, imageUrls, itemTypes, bios);
-                if (trackResponse != null) extractDiscogsTracks(trackResponse, results, imageUrls, itemTypes, bios);
-                if (albumResponse != null) extractLastFmAlbums(albumResponse, results, imageUrls, itemTypes, bios);
+                // Επεξεργασία tracks από Jamendo
+                if (trackResponse != null) {
+                    var tracks = trackResponse.getObject().getJSONArray("results");
+                    for (int i = 0; i < tracks.length(); i++) {
+                        var track = tracks.getJSONObject(i);
+                        String title = track.getString("name");
+                        String streamUrl = track.getString("audio");
 
-                // Προσθήκη των αποτελεσμάτων στη λίστα latestSearches
-                latestSearches.addAll(results);
+                        results.add("Track: " + title);
+                        streamingUrls.add(streamUrl);
+                        imageUrls.add(track.optString("image", "")); // Προσθήκη εικόνας αν υπάρχει
+                        itemTypes.add("Track");
+                        bios.add(""); // Δεν υπάρχει bio για τα tracks
+                    }
+                }
 
+                // Επεξεργασία artists από Discogs
+                if (artistResponse != null) {
+                    var artists = artistResponse.getObject().getJSONArray("results");
+                    for (int i = 0; i < artists.length(); i++) {
+                        var artist = artists.getJSONObject(i);
+                        String name = artist.getString("title");
+
+                        results.add("Artist: " + name);
+                        streamingUrls.add(null); // Δεν έχει URL αναπαραγωγής
+                        imageUrls.add(artist.optString("cover_image", "")); // Εικόνα του artist
+                        itemTypes.add("Artist");
+                        bios.add(artist.optString("bio", "No bio available")); // Προσθήκη bio αν υπάρχει
+                    }
+                }
+
+                // Επεξεργασία albums από LastFm
+                if (albumResponse != null) {
+                    var albums = albumResponse.getObject().getJSONObject("results").getJSONObject("albummatches").getJSONArray("album");
+                    for (int i = 0; i < albums.length(); i++) {
+                        var album = albums.getJSONObject(i);
+                        String name = album.getString("name");
+
+                        results.add("Album: " + name);
+                        streamingUrls.add(null); // Δεν έχει URL αναπαραγωγής
+                        var images = album.getJSONArray("image");
+                        imageUrls.add(images.length() > 0 ? images.getJSONObject(images.length() - 1).getString("#text") : "");
+                        itemTypes.add("Album");
+                        bios.add(""); // Δεν υπάρχει bio για τα albums
+                    }
+                }
+
+                // Ενημέρωση UI
                 Platform.runLater(() -> {
                     if (!results.isEmpty()) {
                         resultsList.setVisible(true);
                         updateResultsList(results);
-                        setupListSelectionListener(results, imageUrls, itemTypes);  // Προσθήκη bios εδώ
+                        setupListSelectionListener(results, streamingUrls, imageUrls, itemTypes, bios);
                     } else {
                         resultsList.setVisible(false);
                     }
@@ -498,6 +544,27 @@ public class DashboardController {
                 Platform.runLater(() -> resultsList.setVisible(false));
             }
         }).start();
+    }
+
+
+    private void setupStreamingUrls(List<String> urls) {
+        resultsList.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null && newValue.intValue() >= 0) {
+                String selectedUrl = urls.get(newValue.intValue());
+                playStream(selectedUrl);
+            }
+        });
+    }
+
+    private void playStream(String url) {
+        if (mediaPlayer != null) {
+            mediaPlayer.stop();
+            mediaPlayer.dispose();
+        }
+
+        Media media = new Media(url);
+        mediaPlayer = new MediaPlayer(media);
+        mediaPlayer.setOnReady(() -> mediaPlayer.play());
     }
 
 
@@ -569,8 +636,7 @@ public class DashboardController {
                 imageView.setFitHeight(150);
                 imageView.setPreserveRatio(true);
 
-                // Δημιουργία τίτλου με τον τύπο και τον τίτλο του αντικειμένου
-                Text imageTitle = new Text(itemType + ": " + title); // Χρησιμοποίησε μόνο μία φορά το itemType
+                Text imageTitle = new Text(itemType + ": " + title);
                 imageTitle.setStyle("-fx-fill: white; -fx-font-size: 16px;");
 
                 VBox imageBox = new VBox(imageView, imageTitle);
@@ -582,18 +648,25 @@ public class DashboardController {
     }
 
 
-    private void setupListSelectionListener(List<String> results, List<String> imageUrls, List<String> itemTypes) {
+    private void setupListSelectionListener(List<String> results, List<String> streamingUrls, List<String> imageUrls, List<String> itemTypes, List<String> bios) {
         resultsList.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) {
                 int index = resultsList.getSelectionModel().getSelectedIndex();
-                if (index >= 0 && index < imageUrls.size()) {
-                    String imageUrl = imageUrls.get(index);
-                    String itemType = itemTypes.get(index); // Πάρε τον τύπο
-                    String title = results.get(index).substring(itemType.length() + 2); // Αφαίρεσε το "Track: ", "Album: ", κλπ.
-                    updateImage(imageUrl, title, itemType); // Ενημέρωση εικόνας
+                if (index >= 0) {
+                    String selectedType = itemTypes.get(index);
+                    String selectedUrl = streamingUrls.get(index);
+                    String selectedImage = imageUrls.get(index);
+                    String bio = bios.get(index);
+                    String title = results.get(index).substring(selectedType.length() + 2);
 
-                    if ("artist".equals(itemType)) {
-                        updateArtistImages(title); // Καλέστε τη μέθοδο με το όνομα του καλλιτέχνη
+                    updateImage(selectedImage, title, selectedType);
+
+                    if ("Artist".equals(selectedType)) {
+                        updateArtistBio(bio); // Ενημέρωση του bio
+                    }
+
+                    if ("Track".equals(selectedType) && selectedUrl != null) {
+                        playStream(selectedUrl);
                     }
                 }
             }
@@ -1008,8 +1081,8 @@ public class DashboardController {
     }
 
     public void updateArtistBio(String bio) {
-        artistBioTextArea.setText("Βιογραφικό Καλλιτέχνη: Ο καλλιτέχνης αυτός είναι γνωστός για την καινοτομία του στη μουσική...");
-
+        artistBioTextArea.setText(bio);
+        artistBioTextArea.setVisible(true);
     }
 
 }

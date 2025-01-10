@@ -26,7 +26,6 @@ public class HistoryController {
         }
     }
 
-
     public void loadHistory() {
         String userId = LoginController.userId; // Πάρε το userId από το LoginController
 
@@ -34,7 +33,7 @@ public class HistoryController {
             return; // Αν δεν υπάρχει έγκυρο userId, δεν φορτώνουμε τα δεδομένα
         }
 
-        String query = "SELECT created_at, title, genre FROM history WHERE user_id = ? ORDER BY created_at DESC";
+        String query = "SELECT created_at, title FROM history WHERE user_id = ? ORDER BY created_at DESC";
 
         try (Connection connection = DataBaseConnection.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
@@ -52,11 +51,10 @@ public class HistoryController {
             while (resultSet.next()) {
                 String createdAt = resultSet.getString("created_at");
                 String title = resultSet.getString("title");
-                String genre = resultSet.getString("genre");
 
                 // Δημιουργία ετικέτας για κάθε εγγραφή
                 Label entryLabel = new Label(
-                        String.format("Date: %s | Title: %s | Genre: %s", createdAt, title, genre)
+                        String.format("Date: %s | Title: %s", createdAt, title)
                 );
                 entryLabel.getStyleClass().add("history-entry"); // Στυλ από CSS
 
@@ -70,6 +68,4 @@ public class HistoryController {
             e.printStackTrace();
         }
     }
-
-
 }
