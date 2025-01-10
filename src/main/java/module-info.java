@@ -1,4 +1,5 @@
 module org.example {
+    requires se.michaelthelin.spotify;
     requires javafx.controls;  // Required for JavaFX controls
     requires javafx.fxml;     // Required for JavaFX FXML (if you're using it)
     requires de.jensd.fx.glyphs.fontawesome;
@@ -11,6 +12,8 @@ module org.example {
     requires com.fasterxml.jackson.databind;
     requires java.prefs;
     requires javafx.media;
+    requires javafx.web;
+    requires org.apache.httpcomponents.core5.httpcore5;
     opens org.example.DataBase to org.mockito;
 
     opens org.example.Controllers to javafx.fxml;

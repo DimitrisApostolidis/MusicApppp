@@ -13,13 +13,14 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.web.WebView?>
 <AnchorPane fx:id="rootPane" prefHeight="750.0" prefWidth="850.0" stylesheets="@../../Styles/Dashboard.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.Controllers.Client.DashboardController">
    <Text fx:id="songTitleText" layoutX="199.0" layoutY="637.0" style="-fx-font-size: 20px; -fx-fill: white;" text="Τίτλος Τραγουδιού" textAlignment="CENTER" visible="false" wrappingWidth="429.5419921875" AnchorPane.bottomAnchor="106.7255859375">
       <font>
          <Font size="63.0" />
       </font>
    </Text>
-
    <Button fx:id="pausee" layoutX="453.0" layoutY="666.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="28.0" text="⏸" />
    <Text fill="WHITE" layoutX="9.0" layoutY="171.8984375" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="shape-text" text="Latest Search" wrappingWidth="164.513671875" AnchorPane.leftAnchor="9.0" AnchorPane.topAnchor="146.0" />
    <Text fill="WHITE" layoutX="14.0" layoutY="385.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="shape-text" text="What's Trending" />
@@ -69,5 +70,4 @@
    </Label>
    <Label fx:id="labelCurrentTime" layoutX="113.0" layoutY="728.0" text="Label" textFill="WHITE" />
    <Label fx:id="labelTotalDuration" layoutX="689.0" layoutY="728.0" text="Label" textFill="WHITE" />
-
 </AnchorPane>
