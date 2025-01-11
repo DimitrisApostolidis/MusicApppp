@@ -55,6 +55,7 @@
                 <PasswordField fx:id="confirmPasswordField" promptText="Confirm your new password" styleClass="profile-text-field" prefWidth="200"/>
             </HBox>
         </VBox>
+        <Label fx:id="passwordErrorLabel" text="" styleClass="profile-error-label" visible="false"/>
 
         <!-- Κουμπιά σε οριζόντια διάταξη -->
         <HBox spacing="20.0" alignment="CENTER_LEFT">

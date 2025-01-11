@@ -2,12 +2,16 @@ package org.example.Controllers.Client;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import org.example.Controllers.LoginController;
 import org.example.DataBase.DataBaseConnection;
 import org.example.PlaylistController;
@@ -39,6 +43,9 @@ public class ProfileController {
 
     @FXML
     private Label emailLabel;
+
+    @FXML
+    private Label passwordErrorLabel;
 
     private static String loggedInUserId;
   String userId;
@@ -139,12 +146,22 @@ public class ProfileController {
         String confirmPassword = confirmPasswordField.getText();
 
         if (currentPassword.isEmpty() || newPassword.isEmpty() || confirmPassword.isEmpty()) {
+            passwordErrorLabel.setVisible(true);
+            passwordErrorLabel.setText("Please fill all the fields");
             System.out.println("Please fill in all fields.");
             return;
         }
 
         if (!newPassword.equals(confirmPassword)) {
+            passwordErrorLabel.setVisible(true);
+            passwordErrorLabel.setText("Passwords do not match");
             System.out.println("New passwords do not match.");
+            return;
+        }
+
+        if (currentPassword.equals(newPassword)) {
+            passwordErrorLabel.setVisible(true);
+            passwordErrorLabel.setText("New password cannot be the same as the current password");
             return;
         }
 
@@ -178,18 +195,33 @@ public class ProfileController {
             updateStmt.setString(2, userId);
 
             int rowsUpdated = updateStmt.executeUpdate();
+            // Μετά την επιτυχή αλλαγή του κωδικού
             if (rowsUpdated > 0) {
                 System.out.println("Password changed successfully.");
+                passwordErrorLabel.setVisible(false);
                 currentPasswordField.clear();
                 newPasswordField.clear();
                 confirmPasswordField.clear();
+
+                // Καθαρισμός του userId για αποσύνδεση
+                LoginController.userId = null;
+
+                // Ανακατεύθυνση στην οθόνη σύνδεσης (π.χ. με αλλαγή σκηνής)
+                // Αυτή η γραμμή εξαρτάται από το πώς διαχειρίζεστε τη σκηνή στην εφαρμογή σας
+                Parent root = FXMLLoader.load(getClass().getResource("/Fxml/Client/LoginClient.fxml"));
+                Scene scene = new Scene(root);
+                Stage stage = (Stage) currentPasswordField.getScene().getWindow();
+                stage.setScene(scene);
+                stage.show();
             } else {
                 System.out.println("Failed to update password.");
             }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
     public void setUsernameLabel(Label usernameLabel) {
         this.usernameLabel = usernameLabel;
     }

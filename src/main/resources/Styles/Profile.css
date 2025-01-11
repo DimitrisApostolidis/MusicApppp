@@ -69,3 +69,10 @@
     -fx-spacing: 15; /* Space between elements in a section */
 }
 
+.profile-error-label {
+    -fx-text-fill: red; /* Κόκκινο χρώμα για το κείμενο */
+    -fx-font-size: 14px; /* Μέγεθος γραμματοσειράς */
+    -fx-font-weight: bold; /* Έντονη γραμματοσειρά */
+}
+
+

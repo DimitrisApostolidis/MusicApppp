@@ -216,5 +216,13 @@ public class LoginController implements Initializable {
         }
 
     }
+    public void testableHandleCreateAccount() {
+        handleCreateAccount();
+    }
+
+    public void testableOpenClientScene(String username) {
+        openClientScene(username);
+    }
+
 
 }

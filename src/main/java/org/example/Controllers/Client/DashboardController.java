@@ -149,10 +149,10 @@ public class DashboardController {
             }
         });
 
-        playlist = new ArrayList<>();
-        playlist.add(getClass().getResource("/music/song1.mp3").toString());
-        playlist.add(getClass().getResource("/music/song2.mp3").toString());
-        playlist.add(getClass().getResource("/music/song3.mp3").toString());
+       // playlist = new ArrayList<>();
+       //playlist.add(getClass().getResource("/music/song1.mp3").toString());
+        //playlist.add(getClass().getResource("/music/song2.mp3").toString());
+       // playlist.add(getClass().getResource("/music/song3.mp3").toString());
         labelCurrentTime.setVisible(false);
         labelTotalDuration.setVisible(false);
 
