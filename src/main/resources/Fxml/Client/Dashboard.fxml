@@ -13,8 +13,6 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.web.WebView?>
 <AnchorPane fx:id="rootPane" prefHeight="750.0" prefWidth="850.0" stylesheets="@../../Styles/Dashboard.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.Controllers.Client.DashboardController">
    <Text fx:id="songTitleText" layoutX="199.0" layoutY="637.0" style="-fx-font-size: 20px; -fx-fill: white;" text="Τίτλος Τραγουδιού" textAlignment="CENTER" visible="false" wrappingWidth="429.5419921875" AnchorPane.bottomAnchor="106.7255859375">
       <font>
@@ -37,14 +35,6 @@
          <Button layoutX="100.0" layoutY="180.0" onAction="#addSongToSelectedPlaylist" text="Add to Playlist" />
    
       </AnchorPane>
-
-
-
-
-
-
-
-   <ImageView fx:id="songImageView" fitHeight="137.0" fitWidth="165.0" layoutX="22.4" layoutY="580.8" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="22.0" AnchorPane.topAnchor="581.0" />
 
    <Slider fx:id="time" layoutX="150.0" layoutY="729.0" prefHeight="14.0" prefWidth="527.0" stylesheets="@../../Styles/Dashboard.css" />
    <Button fx:id="playy" layoutX="363.0" layoutY="666.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="28.0" text="▶" />

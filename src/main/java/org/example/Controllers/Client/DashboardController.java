@@ -31,9 +31,12 @@ import javafx.scene.text.Text;
 import javafx.application.Platform;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+import org.example.Song;
 
 import java.util.ArrayList;
 import java.util.Objects;
+
+import static org.example.DataBase.DataBaseConnection.getConnection;
 
 
 public class DashboardController {
@@ -252,7 +255,6 @@ public class DashboardController {
     }
 
 
-    // Μέθοδος για να ελέγξετε αν το τραγούδι υπάρχει ήδη στα αγαπημένα
     private boolean isTrackFavorite(String trackName) {
         String userId = LoginController.userId; // Πάρε το userId από το LoginController
         if (userId == null || userId.isEmpty()) {
@@ -263,9 +265,10 @@ public class DashboardController {
         // Ερώτημα SQL για να ελέγξετε αν το τραγούδι υπάρχει ήδη στα αγαπημένα του χρήστη
         String query = "SELECT COUNT(*) FROM favourite_songs WHERE user_id = ? AND name = ?";
 
-        try (Connection connection = DataBaseConnection.getConnection();
+        try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement(query)) {
 
+            // Αντικαταστήστε το 'track_name' με το πραγματικό όνομα στήλης που αποθηκεύει το όνομα του τραγουδιού
             statement.setString(1, userId);
             statement.setString(2, trackName);
 
@@ -275,6 +278,7 @@ public class DashboardController {
                 }
             }
         } catch (SQLException e) {
+            System.err.println("Σφάλμα κατά την επικοινωνία με τη βάση δεδομένων.");
             e.printStackTrace();
         }
         return false; // Επιστρέφει false αν δεν βρέθηκε το τραγούδι
@@ -284,7 +288,7 @@ public class DashboardController {
         int songId = -1;
         String query = "SELECT id FROM history WHERE user_id = ? ORDER BY created_at DESC LIMIT 1";  // Επιλογή του πιο πρόσφατου τραγουδιού
 
-        try (Connection connection = DataBaseConnection.getConnection();
+        try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
 
             preparedStatement.setString(1, userId); // Ορίζουμε το userId
@@ -325,11 +329,7 @@ public class DashboardController {
             List<String> itemTypes = new ArrayList<>();
             List<String> bios = new ArrayList<>();
             if (trackResponse != null) extractDiscogsTracks(trackResponse, results, imageUrls, itemTypes, bios);
-            if (!imageUrls.isEmpty()) {
-                songImageView.setImage(new Image(imageUrls.get(0)));
-            } else {
-                System.out.println("imageUrls are empty");
-            }
+
         }).start();
     }
 
@@ -357,7 +357,7 @@ public class DashboardController {
         // Ερώτημα για την εισαγωγή στα favourite_songs
         String queryInsertFavorite = "INSERT INTO favourite_songs (user_id, song_id, name) VALUES (?, ?, ?)";
 
-        try (Connection connection = DataBaseConnection.getConnection()) {
+        try (Connection connection = getConnection()) {
             // Εισαγωγή του song_id, user_id και song_name στα αγαπημένα
             try (PreparedStatement preparedStatement = connection.prepareStatement(queryInsertFavorite)) {
                 preparedStatement.setString(1, userId);   // Εισάγουμε το user_id
@@ -382,7 +382,7 @@ public class DashboardController {
         // Ερώτημα για να πάρεις το τελευταίο songId και songName από το ιστορικό
         String query = "SELECT id, title FROM history WHERE user_id = ? ORDER BY created_at DESC LIMIT 1";
 
-        try (Connection connection = DataBaseConnection.getConnection();
+        try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
 
             preparedStatement.setString(1, userId); // Εισάγουμε το user_id
@@ -424,7 +424,7 @@ public class DashboardController {
         // Βήμα 2: Διαγραφή του τραγουδιού από τα αγαπημένα
         String queryDelete = "DELETE FROM favourite_songs WHERE user_id = ? AND song_id = ? "; // Διαγραφή ΜΟΝΟ του πρώτου τραγουδιού που βρέθηκε
 
-        try (Connection connection = DataBaseConnection.getConnection();
+        try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(queryDelete)) {
 
             preparedStatement.setString(1, userId); // userId από το LoginController
@@ -449,7 +449,7 @@ public class DashboardController {
         // Ερώτημα για να πάρεις το τελευταίο songId από τα αγαπημένα
         String query = "SELECT song_id FROM favourite_songs WHERE user_id = ? ";
 
-        try (Connection connection = DataBaseConnection.getConnection();
+        try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
 
             preparedStatement.setString(1, userId); // Εισάγουμε το user_id
@@ -465,8 +465,6 @@ public class DashboardController {
 
         return songId;
     }
-
-
     public void searchAll(String query) {
         new Thread(() -> {
             try {
@@ -481,6 +479,7 @@ public class DashboardController {
                 List<String> imageUrls = new ArrayList<>();
                 List<String> itemTypes = new ArrayList<>();
                 List<String> bios = new ArrayList<>();  // Δημιουργία της λίστας bios
+                List<String> artistNames = new ArrayList<>(); // Δημιουργία της λίστας για τα ονόματα των καλλιτεχνών
 
                 // Επεξεργασία tracks από Jamendo
                 if (trackResponse != null) {
@@ -495,6 +494,7 @@ public class DashboardController {
                         imageUrls.add(track.optString("image", "")); // Προσθήκη εικόνας αν υπάρχει
                         itemTypes.add("Track");
                         bios.add(""); // Δεν υπάρχει bio για τα tracks
+                        artistNames.add(""); // Δεν υπάρχει όνομα καλλιτέχνη για τα tracks
                     }
                 }
 
@@ -509,7 +509,8 @@ public class DashboardController {
                         streamingUrls.add(null); // Δεν έχει URL αναπαραγωγής
                         imageUrls.add(artist.optString("cover_image", "")); // Εικόνα του artist
                         itemTypes.add("Artist");
-                        bios.add(artist.optString("bio", "No bio available")); // Προσθήκη bio αν υπάρχει
+                       // bios.add(artist.optString("bio", "No bio available")); // Προσθήκη bio αν υπάρχει
+                        artistNames.add(name); // Προσθήκη του ονόματος του καλλιτέχνη
                     }
                 }
 
@@ -526,6 +527,7 @@ public class DashboardController {
                         imageUrls.add(images.length() > 0 ? images.getJSONObject(images.length() - 1).getString("#text") : "");
                         itemTypes.add("Album");
                         bios.add(""); // Δεν υπάρχει bio για τα albums
+                        artistNames.add(""); // Δεν υπάρχει όνομα καλλιτέχνη για τα albums
                     }
                 }
 
@@ -534,7 +536,7 @@ public class DashboardController {
                     if (!results.isEmpty()) {
                         resultsList.setVisible(true);
                         updateResultsList(results);
-                        setupListSelectionListener(results, streamingUrls, imageUrls, itemTypes, bios);
+                        setupListSelectionListener(results, streamingUrls, imageUrls, itemTypes, bios, artistNames);
                     } else {
                         resultsList.setVisible(false);
                     }
@@ -602,9 +604,7 @@ public class DashboardController {
             results.add("Track: " + trackTitle);
             itemTypes.add("Track");
             imageUrls.add(track.optString("cover_image", ""));
-
-            // Δεν υπάρχει bio για τα tracks, οπότε προσθέτουμε κενό
-            bios.add("");
+            artistBioTextArea.setVisible(false);
 
         }
     }
@@ -648,7 +648,7 @@ public class DashboardController {
     }
 
 
-    private void setupListSelectionListener(List<String> results, List<String> streamingUrls, List<String> imageUrls, List<String> itemTypes, List<String> bios) {
+    private void setupListSelectionListener(List<String> results, List<String> streamingUrls, List<String> imageUrls, List<String> itemTypes, List<String> bios, List<String> artistNames) {
         resultsList.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) {
                 int index = resultsList.getSelectionModel().getSelectedIndex();
@@ -656,22 +656,41 @@ public class DashboardController {
                     String selectedType = itemTypes.get(index);
                     String selectedUrl = streamingUrls.get(index);
                     String selectedImage = imageUrls.get(index);
-                    String bio = bios.get(index);
+                    String bio = bios.get(index); // Πάρε το bio από την λίστα
                     String title = results.get(index).substring(selectedType.length() + 2);
+                    String artistName = artistNames.get(index); // Πάρε το όνομα του καλλιτέχνη
 
                     updateImage(selectedImage, title, selectedType);
 
                     if ("Artist".equals(selectedType)) {
-                        updateArtistBio(bio); // Ενημέρωση του bio
+
+                        Platform.runLater(() -> {
+                            updateArtistImages(artistName);
+                            artistBioTextArea.setText("");
+
+                            artistBioTextArea.setVisible(true);
+
+                        });
+
+
+                    } else {
+                        artistBioTextArea.setVisible(false);  // Απόκρυψη του TextArea αν δεν είναι καλλιτέχνης
                     }
 
                     if ("Track".equals(selectedType) && selectedUrl != null) {
                         playStream(selectedUrl);
+                        Platform.runLater(() -> {
+                            artistBioTextArea.setText("");
+                            artistBioTextArea.setVisible(false);
+                        });
                     }
+
                 }
             }
         });
     }
+
+
 
 
     private void displaySingleImage(String imageUrl, String title) {
@@ -714,12 +733,12 @@ public class DashboardController {
                         var bio = artist.getJSONObject("bio");
                         if (bio.has("content")) {
                             String bioContent = bio.getString("content");
-                            Platform.runLater(() -> {
-                                artistBioTextArea.setText("");
-                                artistBioTextArea.setVisible(true);
+                           // Platform.runLater(() -> {
+                                //artistBioTextArea.setText("");
+                               // artistBioTextArea.setVisible(true);
                                 artistBioTextArea.setText(bioContent);
 
-                            });
+                          //  });
                         } else {
                             System.out.println("No bio content found for " + artistName);
                         }
@@ -763,7 +782,7 @@ public class DashboardController {
         // Αναζήτηση για το τραγούδι με βάση το user_id και το title
         String checkQuery = "SELECT id FROM history WHERE user_id = ? AND title = ?";
 
-        try (Connection connection = DataBaseConnection.getConnection();
+        try (Connection connection = getConnection();
              PreparedStatement checkStatement = connection.prepareStatement(checkQuery)) {
 
             checkStatement.setString(1, LoginController.userId);
@@ -1008,77 +1027,88 @@ public class DashboardController {
         playlistPane.setLayoutY(centerY);
 
 
-        if (clickCount == 2) {
-            playlistPane.setVisible(false);  // Κλείνουμε το παράθυρο
-            System.out.println("Το παράθυρο έκλεισε μετά από δύο πατήσεις.");
-            clickCount = 0;  // Επαναφορά του clickCount για μελλοντικές πατήσεις
-        }
+       // if (clickCount == 2) {
+           // playlistPane.setVisible(false);  // Κλείνουμε το παράθυρο
+           // System.out.println("Το παράθυρο έκλεισε μετά από δύο πατήσεις.");
+           // clickCount = 0;  // Επαναφορά του clickCount για μελλοντικές πατήσεις
+       // }
     }
 
-    @FXML
-    private void addSongToSelectedPlaylist() {
-        // Παίρνουμε το επιλεγμένο όνομα της playlist
-        String selectedPlaylist = playlistsList.getSelectionModel().getSelectedItem();
-
-        if (selectedPlaylist != null) {
-
-            // Αυξάνουμε το clickCount κάθε φορά που πατάμε το κουμπί
 
 
-            // Χρησιμοποιούμε την getPlaylistIdByName για να βρούμε το ID της playlist με βάση το όνομά της
-            DataBaseConnection db = new DataBaseConnection();
-            int playlistId = db.getPlaylistIdByName(selectedPlaylist);
 
-            if (playlistId == -1) {
-                System.out.println("Δεν βρέθηκε το ID για την playlist με το όνομα: " + selectedPlaylist);
-                return;
+@FXML
+private void addSongToSelectedPlaylist() {
+    // Παίρνουμε το επιλεγμένο όνομα της playlist
+    String selectedPlaylist = playlistsList.getSelectionModel().getSelectedItem();
+
+    if (selectedPlaylist != null) {
+        DataBaseConnection db = new DataBaseConnection();
+        int playlistId = db.getPlaylistIdByName(selectedPlaylist);
+
+        if (playlistId == -1) {
+            System.out.println("Δεν βρέθηκε το ID για την playlist με το όνομα: " + selectedPlaylist);
+            return;
+        }
+
+        // Ανάκτηση του τρέχοντος τραγουδιού από το ιστορικό του χρήστη
+        String[] currentSong = getCurrentSongFromHistory(LoginController.userId);
+
+        if (currentSong != null) {
+            int songId = Integer.parseInt(currentSong[0]);  // songId είναι στην πρώτη θέση του πίνακα
+            String songTitle = currentSong[1];  // songTitle είναι στη δεύτερη θέση του πίνακα
+
+            // Έλεγχος αν το τραγούδι υπάρχει ήδη στην playlist
+            if (db.isSongInPlaylist(playlistId, songId)) {
+                System.out.println("Το τραγούδι υπάρχει ήδη στην playlist.");
+                playlistPane.setVisible(false);
+                return;  // Αν υπάρχει, δεν το προσθέτουμε ξανά
             }
 
-            // Ανάκτηση του τελευταίου τραγουδιού από το ιστορικό
-            String[] lastSong = getLastSongFromHistory(LoginController.userId);
-
-            if (lastSong != null) {
-                String lastSongTitle = lastSong[1];
-
-                // Ελέγχουμε αν το τραγούδι είναι το τρέχον που παίζει με βάση το πεδίο is_playing στο ιστορικό
-                boolean isPlaying = db.isSongCurrentlyPlayingInHistory(Integer.parseInt(LoginController.userId), lastSongTitle);
-
-                if (isPlaying) {
-                    // Βρίσκουμε το songId από το ιστορικό
-                    int lastSongId = getSongIdFromHistory(LoginController.userId);
-
-                    if (lastSongId == -1) {
-                        System.out.println("Δεν βρέθηκε το songId για το τραγούδι: " + lastSongTitle);
-                        return;
-                    }
-
-                    // Έλεγχος αν το τραγούδι υπάρχει ήδη στην playlist
-                    if (db.isSongInPlaylist(playlistId, lastSongId)) {
-                        System.out.println("Το τραγούδι υπάρχει ήδη στην playlist.");
-                        return;  // Αν υπάρχει, δεν το προσθέτουμε ξανά
-                    }
-
-                    // Προσθέτουμε το τραγούδι στην playlist
-                    boolean success = db.addSongToPlaylist(playlistId, lastSongId, lastSongTitle);
-
-                    if (success) {
-                        System.out.println("Το τραγούδι προστέθηκε επιτυχώς στην playlist: " + selectedPlaylist);
-                    } else {
-                        System.out.println("Η προσθήκη του τραγουδιού απέτυχε.");
-                    }
-                } else {
-                    System.out.println("Το τραγούδι δεν παίζει αυτή τη στιγμή (is_playing = 0).");
-                }
+            // Προσθήκη του τραγουδιού στην playlist
+            boolean successAdd = db.addSongToPlaylist(playlistId, songId, songTitle);
+            if (successAdd) {
+                System.out.println("Το τραγούδι προστέθηκε επιτυχώς στην playlist: " + selectedPlaylist);
+                playlistPane.setVisible(false);
             } else {
-                System.out.println("Δεν βρέθηκε το τελευταίο τραγούδι στο ιστορικό.");
+                System.out.println("Η προσθήκη του τραγουδιού απέτυχε.");
             }
-
-
-
         } else {
-            System.out.println("Δεν επιλέξατε καμία playlist.");
+            System.out.println("Δεν βρέθηκε το τραγούδι στο ιστορικό.");
         }
+    } else {
+        System.out.println("Δεν επιλέξατε καμία playlist.");
     }
+}
+
+public String[] getCurrentSongFromHistory(String userId) {
+    // Επιστρέφει το songId και τον τίτλο του τραγουδιού που βρίσκεται στο ιστορικό και είναι το τρέχον (is_playing = 1)
+    String query = "SELECT id, title FROM history WHERE user_id = ? AND is_playing = 1";
+    try (Connection connection = getConnection();
+         PreparedStatement statement = connection.prepareStatement(query)) {
+
+        statement.setString(1, userId);
+
+        try (ResultSet resultSet = statement.executeQuery()) {
+            if (resultSet.next()) {
+                String songId = String.valueOf(resultSet.getInt("id"));
+                String title = resultSet.getString("title");
+                return new String[]{songId, title};  // Επιστρέφουμε το songId και τον τίτλο
+            }
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+    return null;  // Αν δεν υπάρχει τραγούδι που παίζει
+}
+
+
+
+
+
+
+
+
 
     public void updateArtistBio(String bio) {
         artistBioTextArea.setText(bio);

@@ -3,6 +3,7 @@ package org.example.Controllers.Client;
 import kong.unirest.HttpResponse;
 import kong.unirest.JsonNode;
 import kong.unirest.Unirest;
+import kong.unirest.UnirestException;
 import kong.unirest.json.JSONObject;
 
 import java.net.URLEncoder;
@@ -70,16 +71,22 @@ public class LastFmApiClient {
 
             // Έλεγχος για επιτυχία
             if (response.getStatus() == 200) {
-                return response.getBody();
+                JsonNode body = response.getBody();
+                if (body != null) {
+                    return body;
+                } else {
+                    System.out.println("Error: Response body is null");
+                }
             } else {
-                System.out.println("Error: " + response.getStatus());
-                return null;
+                System.out.println("Error: HTTP Status " + response.getStatus());
             }
         } catch (Exception e) {
+            System.out.println("Exception occurred while searching artists: " + e.getMessage());
             e.printStackTrace();
-            return null;
         }
+        return null; // Επιστρέφουμε null σε περίπτωση αποτυχίας
     }
+
 
     public JsonNode searchTracks(String trackName) {
         try {
@@ -132,21 +139,36 @@ public class LastFmApiClient {
 
     public JsonNode getTopTracks() {
         try {
+            // Κάνουμε το αίτημα GET προς το API
             HttpResponse<JsonNode> response = Unirest.get(BASE_URL)
                     .queryString("method", "chart.gettoptracks")
                     .queryString("api_key", API_KEY)
                     .queryString("format", "json")
                     .asJson();
 
+            // Ελέγχουμε αν η απάντηση είναι επιτυχής (HTTP 200)
             if (response.getStatus() == 200) {
-                return response.getBody();
+                return response.getBody();  // Επιστρέφουμε το σώμα της απάντησης
             } else {
-                System.out.println("Error: " + response.getStatus());
+                // Αν υπάρχει πρόβλημα με το status code, καταγράφουμε το σφάλμα
+                System.out.println("API Error: HTTP " + response.getStatus() + " - " + response.getStatusText());
+                System.out.println("Response Body: " + response.getBody().toString()); // Καταγραφή του σώματος της απάντησης
                 return null;
             }
+        } catch (UnirestException e) {
+            // Εξαίρεση που σχετίζεται με την βιβλιοθήκη Unirest
+            System.out.println("Unirest exception occurred: " + e.getMessage());
+            e.printStackTrace();
+            return null;
         } catch (Exception e) {
+            // Γενική εξαίρεση για άλλες περιπτώσεις
+            System.out.println("An unexpected error occurred: " + e.getMessage());
             e.printStackTrace();
             return null;
         }
     }
+
+
+
+
 }

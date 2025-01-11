@@ -180,12 +180,46 @@ public class ProfileController {
             int rowsUpdated = updateStmt.executeUpdate();
             if (rowsUpdated > 0) {
                 System.out.println("Password changed successfully.");
+                currentPasswordField.clear();
+                newPasswordField.clear();
+                confirmPasswordField.clear();
             } else {
                 System.out.println("Failed to update password.");
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+    public void setUsernameLabel(Label usernameLabel) {
+        this.usernameLabel = usernameLabel;
+    }
+
+    public void setEmailLabel(Label emailLabel) {
+        this.emailLabel = emailLabel;
+    }
+
+    public void setNameField(TextField nameField) {
+        this.nameField = nameField;
+    }
+
+    public void setEmailField(TextField emailField) {
+        this.emailField = emailField;
+    }
+
+    public void setCurrentPasswordField(PasswordField currentPasswordField) {
+        this.currentPasswordField = currentPasswordField;
+    }
+
+    public void setNewPasswordField(PasswordField newPasswordField) {
+        this.newPasswordField = newPasswordField;
+    }
+
+    public void setConfirmPasswordField(PasswordField confirmPasswordField) {
+        this.confirmPasswordField = confirmPasswordField;
+    }
+
+    public void setProfileImage(ImageView profileImage) {
+       this.profileImage = profileImage;
     }
     public Label getUsernameLabel() {
         return usernameLabel;
