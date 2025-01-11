@@ -54,7 +54,6 @@ public class BrowseController {
         String mood = moodComboBox.getValue();
         String timeOfDay = timeComboBox.getValue();
         String season = seasonComboBox.getValue();
-        String preferences = preferencesField.getText();
 
         if (mood == null || timeOfDay == null || season == null) {
             suggestionLabel.setText("Please fill in all required fields.");
@@ -64,7 +63,7 @@ public class BrowseController {
 
         errorMessage.setVisible(false); // Απόκρυψη μηνύματος αν όλα είναι εντάξει
 
-        String response = callGeminiAPI(mood, timeOfDay, season, preferences);
+        String response = callGeminiAPI(mood, timeOfDay, season);
 
         if (response != null && !response.isEmpty()) {
             String formattedPlaylist = extractPlaylist(response);
@@ -83,6 +82,7 @@ public class BrowseController {
         backButton.setVisible(true);
     }
 
+
     @FXML
     private void goBackToOptions() {
         // Clear the previous playlist and reset fields
@@ -92,7 +92,6 @@ public class BrowseController {
         moodComboBox.setValue(null);
         timeComboBox.setValue(null);
         seasonComboBox.setValue(null);
-        preferencesField.clear();
 
         // Show the input options and hide the result area
         browseContainer.setVisible(true);
@@ -121,18 +120,17 @@ public class BrowseController {
 
 
 
-    private String callGeminiAPI(String mood, String timeOfDay, String season, String preferences) {
+    private String callGeminiAPI(String mood, String timeOfDay, String season) {
         try {
             // Δημιουργία prompt για το AI
             String prompt = "Create a playlist of 5 songs for the following conditions:\n" +
                     "Mood: " + mood + "\n" +
                     "Time of Day: " + timeOfDay + "\n" +
                     "Season: " + season + "\n" +
-                    "Preferences: " + preferences + "\n" +
                     "Output the playlist as '1. Song Name by Artist Name'.";
 
             // Ρύθμιση του Gemini API
-            String urlString = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=AIzaSyAj93V-Iv3MrIquIoYi8WUn_4cHGw5atag";
+            String urlString = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=AIzaSyAxeB4oCgZhQUFelETON-qwGknb8QQ0_-I";
             URL url = new URL(urlString);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("POST");
@@ -169,6 +167,7 @@ public class BrowseController {
             return "Error generating playlist.";
         }
     }
+
     private String extractPlaylist(String response) {
         try {
             // Μετατροπή της απόκρισης σε JSON
@@ -190,5 +189,6 @@ public class BrowseController {
     }
 
 }
+
 
 

@@ -52,12 +52,11 @@
                 </FXCollections>
             </items>
         </ComboBox>
-
-        <Label text="Any additional preferences? (Optional)" />
-        <TextField fx:id="preferencesField" promptText="Type your preferences here" />
+        <!-- Removed TextField for preferences -->
 
         <Button fx:id="findPlaylistBtn" text="Find Playlist" onAction="#findPlaylist" styleClass="primary-button" />
     </VBox>
+
     <VBox fx:id="errorContainer" layoutX="20.0" layoutY="350.0" prefHeight="50.0" prefWidth="646.0" spacing="10.0">
         <Label fx:id="errorMessage" text="Please fill in all required fields."
                visible="false"
@@ -70,7 +69,6 @@
     <TextArea fx:id="suggestionLabel" wrapText="true" editable="false" prefWidth="760.0" prefHeight="180.0" />
     <Button fx:id="backButton" text="Back to Options" layoutX="20.0" layoutY="680.0" prefWidth="200.0" styleClass="secondary-button" onAction="#goBackToOptions" visible="false"/>
 </AnchorPane>
-
 
 
 
