@@ -74,17 +74,6 @@
                </Button>
             </children>
          </VBox>
-         <VBox alignment="TOP_CENTER" layoutX="14.0" layoutY="596.0" prefHeight="120.0" prefWidth="130.0" styleClass="report_container" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0">
-            <children>
-               <Text strokeType="OUTSIDE" strokeWidth="0.0" text="We are still in beta" />
-               <Label prefHeight="55.0" prefWidth="152.0" text="Use this to report any bugs or give us a suggestions" />
-               <Button fx:id="report_btn" mnemonicParsing="false" text="Report">
-                  <graphic>
-                     <FontAwesomeIconView glyphName="ROCKET" />
-                  </graphic>
-               </Button>
-            </children>
-         </VBox>
       </children>
       <VBox.margin>
          <Insets left="30.0" right="30.0" />

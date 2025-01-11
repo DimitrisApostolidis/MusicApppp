@@ -136,3 +136,48 @@
     -fx-background-radius: 5;
 }
 
+#topTracksList {
+    -fx-background-color: transparent; /* Διαφανές φόντο */
+    -fx-border-color: #555555; /* Γκρι περίγραμμα */
+    -fx-border-width: 1px; /* Πάχος περιγράμματος */
+    -fx-border-radius: 5; /* Στρογγυλές γωνίες */
+    -fx-padding: 10; /* Εσωτερική απόσταση */
+    -fx-cell-hover-color: rgba(72, 123, 193, 0.2); /* Hover εφέ στα κελιά */
+    -fx-control-inner-background: transparent; /* Διαφανές background */
+}
+
+#topTracksList .list-cell {
+    -fx-text-fill: white; /* Λευκό κείμενο */
+    -fx-font-size: 16px; /* Μέγεθος γραμματοσειράς */
+    -fx-padding: 5; /* Εσωτερική απόσταση για κάθε κελί */
+    -fx-background-color: transparent; /* Διαφανές φόντο */
+}
+
+#topTracksList .list-cell:hover {
+    -fx-background-color: rgba(72, 123, 193, 0.2); /* Hover εφέ */
+    -fx-text-fill: #ffffff; /* Λευκό κείμενο */
+}
+
+#topTracksList .list-cell:focused {
+    -fx-background-color: rgba(76, 175, 80, 0.4); /* Εφέ κατά την εστίαση */
+}
+
+#artistBioTextArea {
+    -fx-background-color: #333333; /* Σκούρο φόντο όπως το topTracksList */
+    -fx-border-color: #555555; /* Γκρι περίγραμμα όπως το topTracksList */
+    -fx-border-width: 1px; /* Πάχος περιγράμματος */
+    -fx-border-radius: 5; /* Στρογγυλές γωνίες */
+    -fx-text-fill: #ffffff; /* Λευκό κείμενο */
+    -fx-font-size: 14px; /* Μέγεθος γραμματοσειράς */
+    -fx-font-family: "Arial", sans-serif; /* Καθαρή γραμματοσειρά */
+    -fx-padding: 10; /* Εσωτερική απόσταση */
+    -fx-highlight-fill: rgba(255, 255, 255, 0.2); /* Λευκό ημιδιαφανές highlight */
+    -fx-highlight-text-fill: #ffffff; /* Λευκό κείμενο στο highlight */
+    -fx-control-inner-background: #333333; /* Εσωτερικό φόντο */
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 3, 1.0, 0, 1); /* Σκιά */
+    -fx-wrap-text: true; /* Αναδίπλωση κειμένου */
+}
+
+
+
+
