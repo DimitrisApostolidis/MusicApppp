@@ -157,10 +157,10 @@ public class DashboardController {
         labelTotalDuration.setVisible(false);
 
         // Αρχικοποίηση του πρώτου τραγουδιού
-        loadTrack(currentTrackIndex);
+      // loadTrack(currentTrackIndex);
 
         playy.setOnMouseClicked(mouseEvent -> {
-            playMusic();
+            mediaPlayer.play();
         });
 
         pausee.setOnMouseClicked(mouseEvent -> {
@@ -656,7 +656,7 @@ public class DashboardController {
                     String selectedType = itemTypes.get(index);
                     String selectedUrl = streamingUrls.get(index);
                     String selectedImage = imageUrls.get(index);
-                    String bio = bios.get(index); // Πάρε το bio από την λίστα
+                    //String bio = bios.get(index); // Πάρε το bio από την λίστα
                     String title = results.get(index).substring(selectedType.length() + 2);
                     String artistName = artistNames.get(index); // Πάρε το όνομα του καλλιτέχνη
 
@@ -929,34 +929,34 @@ public class DashboardController {
     }
 
 
-    public void playMusic() {
-        if (mediaPlayer != null) {
-            labelTotalDuration.setVisible(true);
-            labelCurrentTime.setVisible(true);
-            mediaPlayer.setRate(1.0); // Ρυθμίζουμε την ταχύτητα στην κανονική
-            mediaPlayer.play();
-            if (!mediaPlayer.isMute()) {
-                String mediaSource = mediaPlayer.getMedia().getSource();
-                String songName = new File(mediaSource).getName(); // Παίρνουμε το όνομα του αρχείου
-                setNowPlayingSongName(songName);
-                Image image = new Image(getClass().getResource("/Fxml/Client/icons/play.png").toExternalForm());
-                songImageView.setImage(image);
-            }
-        }
-    }
+  //  public void playMusic() {
+        //if (mediaPlayer != null) {
+          //  labelTotalDuration.setVisible(true);
+           // labelCurrentTime.setVisible(true);
+           // mediaPlayer.setRate(1.0); // Ρυθμίζουμε την ταχύτητα στην κανονική
+           // mediaPlayer.play();
+          //  if (!mediaPlayer.isMute()) {
+              //  String mediaSource = mediaPlayer.getMedia().getSource();
+               // String songName = new File(mediaSource).getName(); // Παίρνουμε το όνομα του αρχείου
+               // setNowPlayingSongName(songName);
+               // Image image = new Image(getClass().getResource("/Fxml/Client/icons/play.png").toExternalForm());
+               // songImageView.setImage(image);
+            //}
+        //}
+    //}
 
     public void playNext() {
         time.setValue(time.getMin());
         currentTrackIndex = (currentTrackIndex + 1) % playlist.size(); // Κυκλική εναλλαγή
         loadTrack(currentTrackIndex);
-        playMusic();
+        //playMusic();
     }
 
     public void playPrevious() {
         time.setValue(time.getMin());
         currentTrackIndex = (currentTrackIndex - 1 + playlist.size()) % playlist.size(); // Κυκλική εναλλαγή προς τα πίσω
         loadTrack(currentTrackIndex);
-        playMusic();
+       // playMusic();
     }
 
     private void loadTopTracks() {
