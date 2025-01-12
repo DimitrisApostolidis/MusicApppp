@@ -1,5 +1,6 @@
 package org.example;
 
+
 import javafx.scene.layout.VBox;
 import javafx.scene.control.Label;
 import org.example.Controllers.Client.HistoryController;
@@ -22,9 +23,9 @@ public class HistoryControllerTest {
         try {
 
             DataBaseConnection dbConnection = new DataBaseConnection();
-            dbConnection.setConnection(URL, USER, PASSWORD); // Σύνδεση με τη βάση
+            dbConnection.setConnection(URL, USER, PASSWORD);
 
-            String userId = "456"; // Χρήστης χωρίς ιστορικό
+            String userId = "456";
 
 
             String deleteQuery = "DELETE FROM history WHERE user_id = ?";
@@ -63,13 +64,13 @@ public class HistoryControllerTest {
             dbConnection.setConnection(wrongUrl, user, password);
 
             HistoryController historyController = new HistoryController();
-            historyController.historyContainer = new VBox(); // Αρχικοποίηση του container
+            historyController.historyContainer = new VBox();
             historyController.loadHistory();
 
             fail("Αναμενόταν SQLException λόγω λανθασμένων στοιχείων σύνδεσης.");
         } catch (SQLException e) {
             System.out.println("Πραγματικό μήνυμα εξαίρεσης: " + e.getMessage());
-            // Ελέγχουμε αν το μήνυμα της εξαίρεσης περιέχει το σωστό μήνυμα
+
             assertTrue(e.getMessage().contains("Δεν μπορεί να γίνει σύνδεση με τη βάση δεδομένων"),
                     "Η SQLException πρέπει να περιέχει μήνυμα αποτυχίας σύνδεσης.");
         }
