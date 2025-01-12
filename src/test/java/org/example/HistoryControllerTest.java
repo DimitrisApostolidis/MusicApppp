@@ -1,52 +1,48 @@
 package org.example;
 
-
 import javafx.scene.layout.VBox;
-import org.example.Controllers.Client.LikedController;
+import javafx.scene.control.Label;
+import org.example.Controllers.Client.HistoryController;
 import org.example.DataBase.DataBaseConnection;
 import org.junit.jupiter.api.Test;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.sql.*;
 
-public class LikedControllerTest {
 
-
+public class HistoryControllerTest {
 
     private final String URL = "jdbc:mysql://localhost:3306/rapsodiaplayer";
     private final String USER = "root";
     private final String PASSWORD = "";
 
-
-
-
-
     @Test
-    public void testLoadLikedSongs_NoLikedSongs() {
+    public void testLoadHistory_NoHistory() {
         try {
 
             DataBaseConnection dbConnection = new DataBaseConnection();
-            dbConnection.setConnection(URL, USER, PASSWORD);
+            dbConnection.setConnection(URL, USER, PASSWORD); // Σύνδεση με τη βάση
 
-            String userId = "456";
+            String userId = "456"; // Χρήστης χωρίς ιστορικό
 
 
-            String deleteQuery = "DELETE FROM favourite_songs WHERE user_id = ?";
+            String deleteQuery = "DELETE FROM history WHERE user_id = ?";
             try (Connection connection = dbConnection.getConnection();
                  PreparedStatement preparedStatement = connection.prepareStatement(deleteQuery)) {
                 preparedStatement.setString(1, userId);
                 int rowsDeleted = preparedStatement.executeUpdate();
-                System.out.println("Διαγράφηκαν " + rowsDeleted + " εγγραφές για τον χρήστη " + userId);
+                System.out.println("Διαγράφηκαν " + rowsDeleted + " εγγραφές ιστορικού για τον χρήστη " + userId);
             }
 
 
-            LikedController likedController = new LikedController();
-            likedController.setUserId(userId);
-            likedController.loadLikedSongs();
+            HistoryController historyController = new HistoryController();
+            historyController.historyContainer = new VBox();
+            historyController.loadHistory();
 
 
-            assertEquals(0, likedController.getLikedSongsContainer().getChildren().size(),
-                    "Ο container πρέπει να είναι κενός όταν δεν υπάρχουν αγαπημένα τραγούδια.");
+            assertEquals(0, historyController.historyContainer.getChildren().size(),
+                    "Ο container πρέπει να είναι κενός όταν δεν υπάρχουν δεδομένα ιστορικού.");
         } catch (SQLException e) {
             e.printStackTrace();
             fail("Σφάλμα κατά την εκτέλεση της μεθόδου: " + e.getMessage());
@@ -55,15 +51,8 @@ public class LikedControllerTest {
 
 
 
-
-
-
-
-
-
-
     @Test
-    public void testLoadLikedSongs_SQLException() {
+    public void testLoadHistory_SQLException() {
         String wrongUrl = "jdbc:mysql://localhost:3306/non_existent_db";
         String user = "wrong_user";
         String password = "wrong_password";
@@ -73,9 +62,9 @@ public class LikedControllerTest {
         try {
             dbConnection.setConnection(wrongUrl, user, password);
 
-            LikedController likedController = new LikedController();
-            likedController.setUserId("123");
-            likedController.loadLikedSongs();
+            HistoryController historyController = new HistoryController();
+            historyController.historyContainer = new VBox(); // Αρχικοποίηση του container
+            historyController.loadHistory();
 
             fail("Αναμενόταν SQLException λόγω λανθασμένων στοιχείων σύνδεσης.");
         } catch (SQLException e) {
@@ -85,9 +74,5 @@ public class LikedControllerTest {
                     "Η SQLException πρέπει να περιέχει μήνυμα αποτυχίας σύνδεσης.");
         }
     }
-
-
-
-
 
 }

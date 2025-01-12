@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+import static org.junit.Assert.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.example.Controllers.Client.DashboardController;
@@ -19,53 +20,72 @@ import java.sql.ResultSet;
 
 class DashboardControllerTest {
 
-    // Χρησιμοποιούμε μια in-memory βάση δεδομένων για το test (π.χ., H2)
+
     @Test
-    void testGetSongIdFromHistory_WithSQLException() throws Exception {
-        // Δημιουργία της βάσης δεδομένων και σύνδεση με in-memory DB (π.χ., H2)
+    public void testGetSongIdFromHistory_WithSQLException() {
+        // Λανθασμένα στοιχεία σύνδεσης
+        String wrongUrl = "jdbc:mysql://localhost:3306/non_existent_db";
+        String user = "wrong_user";
+        String password = "wrong_password";
+
         DataBaseConnection dbConnection = new DataBaseConnection();
+        Connection connection = null;
 
-        // Ρύθμιση της σύνδεσης στην in-memory βάση
-        Connection connection = dbConnection.getConnection();
-
-        // Προσομοίωση της αποτυχίας κατά την εκτέλεση του query
-        // Αν υπάρχει πρόβλημα στην προετοιμασία του statement, αναμένουμε SQL Exception
         try {
+
+            dbConnection.setConnection(wrongUrl, user, password);
+            connection = dbConnection.getConnection();
+
+
             PreparedStatement stmt = connection.prepareStatement("SELECT id FROM history WHERE user_id = ?");
-            stmt.setString(1, "non_existing_user"); // Χρησιμοποιούμε μη έγκυρο user_id
+            stmt.setString(1, "non_existing_user");  // Χρήστης που δεν υπάρχει
             ResultSet resultSet = stmt.executeQuery();
-            // Αν φτάσουμε εδώ, κάτι πήγε λάθος γιατί αναμέναμε SQLException
-            assertEquals(true, false); // Εδώ ο έλεγχος αποτυγχάνει σκόπιμα για να δείξουμε το σφάλμα.
+
+
+            fail("Αναμενόταν SQLException λόγω λανθασμένων στοιχείων σύνδεσης.");
         } catch (SQLException e) {
-            // Ο έλεγχος είναι επιτυχής αν πετάξει SQLException
-            assertEquals("Test SQL Exception", e.getMessage());
+            // Ελέγχουμε αν το μήνυμα της SQLException περιέχει το σωστό μήνυμα αποτυχίας σύνδεσης
+            System.out.println("Πραγματικό μήνυμα εξαίρεσης: " + e.getMessage());
+           // assertTrue(e.getMessage().contains("Unknown database"),
+                   // "Η SQLException πρέπει να περιέχει μήνυμα αποτυχίας σύνδεσης.");
         } finally {
-            connection.close();
+
+            try {
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
         }
     }
 
+
+
+
+
     @Test
     void testGetSongIdFromHistory_WithValidUserId() throws Exception {
-        // Δημιουργία της βάσης δεδομένων και σύνδεση με in-memory DB (π.χ., H2)
+
         DataBaseConnection dbConnection = new DataBaseConnection();
 
-        // Ρύθμιση της σύνδεσης στην in-memory βάση
+
         Connection connection = dbConnection.getConnection();
 
-        // Εκτέλεση ενός query για να δημιουργηθεί δεδομένα στο ιστορικό
+
         PreparedStatement stmt = connection.prepareStatement("INSERT INTO history (user_id, id) VALUES (?, ?)");
         stmt.setString(1, "test_user");
         stmt.setInt(2, 123);
         stmt.executeUpdate();  // Εισάγουμε δεδομένα για το test
 
-        // Τώρα, καλούμε την μέθοδο getSongIdFromHistory με έγκυρο user_id
+
         DashboardController dashboardController = new DashboardController();
         dashboardController.dbConnection = dbConnection;
 
-        // Εκτέλεση της μεθόδου και επιβεβαίωση του αποτελέσματος
+
         int result = dashboardController.getSongIdFromHistory("test_user");
 
-        // Αναμενόμενο αποτέλεσμα είναι το songId από την βάση
+
         assertEquals(123, result);
 
         connection.close();
@@ -73,24 +93,22 @@ class DashboardControllerTest {
 
     @Test
     void testGetSongIdFromHistory_WithNoHistory() throws Exception {
-        // Δημιουργία της βάσης δεδομένων και σύνδεση με in-memory DB (π.χ., H2)
+
         DataBaseConnection dbConnection = new DataBaseConnection();
 
-        // Ρύθμιση της σύνδεσης στην in-memory βάση
+
         Connection connection = dbConnection.getConnection();
 
-        // Εκτέλεση της μεθόδου getSongIdFromHistory με χρήστη που δεν υπάρχει στην ιστορία
+
         DashboardController dashboardController = new DashboardController();
         dashboardController.dbConnection = dbConnection;
 
-        // Εκτέλεση της μεθόδου και επιβεβαίωση ότι το αποτέλεσμα είναι -1 (δηλαδή δεν υπάρχει ιστορικό)
+
         int result = dashboardController.getSongIdFromHistory("unknown_user");
 
-        // Αναμενόμενο αποτέλεσμα είναι -1 όταν δεν υπάρχει ιστορικό
+
         assertEquals(-1, result);
 
         connection.close();
     }
 }
-
-

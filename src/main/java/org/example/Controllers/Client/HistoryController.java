@@ -15,7 +15,9 @@ import java.sql.SQLException;
 public class HistoryController {
 
     @FXML
-    private VBox historyContainer;
+    public VBox historyContainer;
+
+
 
     public void initialize() {
         if (historyContainer == null) {
@@ -25,6 +27,7 @@ public class HistoryController {
             loadHistory();
         }
     }
+
 
 
     public void loadHistory() {
