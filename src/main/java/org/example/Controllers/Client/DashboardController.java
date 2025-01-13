@@ -837,7 +837,7 @@ public class DashboardController {
     }
 
 
-    private void setLabelTotalDuration() {
+    public void setLabelTotalDuration() {
         int totalTime = (int) mediaPlayer.getMedia().getDuration().toSeconds();
         int totalMinutes = (int) totalTime / 60;
         int totalSeconds = (int) totalTime % 60;

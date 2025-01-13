@@ -3,7 +3,7 @@
 <?import javafx.scene.layout.BorderPane?>
 
 <?import javafx.scene.layout.VBox?>
-<BorderPane xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.Controllers.Client.ClientController" styleClass="background" >
+<BorderPane fx:id="clientScene" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.Controllers.Client.ClientController" styleClass="background" >
 
     <left>
         <fx:include source="ClientMenu.fxml"/>
