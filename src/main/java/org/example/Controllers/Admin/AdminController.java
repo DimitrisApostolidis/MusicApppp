@@ -106,6 +106,57 @@ public class AdminController {
 //        username_fld.clear();
 //        password_fld.clear();
 //    }
+//public void initialize(URL url, ResourceBundle resourceBundle) {
+//    preloadClientScene();
+//    login_btn.setOnAction(actionEvent -> handleLogin());
+//    createAccount_btn.setOnAction(actionEvent -> handleCreateAccount());
+//
+//    // Έλεγχος αν υπάρχουν αποθηκευμένα στοιχεία και αυτόματη συμπλήρωση
+//    String savedUsername = prefs.get("username", "");
+//    String savedPassword = prefs.get("password", "");
+//
+//    if (!savedUsername.isEmpty() && !savedPassword.isEmpty()) {
+//        username_fld.setText(savedUsername);
+//        password_fld.setText(savedPassword);
+//        remember_me_chk.setSelected(true);  // Αν είναι αποθηκευμένο, επιλέγεται το checkbox
+//    }
+//}
+//
+//private void preloadClientScene() {
+//    try {
+//        if (clientScene == null) {
+//            // Load the scene only once
+//            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Client/Client.fxml"));
+//            Parent clientRoot = loader.load();
+//
+//            // Cache the scene
+//            clientScene = new Scene(clientRoot);
+//            clientScene.getStylesheets().add(getClass().getResource("/Styles/Background.css").toExternalForm());
+//        }
+//    } catch (IOException e) {
+//        logger.log(Level.SEVERE, "Failed to preload Client scene", e);
+//    }
+//}
+//
+//
+//
+//
+//public void handleLogin() {
+//    String username = username_fld.getText();
+//    String password = password_fld.getText();
+//    DataBaseConnection db = new DataBaseConnection();
+//
+//    // playlistController.clearLoggedInUserId();
+//    // Remember me επιλογή
+//    if (remember_me_chk.isSelected()) {
+//        prefs.put("username", username);  // Αποθήκευση του username
+//        prefs.put("password", password);  // Αποθήκευση του password
+//    } else {
+//        prefs.remove("username");
+//        prefs.remove("password");
+//        username_fld.clear();
+//        password_fld.clear();
+//    }
 //
 //    // Αν ο χρήστης είναι admin
 //    if ("admin".equals(username) && "admin".equals(password)) {
