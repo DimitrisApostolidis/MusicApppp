@@ -14,50 +14,59 @@
 <?import javafx.scene.text.Text?>
 
 <AnchorPane fx:id="rootPane" prefHeight="750.0" prefWidth="850.0" stylesheets="@../../Styles/Dashboard.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.Controllers.Client.DashboardController">
-   <Text fx:id="songTitleText" layoutX="199.0" layoutY="637.0" style="-fx-font-size: 20px; -fx-fill: white;" text="Τίτλος Τραγουδιού" textAlignment="CENTER" visible="false" wrappingWidth="429.5419921875" AnchorPane.bottomAnchor="106.7255859375">
+   <Text fx:id="songTitleText" layoutX="268.0" layoutY="610.0" style="-fx-font-size: 20px; -fx-fill: white;" text="Τίτλος Τραγουδιού" textAlignment="CENTER" visible="false" wrappingWidth="429.5419921875" AnchorPane.bottomAnchor="134.98046875">
       <font>
          <Font size="63.0" />
       </font>
    </Text>
-   <Button fx:id="pausee" layoutX="453.0" layoutY="666.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="28.0" text="⏸" />
-   <Text fill="WHITE" layoutX="9.0" layoutY="171.8984375" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="shape-text" text="Latest Search" wrappingWidth="164.513671875" AnchorPane.leftAnchor="9.0" AnchorPane.topAnchor="146.0" />
-   <Text fill="WHITE" layoutX="14.0" layoutY="385.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="shape-text" text="What's Trending" />
-   <ListView fx:id="topTracksList" layoutX="9.0" layoutY="390.0" prefHeight="150.0" prefWidth="808.0" styleClass="list-view" />
-   <TextArea fx:id="artistBioTextArea" editable="false" layoutX="250.0" layoutY="170.0" prefHeight="150.0" prefWidth="316.0" style="-fx-font-size: 16px; -fx-fill: white; -fx-background-color: transparent;" visible="false" wrapText="true" />
+   <Button fx:id="pausee" layoutX="503.0" layoutY="643.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="28.0" text="⏸" />
+   <Text fill="WHITE" layoutX="11.0" layoutY="112.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="shape-text" text="Latest Search" wrappingWidth="164.513671875" AnchorPane.leftAnchor="11.0" AnchorPane.topAnchor="99.05078125" />
+   <Text fill="WHITE" layoutX="21.0" layoutY="319.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="shape-text" text="What's Trending" />
+   <ListView fx:id="topTracksList" layoutX="21.0" layoutY="323.0" prefHeight="150.0" prefWidth="808.0" styleClass="list-view" />
+   <TextArea fx:id="artistBioTextArea" editable="false" layoutX="262.0" layoutY="122.0" prefHeight="158.0" prefWidth="260.0" style="-fx-font-size: 16px; -fx-fill: white; -fx-background-color: transparent;" visible="false" wrapText="true" />
 
-   <AnchorPane fx:id="imageContainer" layoutX="15.0" layoutY="174.0" prefHeight="181.0" prefWidth="194.0">
+   <AnchorPane fx:id="imageContainer" layoutX="43.0" layoutY="124.0" prefHeight="130.0" prefWidth="193.0">
       <!-- Τοποθέτηση των στοιχείων με συγκεκριμένες συντεταγμένες -->
-      <ImageView fx:id="artist1" fitHeight="150.0" fitWidth="150.0" layoutX="14.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="14.0" />
-   </AnchorPane>
-      <AnchorPane fx:id="playlistPane" layoutX="333.0" layoutY="14.0" prefHeight="200.0" prefWidth="300.0" style="-fx-background-color: #333;" visible="false">
-         <Label layoutX="100.0" layoutY="10.0" text="Select Playlist" textFill="WHITE" />
-         <ListView fx:id="playlistsList" layoutX="20.0" layoutY="40.0" prefHeight="130.0" prefWidth="260.0" />
-         <Button layoutX="100.0" layoutY="180.0" onAction="#addSongToSelectedPlaylist" text="Add to Playlist" />
-   
-      </AnchorPane>
+      <ImageView fx:id="artist1" fitHeight="130.0" fitWidth="182.0" layoutX="7.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="7.0" AnchorPane.topAnchor="0.0" />
 
-   <Slider fx:id="time" layoutX="150.0" layoutY="729.0" prefHeight="14.0" prefWidth="527.0" stylesheets="@../../Styles/Dashboard.css" />
-   <Button fx:id="playy" layoutX="363.0" layoutY="666.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="28.0" text="▶" />
-   <Button fx:id="nextt" layoutX="536.0" layoutY="666.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="50.0" text="⏭" />
-   <Button fx:id="favoriteButton" layoutX="608.0" layoutY="676.0" maxHeight="32.0" maxWidth="30.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="10.0" text="❤" />
-   <Button fx:id="previouss" layoutX="273.0" layoutY="666.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="28.0" text="⏮">
+
+
+   </AnchorPane>
+
+   <AnchorPane fx:id="playlistPane" layoutX="333.0" layoutY="14.0" prefHeight="200.0" prefWidth="300.0" style="-fx-background-color: #333;" visible="false">
+      <Label layoutX="100.0" layoutY="10.0" text="Select Playlist" textFill="WHITE" />
+      <ListView fx:id="playlistsList" layoutX="20.0" layoutY="40.0" prefHeight="130.0" prefWidth="260.0" />
+      <Button layoutX="100.0" layoutY="180.0" onAction="#addSongToSelectedPlaylist" text="Add to Playlist" />
+
+   </AnchorPane>
+
+   <Slider fx:id="time" layoutX="200.0" layoutY="706.0" prefHeight="14.0" prefWidth="527.0" stylesheets="@../../Styles/Dashboard.css" />
+   <Button fx:id="playy" layoutX="413.0" layoutY="643.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="28.0" text="▶" />
+   <Button fx:id="nextt" layoutX="586.0" layoutY="643.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="50.0" text="⏭" />
+   <Button fx:id="favoriteButton" layoutX="658.0" layoutY="653.0" maxHeight="32.0" maxWidth="30.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="10.0" text="❤" />
+   <Button fx:id="previouss" layoutX="323.0" layoutY="643.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="28.0" text="⏮">
       <rotationAxis>
          <Point3D />
       </rotationAxis>
       <opaqueInsets>
          <Insets />
       </opaqueInsets></Button>
-   <Button fx:id="searchButton" layoutX="550.0" layoutY="90.0" minHeight="39.0" minWidth="28.0" mnemonicParsing="false" prefHeight="39.0" prefWidth="28.0" text="🔍" />
-   <TextField fx:id="searchField" layoutX="9.0" layoutY="99.0" prefHeight="32.0" prefWidth="527.0" />
-   <ListView fx:id="resultsList" layoutX="9.0" layoutY="129.0" prefHeight="400" prefWidth="527" visible="false" />
-   <Button fx:id="addtoplaylist" layoutX="212.0" layoutY="676.0" mnemonicParsing="false" onAction="#showPlaylistsPane" prefHeight="35.0" prefWidth="28.0" text="+" />
+   <Button fx:id="searchButton" layoutX="553.0" layoutY="49.0" minHeight="39.0" minWidth="28.0" mnemonicParsing="false" prefHeight="39.0" prefWidth="28.0" text="🔍" />
+   <TextField fx:id="searchField" layoutX="9.0" layoutY="58.0" prefHeight="32.0" prefWidth="527.0" />
+   <ListView fx:id="resultsList" layoutX="10.0" layoutY="82.0" prefHeight="400" prefWidth="527" visible="false" />
+   <Button fx:id="addtoplaylist" layoutX="262.0" layoutY="653.0" mnemonicParsing="false" onAction="#showPlaylistsPane" prefHeight="35.0" prefWidth="28.0" text="+" />
 
 
-   <Label fx:id="labelNowPlaying" alignment="CENTER" layoutX="24.0" layoutY="547.0" prefHeight="39.0" prefWidth="206.0" text="Now playing" textFill="#5e7c5c" visible="false">
+   <Label fx:id="labelNowPlaying" alignment="CENTER" layoutX="40.0" layoutY="474.0" prefHeight="16.0" prefWidth="167.0" text="Now playing" textFill="#5e7c5c" visible="false">
       <font>
          <Font size="26.0" />
       </font>
    </Label>
-   <Label fx:id="labelCurrentTime" layoutX="113.0" layoutY="728.0" text="Label" textFill="WHITE" />
-   <Label fx:id="labelTotalDuration" layoutX="689.0" layoutY="728.0" text="Label" textFill="WHITE" />
+   <Label fx:id="labelCurrentTime" layoutX="162.0" layoutY="705.0" text="Label" textFill="WHITE"  visible="false"/>
+   <Label fx:id="labelTotalDuration" layoutX="739.0" layoutY="705.0" text="Label" textFill="WHITE" visible="false" />
+   <AnchorPane fx:id="imageContainer1" layoutX="32.0" layoutY="521.0" prefHeight="158.0" prefWidth="204.0">
+      <children>
+         <ImageView fx:id="songImageView" fitHeight="150.0" fitWidth="182.0" layoutX="11.0" layoutY="4.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="11.0" AnchorPane.topAnchor="4.0" />
+      </children>
+   </AnchorPane>
 </AnchorPane>

@@ -67,7 +67,7 @@ public class DashboardController {
     private ListView<String> resultsList;
 
     @FXML
-    private AnchorPane imageContainer;
+    private AnchorPane imageContainer,imageContainer1;
 
     @FXML
     private ListView<String> topTracksList;
@@ -150,14 +150,11 @@ public class DashboardController {
         });
 
         playlist = new ArrayList<>();
-        labelCurrentTime.setVisible(false);
         labelTotalDuration.setVisible(false);
-
-        // Αρχικοποίηση του πρώτου τραγουδιού
-      // loadTrack(currentTrackIndex);
-
+        labelCurrentTime.setVisible(false);
         playy.setOnMouseClicked(mouseEvent -> {
             mediaPlayer.play();
+
         });
 
         pausee.setOnMouseClicked(mouseEvent -> {
@@ -209,7 +206,6 @@ public class DashboardController {
                         if (response.has("track")) {
                             imageUrl = response.getJSONObject("track").getJSONArray("image").getJSONObject(3).getString("#text");
                             artistName = response.getJSONObject("track").getString("artist");
-
                             // Ανάκτηση του είδους
                             JSONArray genres = response.getJSONObject("track").optJSONArray("genres");
                             if (genres != null && genres.length() > 0) {
@@ -251,7 +247,11 @@ public class DashboardController {
         });
     }
 
-
+    private String formatDuration(Duration duration) {
+        long minutes = (long) duration.toMinutes();
+        long seconds = (long) (duration.toSeconds() % 60);
+        return String.format("%02d:%02d", minutes, seconds);
+    }
     private boolean isTrackFavorite(String trackName) {
         String userId = LoginController.userId; // Πάρε το userId από το LoginController
         if (userId == null || userId.isEmpty()) {
@@ -315,7 +315,6 @@ public class DashboardController {
         songTitleText.setText(trackName);
         songTitleText.setVisible(true);
         labelNowPlaying.setVisible(true);
-        Platform.runLater(() -> labelNowPlaying.setText("Now playing: " + trackName));
     }
 
 
@@ -507,7 +506,7 @@ public class DashboardController {
                         streamingUrls.add(null); // Δεν έχει URL αναπαραγωγής
                         imageUrls.add(artist.optString("cover_image", "")); // Εικόνα του artist
                         itemTypes.add("Artist");
-                       // bios.add(artist.optString("bio", "No bio available")); // Προσθήκη bio αν υπάρχει
+                        // bios.add(artist.optString("bio", "No bio available")); // Προσθήκη bio αν υπάρχει
                         artistNames.add(name); // Προσθήκη του ονόματος του καλλιτέχνη
                     }
                 }
@@ -564,8 +563,40 @@ public class DashboardController {
 
         Media media = new Media(url);
         mediaPlayer = new MediaPlayer(media);
-        mediaPlayer.setOnReady(() -> mediaPlayer.play());
+
+        mediaPlayer.setOnReady(() -> {
+            mediaPlayer.play(); // Ξεκίνα την αναπαραγωγή
+
+            // Ρύθμιση του χρόνου και των labels μόλις είναι έτοιμο το MediaPlayer
+            time.setMax(mediaPlayer.getMedia().getDuration().toSeconds());
+            setLabelTotalDuration(); // Εμφάνιση της συνολικής διάρκειας
+            setLabelCurrentTime(); // Ενημέρωση του τρέχοντος χρόνου
+            labelTotalDuration.setVisible(true); // Κάνε τη συνολική διάρκεια ορατή
+
+        });
+
+        // Αναβάθμιση της θέσης του slider καθώς το τραγούδι παίζει
+        mediaPlayer.currentTimeProperty().addListener((observable, oldValue, newValue) -> {
+            if (!time.isValueChanging()) { // Μόνο αν δεν σύρει ο χρήστης
+                time.setValue(newValue.toSeconds());
+                setLabelCurrentTime(); // Ενημέρωση της ετικέτας του τρέχοντος χρόνου
+            }
+        });
+
+        // Όταν ο χρήστης αλλάζει τη θέση του slider, ενημέρωσε την αναπαραγωγή
+        time.valueChangingProperty().addListener((observable, wasChanging, isChanging) -> {
+            if (!isChanging) { // Όταν ο χρήστης αφήσει το slider
+                mediaPlayer.seek(Duration.seconds(time.getValue())); // Πήγαινε στην επιλεγμένη χρονική στιγμή
+                setLabelCurrentTime(); // Ενημέρωσε την ετικέτα του τρέχοντος χρόνου
+            }
+        });
+
+        // Άμεση αλλαγή όταν ο χρήστης σύρει το slider
+        time.setOnMouseReleased(event -> {
+            mediaPlayer.seek(Duration.seconds(time.getValue()));
+        });
     }
+
 
 
     public void displayLatestSearches() {
@@ -628,16 +659,17 @@ public class DashboardController {
     private void updateImage(String imageUrl, String title, String itemType) {
         Platform.runLater(() -> {
             imageContainer.getChildren().clear();
+            imageContainer1.getChildren().clear();
             if (imageUrl != null && !imageUrl.isEmpty()) {
-                ImageView imageView = new ImageView(new Image(imageUrl));
-                imageView.setFitWidth(150);
-                imageView.setFitHeight(150);
-                imageView.setPreserveRatio(true);
+                ImageView artist1 = new ImageView(new Image(imageUrl));
+                artist1.setFitWidth(150);
+                artist1.setFitHeight(150);
+                artist1.setPreserveRatio(true);
 
                 Text imageTitle = new Text(itemType + ": " + title);
                 imageTitle.setStyle("-fx-fill: white; -fx-font-size: 16px;");
 
-                VBox imageBox = new VBox(imageView, imageTitle);
+                VBox imageBox = new VBox(artist1, imageTitle);
                 imageBox.setSpacing(10);
                 imageBox.setStyle("-fx-alignment: center;");
                 imageContainer.getChildren().add(imageBox);
@@ -658,16 +690,17 @@ public class DashboardController {
                     String title = results.get(index).substring(selectedType.length() + 2);
                     String artistName = artistNames.get(index); // Πάρε το όνομα του καλλιτέχνη
 
-                    updateImage(selectedImage, title, selectedType);
+
 
                     if ("Artist".equals(selectedType)) {
-
+                        updateImage(selectedImage,title,artistName);
                         Platform.runLater(() -> {
+
                             updateArtistImages(artistName);
                             artistBioTextArea.setText("");
-
                             artistBioTextArea.setVisible(true);
-
+                            labelNowPlaying.setVisible(false);
+                            songTitleText.setVisible(false);
                         });
 
 
@@ -675,11 +708,17 @@ public class DashboardController {
                         artistBioTextArea.setVisible(false);  // Απόκρυψη του TextArea αν δεν είναι καλλιτέχνης
                     }
 
-                    if ("Track".equals(selectedType) && selectedUrl != null) {
-                        playStream(selectedUrl);
+                    if ("Track".equals(selectedType)) {
+                        displaySingleImage(selectedImage, title);
+
+                        labelNowPlaying.setVisible(true);
+                        songTitleText.setVisible(true);
+                        playStream(selectedUrl); // Φόρτωση του τραγουδιού
+
                         Platform.runLater(() -> {
-                            artistBioTextArea.setText("");
                             artistBioTextArea.setVisible(false);
+                            artistBioTextArea.setText("");
+
                         });
                     }
 
@@ -688,30 +727,63 @@ public class DashboardController {
         });
     }
 
+    // Μέθοδος για ενημέρωση του τρέχοντος χρόνου
+    private void setLabelCurrentTime() {
+        // Ακούμε τις αλλαγές στην τρέχουσα θέση του MediaPlayer
+        mediaPlayer.currentTimeProperty().addListener((observable, oldValue, newValue) -> {
+            double currentSeconds = newValue.toSeconds();
 
+            // Μετατροπή σε λεπτά και δευτερόλεπτα
+            int minutes = (int) currentSeconds / 60;
+            int seconds = (int) currentSeconds % 60;
+            labelCurrentTime.setVisible(true);
+            // Ενημέρωση του labelCurrentTime με τη μορφή mm:ss
+            labelCurrentTime.setText(String.format("%02d:%02d", minutes, seconds));
+        });
+    }
+
+
+    // Δημιουργία της μεθόδου για να ενημερώνει τη συνολική διάρκεια
+    private void setLabelTotalDuration() {
+        // Παίρνουμε τη συνολική διάρκεια του τραγουδιού σε δευτερόλεπτα
+        Duration totalDuration = mediaPlayer.getMedia().getDuration();
+        double totalSeconds = totalDuration.toSeconds();
+
+        // Μετατροπή σε λεπτά και δευτερόλεπτα
+        int minutes = (int) totalSeconds / 60;
+        int seconds = (int) totalSeconds % 60;
+
+        // Ενημέρωση του labelTotalDuration με τη μορφή mm:ss
+        labelTotalDuration.setText(String.format("%02d:%02d", minutes, seconds));
+    }
 
 
     private void displaySingleImage(String imageUrl, String title) {
         Platform.runLater(() -> {
-            imageContainer.getChildren().clear(); // Καθαρίζουμε οποιαδήποτε προηγούμενη εικόνα
-
+            imageContainer.getChildren().clear();
+            imageContainer1.getChildren().clear();
+            artistBioTextArea.setVisible(false);
             // Δημιουργία της εικόνας ImageView
-            ImageView imageView = new ImageView(new Image(imageUrl));
-            imageView.setFitWidth(150);
-            imageView.setFitHeight(150);
-            imageView.setPreserveRatio(true);
+            ImageView songImageView = new ImageView(new Image(imageUrl));
+            songImageView.setFitWidth(182);  // Ρυθμίζουμε το πλάτος της εικόνας
+            songImageView.setFitHeight(150); // Ρυθμίζουμε το ύψος της εικόνας
+            songImageView.setPreserveRatio(true);
 
             // Δημιουργία τίτλου
-            Text imageTitle = new Text(title); // Χρησιμοποιούμε μόνο τον τίτλο χωρίς επανάληψη του τύπου
+            Text imageTitle = new Text(title);
             imageTitle.setStyle("-fx-fill: white; -fx-font-size: 16px; -fx-alignment: center;");
 
-            // Προσθήκη εικόνας και τίτλου στο container
-            VBox imageBox = new VBox(imageView, imageTitle);
+            // Δημιουργία ενός VBox για την εικόνα και τον τίτλο
+            VBox imageBox = new VBox(songImageView, imageTitle);
             imageBox.setSpacing(10);
             imageBox.setStyle("-fx-alignment: center;");
-            imageContainer.getChildren().add(imageBox); // Προσθήκη στο container
+
+            imageContainer1.getChildren().add(songImageView);
         });
     }
+
+
+
 
 
     private void updateResultsList(List<String> results) {
@@ -731,12 +803,12 @@ public class DashboardController {
                         var bio = artist.getJSONObject("bio");
                         if (bio.has("content")) {
                             String bioContent = bio.getString("content");
-                           // Platform.runLater(() -> {
-                                //artistBioTextArea.setText("");
-                               // artistBioTextArea.setVisible(true);
+                            Platform.runLater(() -> {
+                                artistBioTextArea.setText("");
+                                artistBioTextArea.setVisible(true);
                                 artistBioTextArea.setText(bioContent);
 
-                          //  });
+                            });
                         } else {
                             System.out.println("No bio content found for " + artistName);
                         }
@@ -838,26 +910,9 @@ public class DashboardController {
     }
 
 
-    public void setLabelTotalDuration() {
-        int totalTime = (int) mediaPlayer.getMedia().getDuration().toSeconds();
-        int totalMinutes = (int) totalTime / 60;
-        int totalSeconds = (int) totalTime % 60;
-        labelTotalDuration.setText(String.format("%d:%02d", totalMinutes, totalSeconds));
-    }
 
 
-    private void setLabelCurrentTime() {
-        mediaPlayer.currentTimeProperty().addListener((observable, oldValue, newValue) -> {
-            // Λήψη του τρέχοντος χρόνου σε δευτερόλεπτα
-            double currentTime = newValue.toSeconds();
 
-            int currentMinutes = (int) currentTime / 60;
-            int currentSeconds = (int) currentTime % 60;
-
-            // Ενημέρωση του label με τον τρέχοντα χρόνο σε μορφή mm:ss
-            labelCurrentTime.setText(String.format("%d:%02d", currentMinutes, currentSeconds));
-        });
-    }
 
     private void loadTrack(int index) {
         if (mediaPlayer != null) {
@@ -881,11 +936,11 @@ public class DashboardController {
             sliderUpdater.stop();
         }
 
+
         // Ρύθμιση της διάρκειας του slider όταν το MediaPlayer είναι έτοιμο
         mediaPlayer.setOnReady(() -> {
             time.setMax(mediaPlayer.getMedia().getDuration().toSeconds());
-            setLabelTotalDuration();
-            setLabelCurrentTime();
+
         });
 
         mediaPlayer.setOnError(() -> {
@@ -927,20 +982,20 @@ public class DashboardController {
     }
 
 
-  //  public void playMusic() {
-        //if (mediaPlayer != null) {
-          //  labelTotalDuration.setVisible(true);
-           // labelCurrentTime.setVisible(true);
-           // mediaPlayer.setRate(1.0); // Ρυθμίζουμε την ταχύτητα στην κανονική
-           // mediaPlayer.play();
-          //  if (!mediaPlayer.isMute()) {
-              //  String mediaSource = mediaPlayer.getMedia().getSource();
-               // String songName = new File(mediaSource).getName(); // Παίρνουμε το όνομα του αρχείου
-               // setNowPlayingSongName(songName);
-               // Image image = new Image(getClass().getResource("/Fxml/Client/icons/play.png").toExternalForm());
-               // songImageView.setImage(image);
-            //}
-        //}
+    //  public void playMusic() {
+    //if (mediaPlayer != null) {
+    //  labelTotalDuration.setVisible(true);
+    // labelCurrentTime.setVisible(true);
+    // mediaPlayer.setRate(1.0); // Ρυθμίζουμε την ταχύτητα στην κανονική
+    // mediaPlayer.play();
+    //  if (!mediaPlayer.isMute()) {
+    //  String mediaSource = mediaPlayer.getMedia().getSource();
+    // String songName = new File(mediaSource).getName(); // Παίρνουμε το όνομα του αρχείου
+    // setNowPlayingSongName(songName);
+    // Image image = new Image(getClass().getResource("/Fxml/Client/icons/play.png").toExternalForm());
+    // songImageView.setImage(image);
+    //}
+    //}
     //}
 
     public void playNext() {
@@ -954,7 +1009,7 @@ public class DashboardController {
         time.setValue(time.getMin());
         currentTrackIndex = (currentTrackIndex - 1 + playlist.size()) % playlist.size(); // Κυκλική εναλλαγή προς τα πίσω
         loadTrack(currentTrackIndex);
-       // playMusic();
+        // playMusic();
     }
 
     private void loadTopTracks() {
@@ -1025,80 +1080,80 @@ public class DashboardController {
         playlistPane.setLayoutY(centerY);
 
 
-       // if (clickCount == 2) {
-           // playlistPane.setVisible(false);  // Κλείνουμε το παράθυρο
-           // System.out.println("Το παράθυρο έκλεισε μετά από δύο πατήσεις.");
-           // clickCount = 0;  // Επαναφορά του clickCount για μελλοντικές πατήσεις
-       // }
+        // if (clickCount == 2) {
+        // playlistPane.setVisible(false);  // Κλείνουμε το παράθυρο
+        // System.out.println("Το παράθυρο έκλεισε μετά από δύο πατήσεις.");
+        // clickCount = 0;  // Επαναφορά του clickCount για μελλοντικές πατήσεις
+        // }
     }
 
 
 
 
-@FXML
-private void addSongToSelectedPlaylist() {
-    // Παίρνουμε το επιλεγμένο όνομα της playlist
-    String selectedPlaylist = playlistsList.getSelectionModel().getSelectedItem();
+    @FXML
+    private void addSongToSelectedPlaylist() {
+        // Παίρνουμε το επιλεγμένο όνομα της playlist
+        String selectedPlaylist = playlistsList.getSelectionModel().getSelectedItem();
 
-    if (selectedPlaylist != null) {
-        DataBaseConnection db = new DataBaseConnection();
-        int playlistId = db.getPlaylistIdByName(selectedPlaylist);
+        if (selectedPlaylist != null) {
+            DataBaseConnection db = new DataBaseConnection();
+            int playlistId = db.getPlaylistIdByName(selectedPlaylist);
 
-        if (playlistId == -1) {
-            System.out.println("Δεν βρέθηκε το ID για την playlist με το όνομα: " + selectedPlaylist);
-            return;
-        }
-
-        // Ανάκτηση του τρέχοντος τραγουδιού από το ιστορικό του χρήστη
-        String[] currentSong = getCurrentSongFromHistory(LoginController.userId);
-
-        if (currentSong != null) {
-            int songId = Integer.parseInt(currentSong[0]);  // songId είναι στην πρώτη θέση του πίνακα
-            String songTitle = currentSong[1];  // songTitle είναι στη δεύτερη θέση του πίνακα
-
-            // Έλεγχος αν το τραγούδι υπάρχει ήδη στην playlist
-            if (db.isSongInPlaylist(playlistId, songId)) {
-                System.out.println("Το τραγούδι υπάρχει ήδη στην playlist.");
-                playlistPane.setVisible(false);
-                return;  // Αν υπάρχει, δεν το προσθέτουμε ξανά
+            if (playlistId == -1) {
+                System.out.println("Δεν βρέθηκε το ID για την playlist με το όνομα: " + selectedPlaylist);
+                return;
             }
 
-            // Προσθήκη του τραγουδιού στην playlist
-            boolean successAdd = db.addSongToPlaylist(playlistId, songId, songTitle);
-            if (successAdd) {
-                System.out.println("Το τραγούδι προστέθηκε επιτυχώς στην playlist: " + selectedPlaylist);
-                playlistPane.setVisible(false);
+            // Ανάκτηση του τρέχοντος τραγουδιού από το ιστορικό του χρήστη
+            String[] currentSong = getCurrentSongFromHistory(LoginController.userId);
+
+            if (currentSong != null) {
+                int songId = Integer.parseInt(currentSong[0]);  // songId είναι στην πρώτη θέση του πίνακα
+                String songTitle = currentSong[1];  // songTitle είναι στη δεύτερη θέση του πίνακα
+
+                // Έλεγχος αν το τραγούδι υπάρχει ήδη στην playlist
+                if (db.isSongInPlaylist(playlistId, songId)) {
+                    System.out.println("Το τραγούδι υπάρχει ήδη στην playlist.");
+                    playlistPane.setVisible(false);
+                    return;  // Αν υπάρχει, δεν το προσθέτουμε ξανά
+                }
+
+                // Προσθήκη του τραγουδιού στην playlist
+                boolean successAdd = db.addSongToPlaylist(playlistId, songId, songTitle);
+                if (successAdd) {
+                    System.out.println("Το τραγούδι προστέθηκε επιτυχώς στην playlist: " + selectedPlaylist);
+                    playlistPane.setVisible(false);
+                } else {
+                    System.out.println("Η προσθήκη του τραγουδιού απέτυχε.");
+                }
             } else {
-                System.out.println("Η προσθήκη του τραγουδιού απέτυχε.");
+                System.out.println("Δεν βρέθηκε το τραγούδι στο ιστορικό.");
             }
         } else {
-            System.out.println("Δεν βρέθηκε το τραγούδι στο ιστορικό.");
+            System.out.println("Δεν επιλέξατε καμία playlist.");
         }
-    } else {
-        System.out.println("Δεν επιλέξατε καμία playlist.");
     }
-}
 
-public String[] getCurrentSongFromHistory(String userId) {
-    // Επιστρέφει το songId και τον τίτλο του τραγουδιού που βρίσκεται στο ιστορικό και είναι το τρέχον (is_playing = 1)
-    String query = "SELECT id, title FROM history WHERE user_id = ? AND is_playing = 1";
-    try (Connection connection = getConnection();
-         PreparedStatement statement = connection.prepareStatement(query)) {
+    public String[] getCurrentSongFromHistory(String userId) {
+        // Επιστρέφει το songId και τον τίτλο του τραγουδιού που βρίσκεται στο ιστορικό και είναι το τρέχον (is_playing = 1)
+        String query = "SELECT id, title FROM history WHERE user_id = ? AND is_playing = 1";
+        try (Connection connection = getConnection();
+             PreparedStatement statement = connection.prepareStatement(query)) {
 
-        statement.setString(1, userId);
+            statement.setString(1, userId);
 
-        try (ResultSet resultSet = statement.executeQuery()) {
-            if (resultSet.next()) {
-                String songId = String.valueOf(resultSet.getInt("id"));
-                String title = resultSet.getString("title");
-                return new String[]{songId, title};  // Επιστρέφουμε το songId και τον τίτλο
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    String songId = String.valueOf(resultSet.getInt("id"));
+                    String title = resultSet.getString("title");
+                    return new String[]{songId, title};  // Επιστρέφουμε το songId και τον τίτλο
+                }
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-    } catch (SQLException e) {
-        e.printStackTrace();
+        return null;  // Αν δεν υπάρχει τραγούδι που παίζει
     }
-    return null;  // Αν δεν υπάρχει τραγούδι που παίζει
-}
 
 
 
@@ -1112,10 +1167,5 @@ public String[] getCurrentSongFromHistory(String userId) {
         artistBioTextArea.setText(bio);
         artistBioTextArea.setVisible(true);
     }
-
-    public MediaPlayer getMediaPlayer() {
-        return mediaPlayer;
-    }
-
 
 }
