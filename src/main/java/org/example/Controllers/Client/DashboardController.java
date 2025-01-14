@@ -315,6 +315,7 @@ public class DashboardController {
         songTitleText.setText(trackName);
         songTitleText.setVisible(true);
         labelNowPlaying.setVisible(true);
+        Platform.runLater(() -> labelNowPlaying.setText("Now playing: " + trackName));
     }
 
 
@@ -1111,5 +1112,10 @@ public String[] getCurrentSongFromHistory(String userId) {
         artistBioTextArea.setText(bio);
         artistBioTextArea.setVisible(true);
     }
+
+    public MediaPlayer getMediaPlayer() {
+        return mediaPlayer;
+    }
+
 
 }
