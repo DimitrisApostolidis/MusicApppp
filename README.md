@@ -6,7 +6,6 @@ Features ✨
     Manage favorite songs: Add, edit, and delete songs from your favorites.
     Create custom playlists: Organize your music as you like.
     Database integration: Persistent storage using SQL.
-    [Άλλες λειτουργίες που έχει το project]
 
 Technologies Used 💻
 
